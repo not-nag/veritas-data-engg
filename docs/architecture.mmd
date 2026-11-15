@@ -1,0 +1,21 @@
+flowchart LR
+    C[Clinic JSON files] --> G[GCS by clinic and date]
+    G --> E[Object arrival events]
+    E --> Q[Pub Sub queue]
+    Q --> W[Cloud Run workers]
+    CFG[Versioned configuration] --> W
+    W --> V[Parse and map fields]
+    V --> N[Normalise names and units]
+    N --> F[Validate and flag]
+    F --> B[BigQuery staging]
+    B --> M[Merge by stable record ID]
+    M --> DB[Canonical observations and records]
+    W --> DL[Dead letter storage]
+    DL --> R[Correct config and replay]
+    R --> Q
+    G --> RAW[Retained raw input]
+    DB --> API[Read API]
+    RAW --> API
+    API --> UI[Next.js operations UI]
+    W --> O[Structured logs and metrics]
+    O --> A[Cloud Monitoring alerts]

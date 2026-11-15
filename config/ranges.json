@@ -1,0 +1,170 @@
+{
+  "version": "4.0",
+  "policy": "Source ranges take priority only for known tests with compatible explicit units. Fallbacks require applicable demographics. Plausibility limits are demonstration quality rules, not clinically validated thresholds.",
+  "sources": [
+    "https://medlineplus.gov/ency/article/003645.htm",
+    "https://medlineplus.gov/ency/article/003648.htm",
+    "https://medlineplus.gov/ency/article/003643.htm",
+    "https://medlineplus.gov/ency/article/003647.htm",
+    "https://medlineplus.gov/ency/article/003644.htm",
+    "https://medlineplus.gov/ency/article/003475.htm",
+    "https://medlineplus.gov/ency/article/003481.htm",
+    "https://medlineplus.gov/ency/article/003484.htm",
+    "https://medlineplus.gov/ency/article/003478.htm",
+    "https://medlineplus.gov/ency/article/003657.htm",
+    "https://www.uhhospitals.org/-/media/files/for-clinicians/research/lab-reference-ranges.pdf?hash=FE0D345C3ECEB8C338A09459498F9ED09D39EC95&la=en",
+    "https://testguide.labmed.uw.edu/view/AGR?tabs=no"
+  ],
+  "adult_gender_ranges": {
+    "Hemoglobin": {
+      "Male": [
+        13.8,
+        17.2
+      ],
+      "Female": [
+        12.1,
+        15.1
+      ]
+    },
+    "Red Blood Cell Count": {
+      "Male": [
+        4.2,
+        5.7
+      ],
+      "Female": [
+        3.8,
+        5.1
+      ]
+    },
+    "Creatinine": {
+      "Male": [
+        0.7,
+        1.3
+      ],
+      "Female": [
+        0.5,
+        0.95
+      ]
+    }
+  },
+  "qualitative_normal": [
+    "negative",
+    "nil",
+    "absent",
+    "normal",
+    "not detected",
+    "clear",
+    "pale yellow"
+  ],
+  "qualitative_abnormal": [
+    "positive",
+    "detected",
+    "present"
+  ],
+  "reference_rules": [
+    {
+      "test": "White Blood Cell Count",
+      "min_age_years": 18,
+      "unit": "cells/uL",
+      "low": 4500,
+      "high": 11000,
+      "source": "https://medlineplus.gov/ency/article/003643.htm"
+    },
+    {
+      "test": "Platelet Count",
+      "min_age_years": 18,
+      "unit": "cells/uL",
+      "low": 150000,
+      "high": 400000,
+      "source": "https://medlineplus.gov/ency/article/003647.htm"
+    },
+    {
+      "test": "Sodium",
+      "unit": "mmol/L",
+      "low": 135,
+      "high": 145,
+      "min_age_years": 18,
+      "source": "https://medlineplus.gov/ency/article/003481.htm"
+    },
+    {
+      "test": "Potassium",
+      "unit": "mmol/L",
+      "low": 3.7,
+      "high": 5.2,
+      "min_age_years": 18,
+      "source": "https://medlineplus.gov/ency/article/003484.htm"
+    },
+    {
+      "test": "Phosphorus",
+      "unit": "mg/dL",
+      "low": 2.8,
+      "high": 4.5,
+      "min_age_years": 18,
+      "source": "https://medlineplus.gov/ency/article/003478.htm"
+    },
+    {
+      "test": "Neutrophils",
+      "min_age_years": 18,
+      "unit": "%",
+      "low": 40,
+      "high": 60,
+      "source": "https://medlineplus.gov/ency/article/003657.htm"
+    },
+    {
+      "test": "Lymphocytes",
+      "min_age_years": 18,
+      "unit": "%",
+      "low": 20,
+      "high": 40,
+      "source": "https://medlineplus.gov/ency/article/003657.htm"
+    },
+    {
+      "test": "Monocytes",
+      "min_age_years": 18,
+      "unit": "%",
+      "low": 2,
+      "high": 8,
+      "source": "https://medlineplus.gov/ency/article/003657.htm"
+    },
+    {
+      "test": "Eosinophils",
+      "min_age_years": 18,
+      "unit": "%",
+      "low": 1,
+      "high": 4,
+      "source": "https://medlineplus.gov/ency/article/003657.htm"
+    },
+    {
+      "test": "Basophils",
+      "min_age_years": 18,
+      "unit": "%",
+      "low": 0.5,
+      "high": 1,
+      "source": "https://medlineplus.gov/ency/article/003657.htm"
+    },
+    {
+      "test": "RDW CV",
+      "unit": "%",
+      "low": 11.5,
+      "high": 14.5,
+      "source": "https://www.uhhospitals.org/-/media/files/for-clinicians/research/lab-reference-ranges.pdf?hash=FE0D345C3ECEB8C338A09459498F9ED09D39EC95&la=en",
+      "note": "Example laboratory interval; local laboratory validation remains required",
+      "all_ages": true
+    },
+    {
+      "test": "Albumin Globulin Ratio",
+      "all_ages": true,
+      "unit": "ratio",
+      "low": 1.0,
+      "high": 2.4,
+      "source": "https://testguide.labmed.uw.edu/view/AGR?tabs=no",
+      "note": "Example laboratory interval; local laboratory validation remains required"
+    }
+  ],
+  "gender_reference_sources": {
+    "Hemoglobin": "https://medlineplus.gov/ency/article/003645.htm",
+    "Red Blood Cell Count": "https://medlineplus.gov/ency/article/003644.htm",
+    "Creatinine": "https://medlineplus.gov/ency/article/003475.htm"
+  },
+  "titre_policy": "Compare dilution denominators only against an explicit source titre reference. No universal Widal cutoff is assumed."
+}

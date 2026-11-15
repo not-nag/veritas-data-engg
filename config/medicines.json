@@ -1,0 +1,242 @@
+{
+  "version": "4.0",
+  "note": "Exact normalised product matching only. Form prefixes, punctuation, mg spacing, and trailing instructions are separated. Product suffixes such as D, DSR, CV and O are never discarded. Strength/form evidence is retained; unresolved abbreviations remain for review.",
+  "sources": [
+    "https://dailymed.nlm.nih.gov/dailymed/search.cfm?query=acetaminophen",
+    "https://dmn.esic.gov.in/attachments/circularfile/Annexure_B_English_1758085846.pdf",
+    "https://sunpharma.com/india-products/",
+    "https://india-pharma.gsk.com/media/k3xe5d1e/ceftum-tablets.pdf",
+    "https://www.intaspharma.com/products/",
+    "https://health.gov.mv/storage/uploads/lwZ95boy/wikvvaih.pdf",
+    "https://www.janssenlabels.com/package-insert/product-monograph/prescribing-information/ULTRACET-pi.pdf",
+    "https://apiv2.netmeds.com/images/NPPA_Pharma_pdf/Form-V-Apr-2025-Cipla.pdf",
+    "https://www.abbottbrasil.com.br/nossas-bulas/duphalac-lactulose.html",
+    "https://www.alkemlabs.com/our-offerings/rx-products",
+    "https://www.alkemlabs.com/pdf/adverse/PAN%20D.pdf",
+    "https://greenbook.nafdac.gov.ng/products/details/8301",
+    "https://www.alkemlabs.com/our-offerings/rx-products",
+    "https://www.alkemlabs.com/pdf/adverse/PAN%20D.pdf",
+    "https://greenbook.nafdac.gov.ng/products/details/8301",
+    "https://www.alkemlabs.com/our-offerings/rx-products",
+    "https://www.alkemlabs.com/pdf/adverse/PAN%20D.pdf",
+    "https://greenbook.nafdac.gov.ng/products/details/8301",
+    "https://www.alkemlabs.com/our-offerings/rx-products",
+    "https://www.alkemlabs.com/pdf/adverse/PAN%20D.pdf",
+    "https://greenbook.nafdac.gov.ng/products/details/8301",
+    "https://www.alkemlabs.com/our-offerings/rx-products",
+    "https://www.alkemlabs.com/pdf/adverse/PAN%20D.pdf",
+    "https://greenbook.nafdac.gov.ng/products/details/8301"
+  ],
+  "aliases": {
+    "acetaminophen": "Paracetamol",
+    "paracetamol": "Paracetamol"
+  },
+  "brand_mappings": {
+    "dolo 650": "Paracetamol",
+    "pantocid 40": "Pantoprazole",
+    "pantocid 20": "Pantoprazole"
+  },
+  "normalization": {
+    "instruction_prefixes": [
+      "after food",
+      "before breakfast",
+      "in case of fever",
+      "before food",
+      "after meals"
+    ],
+    "empty_values": [
+      "",
+      "n/a",
+      "na",
+      "none",
+      "nil"
+    ]
+  },
+  "products": [
+    {
+      "name": "ceftum 500",
+      "generic": "Cefuroxime axetil",
+      "ingredients": [
+        "Cefuroxime axetil"
+      ],
+      "source": "https://india-pharma.gsk.com/media/k3xe5d1e/ceftum-tablets.pdf",
+      "verified_on": "2026-11-13"
+    },
+    {
+      "name": "ceftum 250",
+      "generic": "Cefuroxime axetil",
+      "ingredients": [
+        "Cefuroxime axetil"
+      ],
+      "source": "https://india-pharma.gsk.com/media/k3xe5d1e/ceftum-tablets.pdf",
+      "verified_on": "2026-11-13"
+    },
+    {
+      "name": "ceftas 400",
+      "generic": "Cefixime",
+      "ingredients": [
+        "Cefixime"
+      ],
+      "source": "https://www.intaspharma.com/products/",
+      "verified_on": "2026-11-13"
+    },
+    {
+      "name": "ceftas 200",
+      "generic": "Cefixime",
+      "ingredients": [
+        "Cefixime"
+      ],
+      "source": "https://www.intaspharma.com/products/",
+      "verified_on": "2026-11-13"
+    },
+    {
+      "name": "ceftas o",
+      "generic": "Cefixime + Ofloxacin",
+      "ingredients": [
+        "Cefixime",
+        "Ofloxacin"
+      ],
+      "source": "https://www.intaspharma.com/products/",
+      "verified_on": "2026-11-13"
+    },
+    {
+      "name": "azithral 500",
+      "generic": "Azithromycin",
+      "ingredients": [
+        "Azithromycin"
+      ],
+      "source": "https://health.gov.mv/storage/uploads/lwZ95boy/wikvvaih.pdf",
+      "verified_on": "2026-11-13"
+    },
+    {
+      "name": "ultracet",
+      "generic": "Tramadol + Paracetamol",
+      "ingredients": [
+        "Tramadol",
+        "Paracetamol"
+      ],
+      "source": "https://www.janssenlabels.com/package-insert/product-monograph/prescribing-information/ULTRACET-pi.pdf",
+      "verified_on": "2026-11-13"
+    },
+    {
+      "name": "emeset",
+      "generic": "Ondansetron",
+      "ingredients": [
+        "Ondansetron"
+      ],
+      "source": "https://apiv2.netmeds.com/images/NPPA_Pharma_pdf/Form-V-Apr-2025-Cipla.pdf",
+      "verified_on": "2026-11-13"
+    },
+    {
+      "name": "duphalac",
+      "generic": "Lactulose",
+      "ingredients": [
+        "Lactulose"
+      ],
+      "source": "https://www.abbottbrasil.com.br/nossas-bulas/duphalac-lactulose.html",
+      "verified_on": "2026-11-13"
+    },
+    {
+      "name": "pantocid 40",
+      "generic": "Pantoprazole",
+      "ingredients": [
+        "Pantoprazole"
+      ],
+      "source": "https://sunpharma.com/india-products/",
+      "verified_on": "2026-11-13"
+    },
+    {
+      "name": "pantocid 20",
+      "generic": "Pantoprazole",
+      "ingredients": [
+        "Pantoprazole"
+      ],
+      "source": "https://sunpharma.com/india-products/",
+      "verified_on": "2026-11-13"
+    },
+    {
+      "name": "pantocid d",
+      "generic": "Domperidone + Pantoprazole",
+      "ingredients": [
+        "Domperidone",
+        "Pantoprazole"
+      ],
+      "source": "https://sunpharma.com/india-products/",
+      "verified_on": "2026-11-13"
+    },
+    {
+      "name": "pantocid dsr",
+      "generic": "Domperidone + Pantoprazole",
+      "ingredients": [
+        "Domperidone",
+        "Pantoprazole"
+      ],
+      "source": "https://sunpharma.com/india-products/",
+      "verified_on": "2026-11-13"
+    },
+    {
+      "name": "dolo 650",
+      "generic": "Paracetamol",
+      "ingredients": [
+        "Paracetamol"
+      ],
+      "source": "https://dmn.esic.gov.in/attachments/circularfile/Annexure_B_English_1758085846.pdf",
+      "verified_on": "2026-11-13"
+    },
+    {
+      "name": "pan 40",
+      "generic": "Pantoprazole",
+      "ingredients": [
+        "Pantoprazole"
+      ],
+      "source": "https://www.alkemlabs.com/our-offerings/rx-products",
+      "verified_on": "2026-11-15"
+    },
+    {
+      "name": "pan 20",
+      "generic": "Pantoprazole",
+      "ingredients": [
+        "Pantoprazole"
+      ],
+      "source": "https://www.alkemlabs.com/our-offerings/rx-products",
+      "verified_on": "2026-11-15"
+    },
+    {
+      "name": "pan d",
+      "generic": "Pantoprazole + Domperidone",
+      "ingredients": [
+        "Pantoprazole",
+        "Domperidone"
+      ],
+      "source": "https://www.alkemlabs.com/pdf/adverse/PAN%20D.pdf",
+      "verified_on": "2026-11-15"
+    },
+    {
+      "name": "pan",
+      "generic": "Pantoprazole",
+      "ingredients": [
+        "Pantoprazole"
+      ],
+      "source": "https://www.alkemlabs.com/our-offerings/rx-products",
+      "verified_on": "2026-11-15",
+      "forms": [
+        "injection"
+      ]
+    },
+    {
+      "name": "fortwin",
+      "generic": "Pentazocine",
+      "ingredients": [
+        "Pentazocine"
+      ],
+      "source": "https://greenbook.nafdac.gov.ng/products/details/8301",
+      "verified_on": "2026-11-15",
+      "forms": [
+        "injection"
+      ]
+    }
+  ],
+  "treatment_categories": {
+    "iv fluids": "Intravenous fluids; no individual product specified"
+  }
+}

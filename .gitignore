@@ -1,0 +1,11 @@
+.DS_Store
+__pycache__/
+*.pyc
+web/node_modules/
+web/.next/
+web/next-env.d.ts
+web/*.tsbuildinfo
+data/*
+!data/.gitkeep
+.env*
+*.log

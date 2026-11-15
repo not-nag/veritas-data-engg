@@ -1,0 +1,1884 @@
+{
+  "version": "4.0",
+  "fuzzy_threshold": 0.94,
+  "fuzzy_margin": 0.06,
+  "tests": {
+    "Hemoglobin": {
+      "aliases": [
+        "haemoglobin",
+        "hb",
+        "hgb",
+        "aemoglobin"
+      ],
+      "kind": "numeric",
+      "unit": "g/dL",
+      "units": {
+        "g/dl": 1,
+        "gm/dl": 1,
+        "g/l": 0.1
+      },
+      "plausible": [
+        1,
+        30
+      ],
+      "reference": null
+    },
+    "White Blood Cell Count": {
+      "aliases": [
+        "total wbc count",
+        "wbc count",
+        "total leucocyte count",
+        "total leukocyte count",
+        "tlc",
+        "tal wbc count"
+      ],
+      "kind": "numeric",
+      "unit": "cells/uL",
+      "units": {
+        "cells/cu.mm": 1,
+        "cell/cu.mm": 1,
+        "cells/cumm": 1,
+        "cells/ul": 1,
+        "10^9/l": 1000
+      },
+      "plausible": [
+        0,
+        500000
+      ],
+      "reference": null
+    },
+    "Red Blood Cell Count": {
+      "aliases": [
+        "rbc count",
+        "rbc"
+      ],
+      "kind": "numeric",
+      "unit": "million/uL",
+      "units": {
+        "million/cu.mm": 1,
+        "million/cumm": 1,
+        "mil/cu.mm": 1,
+        "million/ul": 1,
+        "10^12/l": 1,
+        "mil/cu.cm": 0.001
+      },
+      "plausible": [
+        0,
+        15
+      ],
+      "reference": null
+    },
+    "Platelet Count": {
+      "aliases": [
+        "platelet count",
+        "atelet count"
+      ],
+      "kind": "numeric",
+      "unit": "cells/uL",
+      "units": {
+        "cells/cu.mm": 1,
+        "cells/cumm": 1,
+        "cells/ul": 1,
+        "lac/cmm": 100000,
+        "lakhs/cumm": 100000,
+        "10^9/l": 1000
+      },
+      "plausible": [
+        0,
+        3000000
+      ],
+      "reference": null
+    },
+    "Hematocrit": {
+      "aliases": [
+        "haematocrit",
+        "hematocrit hct",
+        "haematocrit (pcv)",
+        "packed cell volume",
+        "pcv",
+        "hct"
+      ],
+      "kind": "numeric",
+      "unit": "%",
+      "units": {
+        "%": 1
+      },
+      "plausible": [
+        0,
+        100
+      ],
+      "reference": null
+    },
+    "MCV": {
+      "aliases": [
+        "mean cell volume",
+        "mean corp volume mcv",
+        "lean corp volume mcv"
+      ],
+      "kind": "numeric",
+      "unit": "fL",
+      "units": {
+        "fl": 1
+      },
+      "plausible": [
+        20,
+        200
+      ],
+      "reference": [
+        79,
+        95
+      ]
+    },
+    "MCH": {
+      "aliases": [
+        "mean cell hemoglobin",
+        "mean cell haemoglobin"
+      ],
+      "kind": "numeric",
+      "unit": "pg",
+      "units": {
+        "pg": 1
+      },
+      "plausible": [
+        0,
+        100
+      ],
+      "reference": null
+    },
+    "MCHC": {
+      "aliases": [
+        "mean corp hb conc mchc",
+        "lean corp hb conc mchc"
+      ],
+      "kind": "numeric",
+      "unit": "g/dL",
+      "units": {
+        "g/dl": 1,
+        "gm/dl": 1,
+        "g/l": 0.1
+      },
+      "plausible": [
+        0,
+        60
+      ],
+      "reference": [
+        32,
+        36
+      ]
+    },
+    "Neutrophils": {
+      "aliases": [
+        "neutrophil",
+        "eutrophils"
+      ],
+      "kind": "numeric",
+      "unit": "%",
+      "units": {
+        "%": 1
+      },
+      "plausible": [
+        0,
+        100
+      ],
+      "reference": null
+    },
+    "Lymphocytes": {
+      "aliases": [
+        "lymphocyte",
+        "mphocytes"
+      ],
+      "kind": "numeric",
+      "unit": "%",
+      "units": {
+        "%": 1
+      },
+      "plausible": [
+        0,
+        100
+      ],
+      "reference": null
+    },
+    "Eosinophils": {
+      "aliases": [
+        "eosinophil",
+        "sinophils"
+      ],
+      "kind": "numeric",
+      "unit": "%",
+      "units": {
+        "%": 1
+      },
+      "plausible": [
+        0,
+        100
+      ],
+      "reference": null
+    },
+    "Monocytes": {
+      "aliases": [
+        "monocyte",
+        "onocytes"
+      ],
+      "kind": "numeric",
+      "unit": "%",
+      "units": {
+        "%": 1
+      },
+      "plausible": [
+        0,
+        100
+      ],
+      "reference": null
+    },
+    "Basophils": {
+      "aliases": [
+        "basophil",
+        "sophils"
+      ],
+      "kind": "numeric",
+      "unit": "%",
+      "units": {
+        "%": 1
+      },
+      "plausible": [
+        0,
+        100
+      ],
+      "reference": null
+    },
+    "RDW CV": {
+      "aliases": [
+        "rdw-cv",
+        "rdw - cv",
+        "dw-cv",
+        "r.d.w"
+      ],
+      "kind": "numeric",
+      "unit": "%",
+      "units": {
+        "%": 1
+      },
+      "plausible": [
+        0,
+        100
+      ],
+      "reference": null
+    },
+    "RDW SD": {
+      "aliases": [
+        "rdw-sd",
+        "dw-sd"
+      ],
+      "kind": "numeric",
+      "unit": "fL",
+      "units": {
+        "fl": 1
+      },
+      "plausible": [
+        0,
+        200
+      ],
+      "reference": null
+    },
+    "Creatinine": {
+      "aliases": [
+        "serum creatinine",
+        "creatinine, serum"
+      ],
+      "kind": "numeric",
+      "unit": "mg/dL",
+      "units": {
+        "mg/dl": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Sodium": {
+      "aliases": [
+        "na+"
+      ],
+      "kind": "numeric",
+      "unit": "mmol/L",
+      "units": {
+        "mmol/l": 1,
+        "meq/l": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Potassium": {
+      "aliases": [
+        "k+"
+      ],
+      "kind": "numeric",
+      "unit": "mmol/L",
+      "units": {
+        "mmol/l": 1,
+        "meq/l": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Chloride": {
+      "aliases": [],
+      "kind": "numeric",
+      "unit": "mmol/L",
+      "units": {
+        "mmol/l": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Urea": {
+      "aliases": [
+        "blood urea"
+      ],
+      "kind": "numeric",
+      "unit": "mg/dL",
+      "units": {
+        "mg/dl": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Blood Urea Nitrogen": {
+      "aliases": [
+        "bun"
+      ],
+      "kind": "numeric",
+      "unit": "mg/dL",
+      "units": {
+        "mg/dl": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Uric Acid": {
+      "aliases": [],
+      "kind": "numeric",
+      "unit": "mg/dL",
+      "units": {
+        "mg/dl": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Calcium": {
+      "aliases": [
+        "serum calcium"
+      ],
+      "kind": "numeric",
+      "unit": "mg/dL",
+      "units": {
+        "mg/dl": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Phosphorus": {
+      "aliases": [
+        "phosphorus, inorganic",
+        "phosphorus serum"
+      ],
+      "kind": "numeric",
+      "unit": "mg/dL",
+      "units": {
+        "mg/dl": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Albumin": {
+      "aliases": [
+        "albumin, serum"
+      ],
+      "kind": "numeric",
+      "unit": "g/dL",
+      "units": {
+        "g/dl": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Globulin": {
+      "aliases": [],
+      "kind": "numeric",
+      "unit": "g/dL",
+      "units": {
+        "g/dl": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Total Protein": {
+      "aliases": [
+        "protein, total"
+      ],
+      "kind": "numeric",
+      "unit": "g/dL",
+      "units": {
+        "g/dl": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Bilirubin Total": {
+      "aliases": [
+        "total bilirubin"
+      ],
+      "kind": "numeric",
+      "unit": "mg/dL",
+      "units": {
+        "mg/dl": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Bilirubin Direct": {
+      "aliases": [
+        "direct bilirubin",
+        "bilirubin conjugated(direct)",
+        "bilirubin conjugated (direct)"
+      ],
+      "kind": "numeric",
+      "unit": "mg/dL",
+      "units": {
+        "mg/dl": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Bilirubin Indirect": {
+      "aliases": [
+        "indirect bilirubin"
+      ],
+      "kind": "numeric",
+      "unit": "mg/dL",
+      "units": {
+        "mg/dl": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "CRP": {
+      "aliases": [
+        "crp-quantitative",
+        "c reactive protein"
+      ],
+      "kind": "numeric",
+      "unit": "mg/L",
+      "units": {
+        "mg/l": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Random Blood Sugar": {
+      "aliases": [
+        "rbs"
+      ],
+      "kind": "numeric",
+      "unit": "mg/dL",
+      "units": {
+        "mg/dl": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "MPV": {
+      "aliases": [
+        "mean platelet volume"
+      ],
+      "kind": "numeric",
+      "unit": "fL",
+      "units": {
+        "fl": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Dengue NS1": {
+      "aliases": [
+        "dengue ns 1"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Widal": {
+      "aliases": [
+        "widal test"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Typhi Dot": {
+      "aliases": [
+        "typhi dot igg & igm",
+        "typhidot igg and igm , serum",
+        "typhidot igg and igm, serum"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Urine Ketones": {
+      "aliases": [
+        "ketone bodies"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Urine Bilirubin": {
+      "aliases": [
+        "bilirubin"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Urine Protein": {
+      "aliases": [
+        "protein (albumin)",
+        "protein (albumin)automated(multistrips)protein error of ph).sulphosalicylic acid method"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Urine Glucose": {
+      "aliases": [
+        "glucose(automated multistrips.(enzyme 0 reaction) benedicts method"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Urine Appearance": {
+      "aliases": [
+        "transparency (appearance)",
+        "transparency (appearance)( visual observation)"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Urine Colour": {
+      "aliases": [
+        "colour"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Urine Casts": {
+      "aliases": [
+        "casts"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Urine Crystals": {
+      "aliases": [
+        "crystals"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Absolute Neutrophils": {
+      "aliases": [
+        "absolute neutrophils count"
+      ],
+      "kind": "numeric",
+      "unit": "cells/uL",
+      "units": {
+        "cells/cu.mm": 1,
+        "cells/cumm": 1,
+        "cells/ul": 1
+      },
+      "plausible": [
+        0,
+        500000
+      ],
+      "reference": null
+    },
+    "Absolute Lymphocytes": {
+      "aliases": [
+        "absolute lymphocytes count"
+      ],
+      "kind": "numeric",
+      "unit": "cells/uL",
+      "units": {
+        "cells/cu.mm": 1,
+        "cells/cumm": 1,
+        "cells/ul": 1
+      },
+      "plausible": [
+        0,
+        500000
+      ],
+      "reference": null
+    },
+    "Absolute Eosinophils": {
+      "aliases": [
+        "absolute eosinophils count"
+      ],
+      "kind": "numeric",
+      "unit": "cells/uL",
+      "units": {
+        "cells/cu.mm": 1,
+        "cells/cumm": 1,
+        "cells/ul": 1
+      },
+      "plausible": [
+        0,
+        500000
+      ],
+      "reference": null
+    },
+    "Absolute Monocytes": {
+      "aliases": [
+        "absolute monocytes count"
+      ],
+      "kind": "numeric",
+      "unit": "cells/uL",
+      "units": {
+        "cells/cu.mm": 1,
+        "cells/cumm": 1,
+        "cells/ul": 1
+      },
+      "plausible": [
+        0,
+        500000
+      ],
+      "reference": null
+    },
+    "Absolute Basophils": {
+      "aliases": [
+        "absolute basophils count"
+      ],
+      "kind": "numeric",
+      "unit": "cells/uL",
+      "units": {
+        "cells/cu.mm": 1,
+        "cells/cumm": 1,
+        "cells/ul": 1
+      },
+      "plausible": [
+        0,
+        500000
+      ],
+      "reference": null
+    },
+    "Corrected White Blood Cell Count": {
+      "aliases": [
+        "corrected tlc"
+      ],
+      "kind": "numeric",
+      "unit": "cells/uL",
+      "units": {
+        "cells/cu.mm": 1,
+        "cell/cu.mm": 1,
+        "cells/cumm": 1,
+        "cells/ul": 1,
+        "10^9/l": 1000
+      },
+      "plausible": [
+        0,
+        500000
+      ],
+      "reference": null
+    },
+    "ALT": {
+      "aliases": [
+        "alanine aminotransferase",
+        "alanine aminotransferase(alt/sgpt)",
+        "alanine transaminase",
+        "sgpt",
+        "alt (alanine transaminase)",
+        "sgpt, alt (alanine transaminase)"
+      ],
+      "kind": "numeric",
+      "unit": "U/L",
+      "units": {
+        "u/l": 1,
+        "iu/l": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "AST": {
+      "aliases": [
+        "aspartate aminotransferase",
+        "aspartate aminotransferase(ast/sgot)",
+        "aspartate transaminase",
+        "aspartate transaminase (sgot, hast)",
+        "aspartate transaminase (sgot, ast)",
+        "sgot"
+      ],
+      "kind": "numeric",
+      "unit": "U/L",
+      "units": {
+        "u/l": 1,
+        "iu/l": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Alkaline Phosphatase": {
+      "aliases": [
+        "alkaline phosphatase (alp)",
+        "alp"
+      ],
+      "kind": "numeric",
+      "unit": "U/L",
+      "units": {
+        "u/l": 1,
+        "iu/l": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "GGT": {
+      "aliases": [
+        "ggt (gamma glutamyl transpeptidase)",
+        "gamma glutamyl transferase"
+      ],
+      "kind": "numeric",
+      "unit": "U/L",
+      "units": {
+        "u/l": 1,
+        "iu/l": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "AST ALT Ratio": {
+      "aliases": [
+        "ast (sgot) / alt (sgpt) ratio (deritis)",
+        "ast (sgot) / alt (sgpt) ratio (de ritis)",
+        "ast(sgot)/alt(sgpt)ratio(deritis)"
+      ],
+      "kind": "numeric",
+      "unit": "ratio",
+      "units": {
+        "": 1,
+        "ratio": 1
+      },
+      "plausible": [
+        0,
+        1000
+      ],
+      "reference": null
+    },
+    "Albumin Globulin Ratio": {
+      "aliases": [
+        "a/g ratio",
+        "albumin/globulin ratio",
+        "albumin/globulin ratio (calculated)"
+      ],
+      "kind": "numeric",
+      "unit": "ratio",
+      "units": {
+        "": 1,
+        "ratio": 1
+      },
+      "plausible": [
+        0,
+        100
+      ],
+      "reference": null
+    },
+    "Neutrophil Lymphocyte Ratio": {
+      "aliases": [
+        "neutrophil lymphocyte ratio (nlr)",
+        "nlr"
+      ],
+      "kind": "numeric",
+      "unit": "ratio",
+      "units": {
+        "": 1,
+        "ratio": 1
+      },
+      "plausible": [
+        0,
+        1000
+      ],
+      "reference": null
+    },
+    "Amylase": {
+      "aliases": [],
+      "kind": "numeric",
+      "unit": "U/L",
+      "units": {
+        "u/l": 1,
+        "iu/l": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Lipase": {
+      "aliases": [
+        "lipase,serum"
+      ],
+      "kind": "numeric",
+      "unit": "U/L",
+      "units": {
+        "u/l": 1,
+        "iu/l": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "eGFR": {
+      "aliases": [
+        "egfr - estimated glomerular"
+      ],
+      "kind": "numeric",
+      "unit": "mL/min/1.73m2",
+      "units": {
+        "ml/min/1.73m2": 1
+      },
+      "plausible": [
+        0,
+        1000
+      ],
+      "reference": null
+    },
+    "Urine pH": {
+      "aliases": [
+        "ph"
+      ],
+      "kind": "numeric",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": [
+        0,
+        14
+      ],
+      "reference": null
+    },
+    "Urine Specific Gravity": {
+      "aliases": [
+        "sp. gravity",
+        "specific gravity"
+      ],
+      "kind": "numeric",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": [
+        0.9,
+        1.1
+      ],
+      "reference": null
+    },
+    "Urine Volume": {
+      "aliases": [
+        "volume"
+      ],
+      "kind": "numeric",
+      "unit": "mL",
+      "units": {
+        "ml": 1,
+        "l": 1000
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Urine Pus Cells": {
+      "aliases": [
+        "pus cells"
+      ],
+      "kind": "numeric",
+      "unit": "/hpf",
+      "units": {
+        "/hpf": 1,
+        "/hp": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Urine Red Blood Cells": {
+      "aliases": [
+        "red blood cells"
+      ],
+      "kind": "numeric",
+      "unit": "/hpf",
+      "units": {
+        "/hpf": 1,
+        "/hp": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Urine Epithelial Cells": {
+      "aliases": [
+        "epithelial cells"
+      ],
+      "kind": "numeric",
+      "unit": "/hpf",
+      "units": {
+        "/hpf": 1,
+        "/hp": 1
+      },
+      "plausible": [
+        0,
+        100000
+      ],
+      "reference": null
+    },
+    "Urine Nitrite": {
+      "aliases": [
+        "nitrite"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Urine Leukocyte Esterase": {
+      "aliases": [
+        "leucocyte esterase",
+        "leukocyte esterase"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Urine Urobilinogen": {
+      "aliases": [
+        "urobilinogen"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Urine Blood": {
+      "aliases": [
+        "blood"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Urine Other Findings": {
+      "aliases": [
+        "others"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Malaria Parasite Smear": {
+      "aliases": [
+        "peripheral smear for malarial parasite (mp) , whole blood edta"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Malaria Vivax Antigen": {
+      "aliases": [
+        "malaria vivax antigen , whole blood edta"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Malaria Falciparum Antigen": {
+      "aliases": [
+        "malaria falciparum antigen , whole blood edta"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Blood Culture": {
+      "aliases": [
+        "culture and sensitivity - aerobic (blood)"
+      ],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null,
+      "normal_values": [
+        "no growth after 48 hours of incubation",
+        "no growth"
+      ]
+    },
+    "Typhi O Titre": {
+      "aliases": [
+        "salmonella typhi o` , serum"
+      ],
+      "kind": "titre",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null,
+      "comparison": "dilution_factor"
+    },
+    "Typhi H Titre": {
+      "aliases": [
+        "salmonella typhi 'h' , serum"
+      ],
+      "kind": "titre",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null,
+      "comparison": "dilution_factor"
+    },
+    "Paratyphi A H Titre": {
+      "aliases": [
+        "s.paratyphi a 'h' , serum"
+      ],
+      "kind": "titre",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null,
+      "comparison": "dilution_factor"
+    },
+    "Paratyphi B H Titre": {
+      "aliases": [
+        "s.paratyphi b 'h' , serum"
+      ],
+      "kind": "titre",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null,
+      "comparison": "dilution_factor"
+    },
+    "Body Temperature": {
+      "aliases": [
+        "temp",
+        "temp."
+      ],
+      "kind": "numeric",
+      "unit": "\u00b0C",
+      "units": {
+        "degree f": {
+          "factor": 0.5555555555555556,
+          "offset": -17.77777777777778
+        },
+        "\u00baf": {
+          "factor": 0.5555555555555556,
+          "offset": -17.77777777777778
+        },
+        "\u00b0f": {
+          "factor": 0.5555555555555556,
+          "offset": -17.77777777777778
+        },
+        "\u00b0c": 1
+      },
+      "plausible": [
+        20,
+        50
+      ],
+      "reference": null
+    },
+    "Pulse": {
+      "aliases": [
+        "heart rate\u00ae",
+        "heart rate"
+      ],
+      "kind": "numeric",
+      "unit": "/min",
+      "units": {
+        "/min": 1,
+        "min": 1,
+        "bpm": 1
+      },
+      "plausible": [
+        0,
+        350
+      ],
+      "reference": null
+    },
+    "Oxygen Saturation": {
+      "aliases": [
+        "spo2"
+      ],
+      "kind": "numeric",
+      "unit": "%",
+      "units": {
+        "%": 1
+      },
+      "plausible": [
+        0,
+        100
+      ],
+      "reference": null,
+      "result_context_suffixes": [
+        {
+          "pattern": "% On Room Air",
+          "unit": "%",
+          "context": "On room air"
+        }
+      ]
+    },
+    "Weight": {
+      "aliases": [],
+      "kind": "numeric",
+      "unit": "kg",
+      "units": {
+        "kg": 1,
+        "g": 0.001
+      },
+      "plausible": [
+        0,
+        1000
+      ],
+      "reference": null
+    },
+    "Respiratory Rate": {
+      "aliases": [
+        "resp. rate"
+      ],
+      "kind": "numeric",
+      "unit": "/min",
+      "units": {
+        "/min": 1,
+        "min": 1
+      },
+      "plausible": [
+        0,
+        200
+      ],
+      "reference": null
+    },
+    "Blood Pressure": {
+      "aliases": [
+        "bp"
+      ],
+      "kind": "panel",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Differential Leukocyte Panel": {
+      "aliases": [
+        "differential leukocyte counts",
+        "differential leucocytic count (dlc)"
+      ],
+      "kind": "panel",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Absolute Leukocyte Panel": {
+      "aliases": [
+        "absolute leucocyte count"
+      ],
+      "kind": "panel",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Bilirubin Panel": {
+      "aliases": [
+        "serum bilirubin (total, direct & indirect)"
+      ],
+      "kind": "panel",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Liver Function Panel": {
+      "aliases": [
+        "liver function test",
+        "lft",
+        "lft (liver function test)",
+        "liver function test (lft) , serum",
+        "liver function test(lft),serum"
+      ],
+      "kind": "panel",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Kidney Function Panel": {
+      "aliases": [
+        "renal profile/kidney function test (rft/kft), serum"
+      ],
+      "kind": "panel",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Complete Blood Count Panel": {
+      "aliases": [
+        "cbc",
+        "complete blood count (cbc) , whole blood edta"
+      ],
+      "kind": "panel",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Urinalysis Panel": {
+      "aliases": [
+        "complete urine examination (cue)",
+        "urine routine and microscopic examination",
+        "urine r/m"
+      ],
+      "kind": "panel",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Abdominal Ultrasound": {
+      "aliases": [
+        "usg w/a",
+        "usg whole abdomen",
+        "ultrasound whole abdomen"
+      ],
+      "kind": "narrative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Chest Examination": {
+      "aliases": [
+        "chest"
+      ],
+      "kind": "narrative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Cardiovascular Examination": {
+      "aliases": [
+        "cvs"
+      ],
+      "kind": "narrative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Abdominal Examination": {
+      "aliases": [
+        "p/a"
+      ],
+      "kind": "narrative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null
+    },
+    "Fever": {
+      "aliases": [],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null,
+      "normal_values": [
+        "absent"
+      ],
+      "abnormal_values": [
+        "present"
+      ]
+    },
+    "Vomiting": {
+      "aliases": [],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null,
+      "normal_values": [
+        "absent"
+      ],
+      "abnormal_values": [
+        "present"
+      ]
+    },
+    "Headache": {
+      "aliases": [],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null,
+      "normal_values": [
+        "absent"
+      ],
+      "abnormal_values": [
+        "present"
+      ]
+    },
+    "Pain abdomen": {
+      "aliases": [],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null,
+      "normal_values": [
+        "absent"
+      ],
+      "abnormal_values": [
+        "present"
+      ]
+    },
+    "Reduced oral intake": {
+      "aliases": [],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null,
+      "normal_values": [
+        "absent"
+      ],
+      "abnormal_values": [
+        "present"
+      ]
+    },
+    "Generalized weakness": {
+      "aliases": [],
+      "kind": "qualitative",
+      "unit": "",
+      "units": {
+        "": 1
+      },
+      "plausible": null,
+      "reference": null,
+      "normal_values": [
+        "absent"
+      ],
+      "abnormal_values": [
+        "present"
+      ]
+    },
+    "Systolic Blood Pressure": {
+      "aliases": [],
+      "kind": "numeric",
+      "unit": "mmHg",
+      "units": {
+        "mmhg": 1
+      },
+      "plausible": [
+        0,
+        500
+      ],
+      "reference": null
+    },
+    "Diastolic Blood Pressure": {
+      "aliases": [],
+      "kind": "numeric",
+      "unit": "mmHg",
+      "units": {
+        "mmhg": 1
+      },
+      "plausible": [
+        0,
+        500
+      ],
+      "reference": null
+    }
+  },
+  "sources": [
+    "https://medlineplus.gov/lab-tests/liver-function-tests/",
+    "https://www2.gov.bc.ca/assets/gov/health/practitioner-pro/bc-guidelines/urinalysis.pdf"
+  ],
+  "panels": {
+    "Differential Leukocyte Panel": {
+      "mode": "named",
+      "separator": ",",
+      "components": [
+        {
+          "test": "Neutrophils",
+          "aliases": [
+            "Neutrophils",
+            "Neutrophil"
+          ],
+          "unit": "%",
+          "unit_policy": "configured panel convention"
+        },
+        {
+          "test": "Lymphocytes",
+          "aliases": [
+            "Lymphocytes",
+            "Lymphocyte"
+          ],
+          "unit": "%",
+          "unit_policy": "configured panel convention"
+        },
+        {
+          "test": "Eosinophils",
+          "aliases": [
+            "Eosinophils",
+            "Eosinophil"
+          ],
+          "unit": "%",
+          "unit_policy": "configured panel convention"
+        },
+        {
+          "test": "Monocytes",
+          "aliases": [
+            "Monocytes",
+            "Monocyte"
+          ],
+          "unit": "%",
+          "unit_policy": "configured panel convention"
+        },
+        {
+          "test": "Basophils",
+          "aliases": [
+            "Basophils",
+            "Basophil"
+          ],
+          "unit": "%",
+          "unit_policy": "configured panel convention"
+        }
+      ],
+      "sum_expected": 100,
+      "sum_tolerance": 1
+    },
+    "Absolute Leukocyte Panel": {
+      "mode": "named",
+      "separator": ",",
+      "components": [
+        {
+          "test": "Absolute Neutrophils",
+          "aliases": [
+            "Neutrophils",
+            "Neutrophil"
+          ],
+          "unit": "cells/cu.mm",
+          "unit_policy": "configured panel convention"
+        },
+        {
+          "test": "Absolute Lymphocytes",
+          "aliases": [
+            "Lymphocytes",
+            "Lymphocyte"
+          ],
+          "unit": "cells/cu.mm",
+          "unit_policy": "configured panel convention"
+        },
+        {
+          "test": "Absolute Eosinophils",
+          "aliases": [
+            "Eosinophils",
+            "Eosinophil"
+          ],
+          "unit": "cells/cu.mm",
+          "unit_policy": "configured panel convention"
+        },
+        {
+          "test": "Absolute Monocytes",
+          "aliases": [
+            "Monocytes",
+            "Monocyte"
+          ],
+          "unit": "cells/cu.mm",
+          "unit_policy": "configured panel convention"
+        }
+      ]
+    },
+    "Bilirubin Panel": {
+      "mode": "named_or_ordered",
+      "separator": ",",
+      "components": [
+        {
+          "test": "Bilirubin Total",
+          "aliases": [
+            "bilirubin Total",
+            "Total bilirubin"
+          ],
+          "unit": "mg/dL",
+          "unit_policy": "explicit source only"
+        },
+        {
+          "test": "Bilirubin Direct",
+          "aliases": [
+            "bilirubin Direct",
+            "Direct bilirubin"
+          ],
+          "unit": "mg/dL",
+          "unit_policy": "explicit source only"
+        },
+        {
+          "test": "Bilirubin Indirect",
+          "aliases": [
+            "bilirubin Indirect",
+            "Indirect bilirubin"
+          ],
+          "unit": "mg/dL",
+          "unit_policy": "explicit source only"
+        }
+      ]
+    },
+    "Liver Function Panel": {
+      "mode": "named",
+      "separator": ",",
+      "components": [
+        {
+          "test": "AST",
+          "aliases": [
+            "aspartate transaminase (sgot, ast)",
+            "sgot"
+          ],
+          "unit": "U/L",
+          "unit_policy": "explicit source only"
+        },
+        {
+          "test": "ALT",
+          "aliases": [
+            "sgpt, alt (alanine transaminase)",
+            "alanine transaminase",
+            "sgpt"
+          ],
+          "unit": "U/L",
+          "unit_policy": "explicit source only"
+        },
+        {
+          "test": "Alkaline Phosphatase",
+          "aliases": [
+            "alkaline phosphatase (alp)"
+          ],
+          "unit": "U/L",
+          "unit_policy": "explicit source only"
+        },
+        {
+          "test": "Total Protein",
+          "aliases": [
+            "total protein"
+          ],
+          "unit": "g/dL",
+          "unit_policy": "explicit source only"
+        },
+        {
+          "test": "Albumin",
+          "aliases": [
+            "albumin"
+          ],
+          "unit": "g/dL",
+          "unit_policy": "explicit source only"
+        },
+        {
+          "test": "Globulin",
+          "aliases": [
+            "globulin (calculated)"
+          ],
+          "unit": "g/dL",
+          "unit_policy": "explicit source only"
+        },
+        {
+          "test": "Albumin Globulin Ratio",
+          "aliases": [
+            "albumin/globulin ratio (calculated)"
+          ],
+          "unit": "ratio",
+          "unit_policy": "explicit source only"
+        },
+        {
+          "test": "GGT",
+          "aliases": [
+            "ggt (gamma glutamyl transpeptidase)"
+          ],
+          "unit": "U/L",
+          "unit_policy": "explicit source only"
+        }
+      ]
+    },
+    "Blood Pressure": {
+      "mode": "ratio_pair",
+      "components": [
+        {
+          "test": "Systolic Blood Pressure",
+          "aliases": [],
+          "unit": "mmHg",
+          "unit_policy": "explicit source only"
+        },
+        {
+          "test": "Diastolic Blood Pressure",
+          "aliases": [],
+          "unit": "mmHg",
+          "unit_policy": "explicit source only"
+        }
+      ]
+    }
+  },
+  "extraction": {
+    "non_test_labels": {
+      "comment": "comment",
+      "biochemicalexamination": "section heading",
+      "centrifugedsedimentwetmountandmicroscopy": "section heading",
+      "diagnostics": "report branding",
+      "testname": "table heading",
+      "diet": "clinical field",
+      "totalintake": "clinical field",
+      "totaloutput": "clinical field"
+    },
+    "context_rules": [
+      {
+        "id": "urine-glucose-section",
+        "label": "GLUCOSE",
+        "preceding_labels": [
+          "BIOCHEMICAL EXAMINATION"
+        ],
+        "window": 2,
+        "result_values": [
+          "NEGATIVE",
+          "POSITIVE",
+          "NIL",
+          "ABSENT",
+          "PRESENT",
+          "TRACE"
+        ],
+        "canonical": "Urine Glucose",
+        "reason": "Qualitative glucose after urine-specific context and a biochemical heading",
+        "required_preceding_labels": [
+          "SP. GRAVITY",
+          "Urine Specific Gravity",
+          "URINE ANALYSIS",
+          "URINE ROUTINE"
+        ],
+        "context_window": 8
+      },
+      {
+        "id": "egfr-wrapped-label",
+        "label": "FILTRATION RATE",
+        "preceding_labels": [
+          "eGFR - ESTIMATED GLOMERULAR"
+        ],
+        "window": 1,
+        "canonical": "eGFR",
+        "reason": "Continuation immediately after explicit eGFR label; values and missing units are unchanged"
+      }
+    ],
+    "label_patterns": [
+      {
+        "id": "creatinine-inline-label",
+        "pattern": "KFT\\s*-\\s*sr\\s+creatinine\\s*-\\s*[-+]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)",
+        "canonical": "Creatinine",
+        "reason": "Explicit serum creatinine label with embedded number; no missing result or unit inferred"
+      }
+    ]
+  }
+}

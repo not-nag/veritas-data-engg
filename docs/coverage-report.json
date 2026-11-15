@@ -1,0 +1,72 @@
+{
+  "baseline_source_entries": 363,
+  "previous_resolved": 185,
+  "previous_v3_resolved": 331,
+  "previous_v3_name_resolution_percent": 91.2,
+  "resolved_source_entries": 336,
+  "name_resolution_percent": 92.6,
+  "coverage_denominator": "All original source rows before expansion; includes non-test rows and damaged extractions",
+  "eligible_entries": 350,
+  "non_test_entries": 13,
+  "eligible_name_resolution_percent": 96.0,
+  "non_test_names": {
+    "Comment": 3,
+    "BIOCHEMICAL EXAMINATION": 2,
+    "CENTRIFUGED SEDIMENT WET MOUNT AND MICROSCOPY": 2,
+    "DIAGNOSTICS": 2,
+    "test_name": 1,
+    "Diet": 1,
+    "Total Intake": 1,
+    "Total Output": 1
+  },
+  "resolved_kinds": {
+    "numeric": 245,
+    "qualitative": 46,
+    "panel": 30,
+    "titre": 8,
+    "narrative": 7
+  },
+  "unresolved_source_entries": 27,
+  "eligible_unresolved_entries": 14,
+  "unresolved_names": {
+    "ABSENT": 4,
+    "Comment": 3,
+    "BIOCHEMICAL EXAMINATION": 2,
+    "NEGATIVE": 2,
+    "CENTRIFUGED SEDIMENT WET MOUNT AND MICROSCOPY": 2,
+    "DIAGNOSTICS": 2,
+    "BC INDICES": 1,
+    "lac/cmm": 1,
+    "latelet Indices": 1,
+    "ET": 1,
+    "LCR": 1,
+    "test_name": 1,
+    "9-11": 1,
+    "Supplement 0,Lt.": 1,
+    "BE": 1,
+    "Diet": 1,
+    "Total Intake": 1,
+    "Total Output": 1
+  },
+  "output_observations": 398,
+  "derived_components": 45,
+  "expanded_source_entries": 10,
+  "classifications": {
+    "Above Range": 32,
+    "Below Range": 39,
+    "Invalid": 226,
+    "Outlier": 1,
+    "Within Range": 100
+  },
+  "medication_statuses": {
+    "Unresolved": 32,
+    "Treatment category": 2,
+    "Not applicable": 2,
+    "Mapped": 28
+  },
+  "canonical_tests": 104,
+  "wide_csv_columns": 524,
+  "wide_sql_columns": 525,
+  "wide_rows": 19,
+  "interpretation": "Raw and eligible coverage are distinct. Non-test rows remain stored and invalid. Unknown rows stay eligible. Name matching does not prove safe numerical or clinical interpretation."
+}

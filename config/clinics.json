@@ -1,0 +1,183 @@
+{
+  "version": "3.0",
+  "deduplication": {
+    "scope_fields": [
+      "clinic",
+      "document_id",
+      "record_type"
+    ]
+  },
+  "profiles": [
+    {
+      "id": "assignment",
+      "match": {
+        "path": "data.responseDetails"
+      },
+      "records_path": "data.responseDetails",
+      "type_path": "classifier",
+      "payload_path": "data",
+      "document_id_path": "data.documentId",
+      "metadata_path": "data.metaDetails",
+      "clinic_path": "",
+      "clinic_fallback_metadata": "source_system",
+      "lab_types": [
+        "lab_report"
+      ],
+      "discharge_types": [
+        "discharge_summary"
+      ],
+      "tests_path": "report_details",
+      "patient_path": "basic_info",
+      "test_fields": {
+        "name": "test_name",
+        "result": "result",
+        "unit": "unit",
+        "range": "range",
+        "page": "page_no"
+      },
+      "patient_fields": {
+        "name": [
+          "patient_name",
+          "patientName"
+        ],
+        "age": [
+          "age"
+        ],
+        "gender": [
+          "gender"
+        ],
+        "report_date": [
+          "reports_date",
+          "report_date"
+        ],
+        "admission_date": [
+          "admissionDate"
+        ],
+        "discharge_date": [
+          "dischargeDate"
+        ]
+      },
+      "medications_path": "dischargeMedications",
+      "medication_fields": {
+        "name": "medicine",
+        "dose": "dose",
+        "frequency": "frequency"
+      },
+      "required_fields": {
+        "lab_report": [
+          "patient.name",
+          "patient.age_structured",
+          "patient.gender",
+          "patient.report_date"
+        ],
+        "discharge_summary": [
+          "patient.name",
+          "patient.age_structured",
+          "patient.gender",
+          "patient.admission_date",
+          "patient.discharge_date"
+        ]
+      },
+      "schema_version_path": "data.schemaVersion",
+      "schema_versions": [
+        null,
+        "1",
+        "1.0"
+      ]
+    },
+    {
+      "id": "clinic-v2",
+      "match": {
+        "path": "reports",
+        "all": [
+          {
+            "path": "clinicId",
+            "exists": true
+          }
+        ]
+      },
+      "records_path": "reports",
+      "type_path": "type",
+      "payload_path": "payload",
+      "document_id_path": "documentId",
+      "metadata_path": "metadata",
+      "clinic_path": "clinicId",
+      "clinic_fallback_metadata": "source_system",
+      "lab_types": [
+        "lab_report"
+      ],
+      "discharge_types": [
+        "discharge_summary"
+      ],
+      "tests_path": "measurements",
+      "patient_path": "patient",
+      "test_fields": {
+        "name": "name",
+        "result": "value",
+        "unit": "units",
+        "range": "reference",
+        "page": "page"
+      },
+      "patient_fields": {
+        "name": [
+          "name"
+        ],
+        "age": [
+          "age"
+        ],
+        "gender": [
+          "sex"
+        ],
+        "report_date": [
+          "date"
+        ],
+        "admission_date": [
+          "admissionDate"
+        ],
+        "discharge_date": [
+          "dischargeDate"
+        ]
+      },
+      "medications_path": "dischargeMedications",
+      "medication_fields": {
+        "name": "medicine",
+        "dose": "dose",
+        "frequency": "frequency"
+      },
+      "required_fields": {
+        "lab_report": [
+          "patient.name",
+          "patient.age_structured",
+          "patient.gender",
+          "patient.report_date"
+        ],
+        "discharge_summary": [
+          "patient.name",
+          "patient.age_structured",
+          "patient.gender",
+          "patient.admission_date",
+          "patient.discharge_date"
+        ]
+      },
+      "schema_version_path": "schemaVersion",
+      "schema_versions": [
+        "2.0"
+      ]
+    }
+  ],
+  "operations": {
+    "timezone": "Asia/Kolkata",
+    "watcher": {
+      "enabled": true,
+      "folder": "data/inbox",
+      "poll_seconds": 2,
+      "settle_seconds": 2
+    },
+    "monitoring": {
+      "window_seconds": 3600,
+      "minimum_files": 1,
+      "error_rate_threshold": 0.01,
+      "lag_seconds": 900
+    }
+  }
+}

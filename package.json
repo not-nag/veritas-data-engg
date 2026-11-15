@@ -1,0 +1,1 @@
+{"name":"veritas-assignment","private":true,"scripts":{"dev":"bash scripts/dev.sh","setup":"npm ci --prefix web","build":"npm run build --prefix web","test":"PYTHONPATH=src python3 -m unittest discover -s tests -v","process":"PYTHONPATH=src python3 -m pipeline"}}
