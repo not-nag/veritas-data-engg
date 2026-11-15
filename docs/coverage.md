@@ -41,7 +41,7 @@ Status reflects working local code, not the proposed cloud deployment.
 
 `npm test` covers parsing, incompatible units, range boundaries, outliers, demographics, medicine handling, malformed-file isolation, transaction rollback, sample duplicate suppression, rerun idempotency, and config-only schema/test onboarding. `npm run build` validates the Next.js production build and TypeScript. UI and API smoke checks supplement those tests.
 
-## Additional workflow and measured coverage
+## Measured coverage and replay
 
 Explicit mapping refresh archives previous outputs and review state, retains record IDs and ingestion timestamps, and resets review for recalculated records. File-level rollback also protects archives. The inspector exposes prior versions. Identical reruns do not create redundant history.
 
@@ -49,4 +49,4 @@ The sample baseline has 363 original entries, 336 recognised names, 398 output o
 
 Local operations also include persistent pause/resume, settling detection, crash recovery of stale intake claims, source retention, and alert transition history. See [operations](operations.md) for limits and metric definitions. Source reference contradictions remain invalid; supported blood-pressure pairs and source-threshold titres are handled without inventing missing clinical context.
 
-Version 4 also exposes 336/350 eligible coverage (96.0%) after 13 named non-test rows. The full 363-row metric remains primary and visible. All uncertain rows remain eligible; exclusion details are available in the dashboard. No 98% achievement is claimed.
+The dashboard also exposes 336/350 eligible coverage (96.0%) after 13 named non-test rows. The full 363-row metric remains primary and visible. All uncertain rows remain eligible; exclusion details are available in the dashboard. No 98% achievement is claimed.

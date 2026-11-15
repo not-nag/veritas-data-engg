@@ -1,8 +1,5 @@
 {
   "baseline_source_entries": 363,
-  "previous_resolved": 185,
-  "previous_v3_resolved": 331,
-  "previous_v3_name_resolution_percent": 91.2,
   "resolved_source_entries": 336,
   "name_resolution_percent": 92.6,
   "coverage_denominator": "All original source rows before expansion; includes non-test rows and damaged extractions",

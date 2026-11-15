@@ -2,25 +2,10 @@
 
 Veritas needs comparable, auditable observations from heterogeneous medical reports. The prototype prioritises deterministic transformations, preserved source evidence, configurable onboarding, and visible uncertainty. It implements local ingestion, processing, storage, and review; managed services below are the production design.
 
-```mermaid
-flowchart LR
-    Clinics[Clinic JSON] --> GCS[GCS by clinic and date]
-    GCS --> Queue[Pub Sub arrival events]
-    Queue --> Workers[Cloud Run workers]
-    Config[Versioned mapping configuration] --> Workers
-    Workers --> Parse[Parse and map]
-    Parse --> Normalise[Normalise and validate]
-    Normalise --> Stage[BigQuery staging]
-    Stage --> Merge[Merge by stable ID]
-    Merge --> DB[Canonical records and observations]
-    Workers --> DLQ[Dead letter storage]
-    DLQ --> Replay[Correct and replay]
-    Replay --> Queue
-    DB --> API[Read API]
-    GCS --> API
-    API --> UI[Next.js operations UI]
-    Workers --> Monitor[Logs metrics and alerts]
-```
+![Proposed production architecture](diagrams/production-architecture.svg)
+
+[Implemented local architecture](diagrams/local-architecture.svg) · [Production controls](diagrams/production-controls.svg) · [Editable Draw.io document](diagrams/veritas-architecture.drawio)
+
 
 ## Ingestion and processing
 
@@ -49,4 +34,4 @@ Next.js presents calendar-day file totals, name-resolution coverage, records, fl
 JSON lands under a known clinic/date convention; one file may contain multiple document types. Sample metadata identifies source systems rather than reliable clinic identities, so source system is the local proxy. Redacted identifiers are not usable for patient matching. Source reference ranges may themselves be wrong; compatibility checks catch some contradictions, but domain approval is needed. Composite or shifted extractions require review rather than inferred correction.
 
 
-See [non-functional design notes](non-functional-design.md) for scale, onboarding, availability, governance, and observability. The editable diagram is in `architecture.mmd`.
+See [non-functional design notes](non-functional-design.md) for scale, onboarding, availability, governance, and observability. Drawings are available as SVG and PNG under `diagrams/`, with a three-page editable Draw.io document. The Mermaid source is in `architecture.mmd`.

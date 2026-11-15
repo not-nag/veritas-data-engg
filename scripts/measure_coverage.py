@@ -18,8 +18,7 @@ with tempfile.TemporaryDirectory() as folder:
     observations = [o for record in outputs for o in record['observations']]
     derived = [o for o in observations if o.get('derived_from')]
     data = {
-        'baseline_source_entries':report['total_tests'], 'previous_resolved':185,
-        'previous_v3_resolved':331, 'previous_v3_name_resolution_percent':91.2,
+        'baseline_source_entries':report['total_tests'],
         'resolved_source_entries':report['resolved_tests'],
         'name_resolution_percent':round(100*report['resolved_tests']/report['total_tests'],1),
         'coverage_denominator':'All original source rows before expansion; includes non-test rows and damaged extractions',

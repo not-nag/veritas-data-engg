@@ -39,7 +39,7 @@
 
 | Exclusion | Reason and next step |
 | --- | --- |
-| Actual GCS/Pub/Sub/BigQuery deployment | User requested local implementation. Provision IAM, queues, workers, warehouse jobs, and retention policies separately. |
+| Actual GCS/Pub/Sub/BigQuery deployment | Local execution follows the assignment’s prototype scope. Provision IAM, queues, workers, warehouse jobs, and retention policies separately. |
 | Proven 200k/day throughput and 15-minute p95 | Needs realistic file sizes, arrival distributions, deployment, and load tests. |
 | 98% mapping coverage | Measured source-name resolution is 92.6%, including named panels and narrative findings; result validity is separate. Review unresolved tests with a domain specialist; track resolution precision as well as coverage. |
 | Automated correction of shifted rows | Samples show label/value conflicts. Obtain source documents or extraction coordinates and validate a correction strategy. |
@@ -53,7 +53,7 @@
 
 ## Requirement interpretation
 
-The later code-deliverables section is treated as the desired final scope even where earlier tables call features optional. This first implementation prioritises complete ingestion-to-review flow. The supplied long-form schema and five-column-per-test requirement are reconciled with observation storage and a generated wide export. Partial capabilities and exclusions are explicit in `coverage.md`.
+The later code-deliverables section is treated as the desired final scope even where earlier tables call features optional. The prototype prioritises the ingestion-to-review workflow. The supplied long-form schema and five-column-per-test requirement are reconciled with observation storage and a generated wide export. Partial capabilities and exclusions are explicit in `coverage.md`.
 
 ## Coverage and metric interpretation
 
@@ -63,4 +63,4 @@ Daily counts use the configured operations timezone and file-attempt date. Clini
 
 Watcher discovery time starts when the running local service first sees a file, not when an external clinic created it. Settle detection is a practical safeguard, not an atomic object-store guarantee; writers should finish via atomic rename. Queue claims older than five minutes can recover after a crash. One local processing service should own each database. Schema versions are explicit and unknown/ambiguous profiles fail safely. Masked mode is not a compliance claim or permission boundary.
 
-Version 4 adds explicit contextual label rules and tags exact non-test rows without removing evidence. Raw coverage remains 336/363; eligible coverage is 336/350. Recovered names do not authorize inferred results/units. Adult differential fallbacks require known adult age; explicitly all-age laboratory reference examples may apply with unknown age. Manufacturer/regulator evidence now supports PAN variants and injectable Fortwin; incomplete names require configured source-form evidence.
+Contextual label rules and exact non-test categories preserve source evidence. Raw coverage remains 336/363; eligible coverage is 336/350. Recovered names do not authorize inferred results/units. Adult differential fallbacks require known adult age; explicitly all-age laboratory reference examples may apply with unknown age. Manufacturer/regulator evidence now supports PAN variants and injectable Fortwin; incomplete names require configured source-form evidence.

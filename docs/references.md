@@ -32,9 +32,9 @@ Local source documents: `Requirements/Assignment.docx`, the supplied ideal-schem
 
 Medicine normalisation retains formulation suffixes and strengths. Exact product evidence is linked from configuration and the inspector; ambiguous abbreviations are left unresolved. No universal titre cutoff is inferred from these references.
 
-## Version 4 dictionary additions
+## Medicine and laboratory reference sources
 
-Verified on 15 November 2026:
+Source verification date: 15 November 2026.
 
 - [Alkem product catalogue](https://www.alkemlabs.com/our-offerings/rx-products) and [PAN-D product information](https://www.alkemlabs.com/pdf/adverse/PAN%20D.pdf): PAN 20/40 and combination ingredients; incomplete PAN is accepted only with an explicit injection form. Product strengths from reference material are not substituted into missing source doses.
 - [NAFDAC Fortwin injection record](https://greenbook.nafdac.gov.ng/products/details/8301): ingredient/form evidence from a regulator entry for an Indian-manufactured product. This is formulation evidence, not a claim about the source report's exact pack or batch.

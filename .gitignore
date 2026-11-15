@@ -9,3 +9,6 @@ data/*
 !data/.gitkeep
 .env*
 *.log
+
+# Local framework-generated files.
+web/AGENTS.md
