@@ -5,11 +5,11 @@ from xml.etree import ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 DEST = ROOT / 'docs/diagrams'
 WIDTH, HEIGHT = 1240, 740
-BURGUNDY, INK, MUTED, BORDER = '#49182b', '#262126', '#716870', '#ddd6db'
+INK, MUTED, BORDER = '#000000', '#000000', '#000000'
 
 
-def node(identifier, x, y, w, h, *lines, accent=False):
-    return dict(id=identifier,x=x,y=y,w=w,h=h,lines=lines,accent=accent)
+def node(identifier, x, y, w, h, *lines):
+    return dict(id=identifier,x=x,y=y,w=w,h=h,lines=lines)
 
 
 pages = [
@@ -18,14 +18,14 @@ pages = [
          nodes=[
              node('input',40,190,175,90,'Report inputs','Folder / JSON upload','CLI batch'),
              node('intake',280,190,200,90,'Intake','Discovery and retention','Persistent watcher queue'),
-             node('engine',560,190,220,90,'Python processing engine','Map → normalise → validate','Deduplicate and flag',accent=True),
+             node('engine',560,190,220,90,'Python processing engine','Map → normalise → validate','Deduplicate and flag'),
              node('config',560,55,220,80,'Editable JSON configuration','Clinic schemas, tests,','units, ranges, medicines'),
              node('db',930,190,240,90,'SQLite','Raw and canonical records','History, reviews, wide view'),
              node('errors',560,375,220,80,'Failed-file store','Original payload and error','Retry attempt audit'),
              node('retry',280,375,200,80,'Inspect and repair','Retry original or edited JSON'),
              node('api',930,375,240,80,'Python HTTP API','Loopback-only local service'),
              node('metrics',560,555,220,80,'Operational visibility','Logs, metrics, threshold alerts'),
-             node('ui',930,555,240,80,'Next.js interface','API proxy and operations UI',accent=True)],
+             node('ui',930,555,240,80,'Next.js interface','API proxy and operations UI')],
          edges=[('input','intake',[(215,235),(280,235)]),('intake','engine',[(480,235),(560,235)]),
                 ('config','engine',[(670,135),(670,190)]),('engine','db',[(780,235),(930,235)]),
                 ('engine','errors',[(670,280),(670,375)]),('errors','retry',[(560,415),(480,415)]),
@@ -40,13 +40,13 @@ pages = [
              node('clinic',35,190,155,90,'Clinics','JSON reports'),
              node('gcs',230,190,180,90,'Cloud Storage','Clinic / date paths','Immutable object versions'),
              node('queue',460,190,180,90,'Pub/Sub','Arrival events','Buffer burst traffic'),
-             node('workers',720,190,200,90,'Cloud Run workers','Parse and standardise','Validate and flag',accent=True),
+             node('workers',720,190,200,90,'Cloud Run workers','Parse and standardise','Validate and flag'),
              node('config',720,55,200,80,'Versioned configuration','Reviewed and pinned per job'),
              node('warehouse',980,190,220,90,'BigQuery','Staging → MERGE','Stable-ID deduplication'),
              node('dlq',460,385,180,80,'Dead-letter storage','Payload, error, correlation ID'),
              node('replay',230,385,180,80,'Repair and replay','Retain original generation'),
              node('apiui',980,385,220,80,'Read API and UI','Authenticated operations','Raw / canonical inspection'),
-             node('monitor',720,560,200,80,'Cloud Monitoring','Queue age, p95, error rate','Correlated logs and alerts',accent=True)],
+             node('monitor',720,560,200,80,'Cloud Monitoring','Queue age, p95, error rate','Correlated logs and alerts')],
          edges=[('clinic','gcs',[(190,235),(230,235)]),('gcs','queue',[(410,235),(460,235)]),
                 ('queue','workers',[(640,235),(720,235)]),('config','workers',[(820,135),(820,190)]),
                 ('workers','warehouse',[(920,235),(980,235)]),('warehouse','apiui',[(1090,280),(1090,385)]),
@@ -61,14 +61,14 @@ pages = [
              node('schema',40,155,240,85,'Clinic schema and samples','Identify version and field paths'),
              node('mapping',345,155,240,85,'Versioned configuration','Aliases, units, quality contracts'),
              node('verify',650,155,240,85,'Validate and review','Representative sample tests','Domain review of medical rules'),
-             node('release',955,155,240,85,'Release mappings','Pin configuration per job','Replay with output history',accent=True),
+             node('release',955,155,240,85,'Release mappings','Pin configuration per job','Replay with output history'),
              node('raw',40,355,240,85,'Immutable source evidence','Object generation and clinic ID'),
              node('lineage',345,355,240,85,'Traceable output','Stable IDs, timestamps, config hash'),
              node('security',650,355,240,85,'Privacy and security','Encryption and tokenisation','Least-privilege access'),
              node('retention',955,355,240,85,'Governed access','Retention, deletion, audit policy'),
              node('events',40,555,240,85,'Structured events','Run and record correlation IDs'),
              node('signals',345,555,240,85,'Operational metrics','Throughput, errors, lag, p95','Coverage and duplicates'),
-             node('alerts',650,555,240,85,'Threshold alerts','Error rate >1%','Queue age / latency breach',accent=True),
+             node('alerts',650,555,240,85,'Threshold alerts','Error rate >1%','Queue age / latency breach'),
              node('response',955,555,240,85,'Operational response','Investigate → repair → replay','Track resolution and recovery')],
          edges=[('schema','mapping',[(280,197),(345,197)]),('mapping','verify',[(585,197),(650,197)]),('verify','release',[(890,197),(955,197)]),
                 ('raw','lineage',[(280,397),(345,397)]),('lineage','security',[(585,397),(650,397)]),('security','retention',[(890,397),(955,397)]),
@@ -94,7 +94,7 @@ def render(page, document):
     marker=ET.SubElement(defs,'marker',{'id':'arrow','viewBox':'0 0 10 10','refX':'9','refY':'5','markerWidth':'7','markerHeight':'7','orient':'auto-start-reverse'})
     ET.SubElement(marker,'path',{'d':'M 0 0 L 10 5 L 0 10 z','fill':MUTED})
     diagram=ET.SubElement(document,'diagram',{'id':page['slug'],'name':page['title']})
-    model=ET.SubElement(diagram,'mxGraphModel',{'dx':str(WIDTH),'dy':str(HEIGHT),'grid':'1','gridSize':'10','page':'1','pageWidth':str(WIDTH),'pageHeight':str(HEIGHT),'arrows':'1','connect':'1'})
+    model=ET.SubElement(diagram,'mxGraphModel',{'dx':str(WIDTH),'dy':str(HEIGHT),'grid':'1','gridSize':'10','page':'1','pageWidth':str(WIDTH),'pageHeight':str(HEIGHT),'arrows':'1','connect':'1','background':'#ffffff'})
     root=ET.SubElement(model,'root');ET.SubElement(root,'mxCell',{'id':'0'});ET.SubElement(root,'mxCell',{'id':'1','parent':'0'})
     def label(identifier,text,x,y,w,h,size=14,color=INK):
         cell=ET.SubElement(root,'mxCell',{'id':identifier,'value':text,'vertex':'1','parent':'1','style':f'text;html=0;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize={size};fontColor={color};'})
@@ -114,12 +114,12 @@ def render(page, document):
             array=ET.SubElement(geom,'Array',{'as':'points'})
             for x,y in points[1:-1]:ET.SubElement(array,'mxPoint',{'x':str(x),'y':str(y)})
     for n in page['nodes']:
-        fill,text_color=(BURGUNDY,'#ffffff') if n['accent'] else ('#faf8f9',INK)
-        ET.SubElement(svg,'rect',{'x':str(n['x']),'y':str(n['y']),'width':str(n['w']),'height':str(n['h']),'rx':'9','fill':fill,'stroke':BURGUNDY if n['accent'] else BORDER})
+        fill,text_color='#ffffff',INK
+        ET.SubElement(svg,'rect',{'x':str(n['x']),'y':str(n['y']),'width':str(n['w']),'height':str(n['h']),'rx':'0','fill':fill,'stroke':BORDER,'stroke-width':'1.4'})
         first_y=n['y']+n['h']/2-(len(n['lines'])-1)*10+5
         for i,line in enumerate(n['lines']):svg_text(svg,n['x']+n['w']/2,first_y+i*20,line,14 if i==0 else 12,text_color,'600' if i==0 else '400','middle')
         value='\n'.join(n['lines'])
-        cell=ET.SubElement(root,'mxCell',{'id':n['id'],'value':value,'vertex':'1','parent':'1','style':f'rounded=1;whiteSpace=wrap;html=0;fillColor={fill};strokeColor={BURGUNDY if n["accent"] else BORDER};fontColor={text_color};fontSize=13;fontFamily=Helvetica;spacing=8;'})
+        cell=ET.SubElement(root,'mxCell',{'id':n['id'],'value':value,'vertex':'1','parent':'1','style':f'rounded=0;whiteSpace=wrap;html=0;fillColor={fill};strokeColor={BORDER};strokeWidth=1.4;fontColor={text_color};fontSize=13;fontFamily=Helvetica;spacing=8;'})
         ET.SubElement(cell,'mxGeometry',{'x':str(n['x']),'y':str(n['y']),'width':str(n['w']),'height':str(n['h']),'as':'geometry'})
     ET.SubElement(svg,'line',{'x1':'35','y1':'682','x2':'1205','y2':'682','stroke':BORDER})
     svg_text(svg,35,708,page['footer'],12,MUTED)
