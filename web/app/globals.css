@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@theme inline {
+  --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
+}
 :root {
   --background: #fff;
   --foreground: #171717;
@@ -16,7 +19,7 @@ body {
   margin: 0;
   background: #fff;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
 }
