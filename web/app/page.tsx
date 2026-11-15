@@ -19,6 +19,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { OperationsPanel } from "@/components/operations-panel";
+import {
+  WalkthroughProvider,
+  WalkthroughLauncher,
+  WalkthroughGuide,
+  useWalkthrough,
+} from "@/components/walkthrough";
+import { processingEvent } from "@/lib/walkthrough-state.mjs";
 type Patient = {
   name?: string;
   gender?: string;
@@ -224,6 +231,14 @@ async function api(path: string, body?: unknown) {
   return data;
 }
 export default function Home() {
+  return (
+    <WalkthroughProvider>
+      <Workspace />
+    </WalkthroughProvider>
+  );
+}
+function Workspace() {
+  const tour = useWalkthrough();
   const [data, setData] = useState<Data | null>(null),
     [tab, setTab] = useState("Overview"),
     [query, setQuery] = useState(""),
@@ -237,8 +252,123 @@ export default function Home() {
     [detailTab, setDetailTab] = useState("Observations"),
     [selectedDay, setSelectedDay] = useState(""),
     [observationFilter, setObservationFilter] = useState("All observations"),
-    [masked, setMasked] = useState(false);
+    [masked, setMasked] = useState(false),
+    [masking, setMasking] = useState(false),
+    [dayDraft, setDayDraft] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
+  const preparedStep = useRef("");
+  const lastLab = useRef<string | null>(null),
+    lastDischarge = useRef<string | null>(null),
+    lastReview = useRef<string | null>(null);
+  const dataRef = useRef(data),
+    detailRef = useRef(detail),
+    maskedRef = useRef(masked);
+  dataRef.current = data;
+  detailRef.current = detail;
+  maskedRef.current = masked;
+  useEffect(() => {
+    if (!tour.active) {
+      preparedStep.current = "";
+      return;
+    }
+    const step = tour.step;
+    if (preparedStep.current === step.id) return;
+    let cancelled = false;
+    setTab(step.screen);
+    setQuery("");
+    setClinic("All clinics");
+    setClassification("All records");
+    if (!step.record) {
+      setDetail(null);
+      preparedStep.current = step.id;
+      return;
+    }
+    const stored = dataRef.current?.records || [];
+    const remembered =
+      step.record === "lab"
+        ? lastLab.current
+        : step.record === "discharge"
+          ? lastDischarge.current
+          : lastReview.current;
+    const chosen =
+      stored.find((r) => r.id === remembered) ||
+      stored.find((r) =>
+        step.record === "lab"
+          ? r.tests > 0
+          : step.record === "discharge"
+            ? r.record_type === "discharge_summary"
+            : r.flagged && r.review_status !== "Reviewed",
+      );
+    if (!chosen) {
+      setDetail(null);
+      return;
+    }
+    preparedStep.current = step.id;
+    if (step.detailTab) setDetailTab(step.detailTab);
+    if (step.id === "provenance") setObservationFilter("All observations");
+    if (detailRef.current?.output.id === chosen.id) return;
+    let pending = true;
+    setLoadingDetail(true);
+    void api(
+      "record?id=" +
+        encodeURIComponent(chosen.id) +
+        (maskedRef.current ? "&mask=1" : ""),
+    )
+      .then((value) => {
+        if (!cancelled) setDetail(value);
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          setError(error.message);
+          preparedStep.current = "";
+        }
+      })
+      .finally(() => {
+        pending = false;
+        if (!cancelled) setLoadingDetail(false);
+      });
+    return () => {
+      cancelled = true;
+      if (pending && preparedStep.current === step.id) {
+        preparedStep.current = "";
+        setLoadingDetail(false);
+      }
+    };
+  }, [tour.active, tour.step.id, data?.records.length]);
+  useEffect(() => {
+    const request = tour.fillRequest;
+    if (!request) return;
+    if (request.stepId === "search") {
+      setQuery("lab_report");
+      tour.signal("records-searched");
+    }
+    if (request.stepId === "clinic-filter") {
+      const example = dataRef.current?.records.find((r) => r.tests > 0)?.clinic;
+      if (example) {
+        setClinic(example);
+        tour.signal("clinic-filtered");
+      }
+    }
+    if (request.stepId === "quality-filter") {
+      setClassification("Flagged");
+      tour.signal("quality-filtered");
+    }
+    if (request.stepId === "observation-filter") {
+      setObservationFilter("Invalid");
+      tour.signal("observations-filtered");
+    }
+    if (request.stepId === "daily") {
+      const current = dataRef.current;
+      const latest = current?.runs[0];
+      setDayDraft(
+        latest
+          ? new Date(latest.started_at).toLocaleDateString("en-CA", {
+              timeZone: current?.daily.timezone || "UTC",
+            })
+          : current?.daily.date || "",
+      );
+    }
+  }, [tour.fillRequest]);
   const refresh = useCallback(async () => {
     try {
       setData(
@@ -280,6 +410,13 @@ export default function Home() {
       }
       const r = await api("process", payload);
       await refresh();
+      const event = processingEvent({
+        upload: !!files,
+        reprocess,
+        processed: r.processed,
+        failed: r.failed,
+      });
+      if (event) tour.signal(event);
       setNotice(
         `${r.processed} files processed · ${r.records} new records${r.updated_records ? ` · ${r.updated_records} refreshed` : ""} · ${r.duplicates} duplicates suppressed${r.failed ? ` · ${r.failed} failed` : ""}`,
       );
@@ -301,6 +438,19 @@ export default function Home() {
       );
       setDetailTab("Observations");
       setObservationFilter("All observations");
+      const record = dataRef.current?.records.find((r) => r.id === id);
+      if (record?.tests) {
+        lastLab.current = id;
+        tour.signal("inspect:lab");
+      }
+      if (record?.record_type === "discharge_summary") {
+        lastDischarge.current = id;
+        tour.signal("inspect:discharge");
+      }
+      if (tab === "Review queue") {
+        lastReview.current = id;
+        tour.signal("inspect:review");
+      }
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -312,6 +462,7 @@ export default function Home() {
       await api("review", { id, status: "Reviewed" });
       await refresh();
       setNotice("Record marked as reviewed. Source flags are retained.");
+      tour.signal("record-reviewed");
     } catch (e) {
       setError((e as Error).message);
     }
@@ -359,23 +510,29 @@ export default function Home() {
               Claims operations
             </span>
           </a>
-          <span className="flex items-center gap-2 text-[11px] text-neutral-500">
-            <span
-              className={`size-1.5 rounded-full ${data ? "bg-emerald-500" : "bg-neutral-300"}`}
-            />
-            {data ? "Local workspace" : "Connecting"}
-          </span>
+          <div className="flex items-center gap-3">
+            <WalkthroughLauncher />
+            <span className="hidden items-center gap-2 text-[11px] text-neutral-500 sm:flex">
+              <span
+                className={`size-1.5 rounded-full ${data ? "bg-emerald-500" : "bg-neutral-300"}`}
+              />
+              {data ? "Local workspace" : "Connecting"}
+            </span>
+          </div>
         </div>
       </header>
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <nav
+          data-tour="navigation"
           aria-label="Main navigation"
           className="veritas-nav flex gap-1 overflow-x-auto"
         >
           {tabs.map((t) => (
             <button
               key={t}
+              data-tour={`nav-${t}`}
               onClick={() => {
+                tour.signal("nav:" + t);
                 setTab(t);
                 setDetail(null);
                 setQuery("");
@@ -392,6 +549,13 @@ export default function Home() {
             </button>
           ))}
         </nav>
+        <WalkthroughGuide
+          onFinish={() =>
+            setNotice(
+              "Walkthrough complete. You can restart it from the header.",
+            )
+          }
+        />
         <main className="pb-12 pt-9">
           <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
             <div>
@@ -424,13 +588,18 @@ export default function Home() {
             <div className="flex gap-2">
               <Button
                 variant="outline"
+                data-tour="upload"
                 onClick={() => input.current?.click()}
                 disabled={busy}
               >
                 <Upload />
                 Upload JSON
               </Button>
-              <Button onClick={() => process()} disabled={busy}>
+              <Button
+                data-tour="samples"
+                onClick={() => process()}
+                disabled={busy}
+              >
                 {busy ? <Loader2 className="animate-spin" /> : <Activity />}
                 {busy ? "Processing…" : "Run sample data"}
               </Button>
@@ -496,13 +665,17 @@ export default function Home() {
                 <ArrowLeft />
                 Back to {tab.toLowerCase()}
               </Button>
-              <label className="mb-4 flex items-center gap-2 text-xs text-neutral-500">
+              <label
+                data-tour="mask"
+                className="mb-4 flex items-center gap-2 text-xs text-neutral-500"
+              >
                 <input
                   type="checkbox"
                   checked={masked}
+                  disabled={masking}
                   onChange={async (e) => {
                     const value = e.target.checked;
-                    setMasked(value);
+                    setMasking(true);
                     try {
                       setDetail(
                         await api(
@@ -511,8 +684,12 @@ export default function Home() {
                             (value ? "&mask=1" : ""),
                         ),
                       );
+                      setMasked(value);
+                      tour.signal("mask-changed");
                     } catch (error) {
                       setError((error as Error).message);
+                    } finally {
+                      setMasking(false);
                     }
                   }}
                 />
@@ -537,6 +714,7 @@ export default function Home() {
                       data?.records.find((r) => r.id === detail.output.id)
                         ?.review_status === "Reviewed"
                     }
+                    data-tour="mark-reviewed"
                     onClick={() => review(detail.output.id)}
                   >
                     <CheckCheck />
@@ -554,7 +732,13 @@ export default function Home() {
                 </p>
               </div>
               {!!detail.versions?.length && (
-                <details className="mb-5 rounded-md border border-neutral-200 p-4 text-xs">
+                <details
+                  data-tour="versions"
+                  onToggle={(e) => {
+                    if (e.currentTarget.open) tour.signal("versions-opened");
+                  }}
+                  className="mb-5 rounded-md border border-neutral-200 p-4 text-xs"
+                >
                   <summary>
                     Previous output versions ({detail.versions.length})
                   </summary>
@@ -586,7 +770,11 @@ export default function Home() {
                       key={t}
                       variant={detailTab === t ? "default" : "outline"}
                       size="sm"
-                      onClick={() => setDetailTab(t)}
+                      data-tour={`detail-${t}`}
+                      onClick={() => {
+                        setDetailTab(t);
+                        tour.signal("detail:" + t);
+                      }}
                     >
                       {t}
                     </Button>
@@ -594,16 +782,23 @@ export default function Home() {
                 )}
               </div>
               {detailTab === "Observations" ? (
-                <div className="overflow-x-auto rounded-lg border border-neutral-200">
+                <div
+                  data-tour="observations"
+                  className="overflow-x-auto rounded-lg border border-neutral-200"
+                >
                   <div className="flex items-center justify-between gap-3 border-b border-neutral-100 px-4 py-3">
                     <span className="text-xs text-neutral-500">
                       {filteredObservations.length} of{" "}
                       {detail.output.observations.length} observations
                     </span>
                     <select
+                      data-tour="observation-filter"
                       aria-label="Filter observations"
                       value={observationFilter}
-                      onChange={(e) => setObservationFilter(e.target.value)}
+                      onChange={(e) => {
+                        setObservationFilter(e.target.value);
+                        tour.signal("observations-filtered");
+                      }}
                       className="h-8 rounded-md border border-neutral-200 px-2 text-xs"
                     >
                       {[
@@ -782,7 +977,9 @@ export default function Home() {
             </>
           ) : (
             <>
-              {tab === "Operations" && <OperationsPanel />}
+              {tab === "Operations" && (
+                <OperationsPanel refreshKey={latest?.id} />
+              )}
               {tab === "Overview" && (
                 <>
                   <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-xs text-neutral-500">
@@ -790,15 +987,25 @@ export default function Home() {
                       Daily ingestion · {data?.daily.timezone || "Asia/Kolkata"}
                     </span>
                     <form
+                      data-tour="daily-filter"
                       aria-label="Daily statistics filter"
                       className="flex gap-2"
-                      onSubmit={(e) => {
+                      onSubmit={async (e) => {
                         e.preventDefault();
-                        setSelectedDay(
-                          String(
-                            new FormData(e.currentTarget).get("day") || "",
-                          ),
+                        const day = String(
+                          new FormData(e.currentTarget).get("day") || "",
                         );
+                        try {
+                          const result = await api(
+                            "dashboard?day=" + encodeURIComponent(day),
+                          );
+                          setData(result);
+                          setSelectedDay(day);
+                          setError("");
+                          tour.signal("date-applied");
+                        } catch (error) {
+                          setError((error as Error).message);
+                        }
                       }}
                     >
                       <Input
@@ -807,7 +1014,10 @@ export default function Home() {
                         required
                         type="date"
                         aria-label="Daily statistics date"
-                        defaultValue={selectedDay || data?.daily.date || ""}
+                        value={
+                          dayDraft ?? (selectedDay || data?.daily.date || "")
+                        }
+                        onChange={(e) => setDayDraft(e.target.value)}
                         className="h-8 text-xs"
                       />
                       <Button type="submit" variant="outline" size="sm">
@@ -908,7 +1118,10 @@ export default function Home() {
                         />
                       )}
                     </section>
-                    <section className="rounded-lg border border-neutral-200">
+                    <section
+                      data-tour="coverage"
+                      className="rounded-lg border border-neutral-200"
+                    >
                       <div className="border-b border-neutral-100 px-5 py-4">
                         <h2 className="text-sm font-medium">
                           Standardisation coverage
@@ -961,7 +1174,14 @@ export default function Home() {
                               the raw metric above and in the source evidence.
                               Uncertain rows remain eligible.
                             </p>
-                            <details className="mt-2">
+                            <details
+                              data-tour="exclusions"
+                              onToggle={(e) => {
+                                if (e.currentTarget.open)
+                                  tour.signal("exclusions-opened");
+                              }}
+                              className="mt-2"
+                            >
                               <summary>View non-test rows</summary>
                               {Object.entries(data.non_test_names).map(
                                 ([name, count]) => (
@@ -1037,17 +1257,26 @@ export default function Home() {
                       <div className="relative">
                         <Search className="absolute left-2.5 top-2.5 size-3.5 text-neutral-400" />
                         <Input
+                          data-tour="search"
                           aria-label="Search records"
                           placeholder="Search records…"
                           value={query}
-                          onChange={(e) => setQuery(e.target.value)}
+                          onChange={(e) => {
+                            setQuery(e.target.value);
+                            if (e.target.value.trim())
+                              tour.signal("records-searched");
+                          }}
                           className="h-8 w-44 pl-8 text-xs"
                         />
                       </div>
                       <select
+                        data-tour="clinic-filter"
                         aria-label="Filter by clinic"
                         value={clinic}
-                        onChange={(e) => setClinic(e.target.value)}
+                        onChange={(e) => {
+                          setClinic(e.target.value);
+                          tour.signal("clinic-filtered");
+                        }}
                         className="h-8 rounded-md border border-neutral-200 px-2 text-xs"
                       >
                         <option>All clinics</option>
@@ -1057,9 +1286,13 @@ export default function Home() {
                       </select>
                       {tab === "Records" && (
                         <select
+                          data-tour="quality-filter"
                           aria-label="Filter quality"
                           value={classification}
-                          onChange={(e) => setClassification(e.target.value)}
+                          onChange={(e) => {
+                            setClassification(e.target.value);
+                            tour.signal("quality-filtered");
+                          }}
                           className="h-8 rounded-md border border-neutral-200 px-2 text-xs"
                         >
                           <option>All records</option>
@@ -1068,7 +1301,11 @@ export default function Home() {
                         </select>
                       )}
                       <Button size="sm" variant="outline" asChild>
-                        <a href="/api/export">
+                        <a
+                          data-tour="export"
+                          href="/api/export"
+                          onClick={() => tour.signal("export-requested")}
+                        >
                           <ArrowDownToLine />
                           Export
                         </a>
@@ -1139,6 +1376,13 @@ export default function Home() {
                                   <Button
                                     variant="ghost"
                                     size="icon"
+                                    data-tour={
+                                      tab === "Review queue"
+                                        ? "inspect-review"
+                                        : r.tests
+                                          ? "inspect-lab"
+                                          : "inspect-discharge"
+                                    }
                                     aria-label={`Inspect ${r.document_id}`}
                                     onClick={() => inspect(r.id)}
                                   >

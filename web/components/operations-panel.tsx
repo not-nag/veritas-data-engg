@@ -3,6 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Activity, Check, Loader2, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useWalkthrough } from "@/components/walkthrough";
+import example from "@/public/walkthrough-example.json";
 type Failure = {
   id: string;
   source: string;
@@ -67,7 +69,9 @@ async function request(path: string, body?: unknown) {
 function stamp(value: string | null) {
   return value ? new Date(value).toLocaleString() : "Not yet scanned";
 }
-export function OperationsPanel() {
+export function OperationsPanel({ refreshKey }: { refreshKey?: string }) {
+  const tour = useWalkthrough();
+  const { reportWatcher } = tour;
   const [data, setData] = useState<State | null>(null),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
@@ -76,21 +80,33 @@ export function OperationsPanel() {
     [content, setContent] = useState("");
   const refresh = useCallback(async () => {
     try {
-      setData(await request("operations"));
+      const value = await request("operations");
+      setData(value);
+      reportWatcher(value.watcher.enabled);
     } catch (e) {
       setError((e as Error).message);
     }
-  }, []);
+  }, [reportWatcher]);
   useEffect(() => {
     void refresh();
     const timer = setInterval(() => void refresh(), 10000);
     return () => clearInterval(timer);
-  }, [refresh]);
-  async function action(body: unknown) {
+  }, [refresh, refreshKey]);
+  useEffect(() => {
+    if (tour.fillRequest?.stepId === "repair" && selected)
+      setContent(JSON.stringify(example, null, 2));
+  }, [tour.fillRequest]);
+  async function action(body: {
+    action: string;
+    enabled?: boolean;
+    code?: string;
+  }) {
     setBusy(true);
     setError("");
     try {
       await request("operations", body);
+      if (body.action === "watcher")
+        tour.signal(body.enabled ? "watcher-running" : "watcher-paused");
       await refresh();
     } catch (e) {
       setError((e as Error).message);
@@ -107,6 +123,7 @@ export function OperationsPanel() {
       setSelected(item);
       setContent(value.content);
       setNotice("");
+      tour.signal("failure-inspected");
     } catch (e) {
       setError((e as Error).message);
     }
@@ -127,7 +144,10 @@ export function OperationsPanel() {
           : `Retry completed: ${result.records} new, ${result.updated_records} refreshed, ${result.duplicates} duplicates.`,
       );
       await refresh();
-      if (!result.failed) setSelected(null);
+      if (!result.failed) {
+        setSelected(null);
+        tour.signal("retry-succeeded");
+      }
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -158,7 +178,10 @@ export function OperationsPanel() {
           {notice}
         </p>
       )}
-      <section className="rounded-lg border border-neutral-200 p-5">
+      <section
+        data-tour="watcher"
+        className="rounded-lg border border-neutral-200 p-5"
+      >
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <h2 className="flex items-center gap-2 text-sm font-medium">
@@ -196,7 +219,7 @@ export function OperationsPanel() {
           </Button>
         </div>
       </section>
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div data-tour="health" className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {[
           [
             "Error rate",
@@ -230,7 +253,10 @@ export function OperationsPanel() {
           </div>
         ))}
       </div>
-      <section className="overflow-hidden rounded-lg border border-neutral-200">
+      <section
+        data-tour="alerts"
+        className="overflow-hidden rounded-lg border border-neutral-200"
+      >
         <h2 className="border-b border-neutral-100 px-5 py-4 text-sm font-medium">
           Monitoring alerts
         </h2>
@@ -318,6 +344,7 @@ export function OperationsPanel() {
                       size="sm"
                       variant="outline"
                       disabled={busy}
+                      data-tour="failure-inspect"
                       onClick={() => inspect(item)}
                     >
                       Inspect / retry
@@ -334,7 +361,10 @@ export function OperationsPanel() {
         )}
       </section>
       {selected && (
-        <section className="rounded-lg border border-neutral-200 p-5">
+        <section
+          data-tour="repair"
+          className="rounded-lg border border-neutral-200 p-5"
+        >
           <div className="mb-4 flex items-center justify-between gap-3">
             <h2 className="text-sm font-medium">Repair failed input</h2>
             <Button size="sm" variant="ghost" onClick={() => setSelected(null)}>

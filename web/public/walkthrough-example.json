@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "2.0",
+  "clinicId": "WALKTHROUGH-DEMO",
+  "documentId": "WALKTHROUGH-DEMO-001",
+  "metadata": {},
+  "reports": [
+    {
+      "type": "lab_report",
+      "payload": {
+        "patient": {
+          "name": "Example patient (synthetic)",
+          "age": "35Y",
+          "sex": "F",
+          "date": "2026-11-13"
+        },
+        "measurements": [
+          {
+            "name": "Hemoglobin",
+            "value": "13.5 g/dL",
+            "units": "g/dL",
+            "reference": "12-16",
+            "page": 1
+          },
+          {
+            "name": "BP",
+            "value": "120/80 mmHg",
+            "units": "mmHg",
+            "reference": "",
+            "page": 1
+          }
+        ]
+      }
+    }
+  ]
+}

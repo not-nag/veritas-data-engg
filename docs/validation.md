@@ -4,7 +4,7 @@ Validated with Python 3.13.3 and Node.js 22.10.0.
 
 | Check | Result |
 | --- | --- |
-| `npm test` | 47 tests pass |
+| `npm test` | 47 backend tests and 7 walkthrough tests pass |
 | `npm run build` | Production build and TypeScript checks pass |
 | API checks | Processing, retries, masking, metrics, and export verified |
 | UI checks | Navigation, coverage breakdown, inspector masking, watcher controls, and repair editor verified |
@@ -14,6 +14,8 @@ Validated with Python 3.13.3 and Node.js 22.10.0.
 Tests cover numeric and demographic parsing, unit conversion, range boundaries, interval uncertainty, panel decomposition, medicine mapping, schema selection, configuration-only onboarding, duplicate suppression, file rollback, output history, intake recovery, retry auditing, alert transitions, and privacy masking.
 
 Extraction tests verify that context-dependent names require explicit supporting labels, non-test rows remain in source evidence, uploaded annotations cannot override matching, and missing results or units are not invented.
+
+Walkthrough state tests verify action gating, failure handling, completed-step deduplication, saved-progress validation, and pending-step resumption. UI checks cover the complete guided flow from an empty workspace, explicit processing and review actions, synthetic upload, failed-file repair, CSV download, pause/resume, and narrow-screen controls. The guide does not perform writes on start, step selection, or example fill.
 
 ## Sample baseline
 

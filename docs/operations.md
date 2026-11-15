@@ -2,6 +2,12 @@
 
 Start with `npm run dev`. Open Operations in the UI. No cloud credentials or Docker are required. Run one API/watcher process per database.
 
+## Interactive walkthrough
+
+Select **Walkthrough** in the header to explore the interface in 33 steps. Back, Skip step, and a step picker support non-linear exploration. Paused progress resumes on the same browser; saved progress contains only step identifiers.
+
+The guide prepares views and example input but never submits processing, uploads, reviews, retries, or watcher changes. Required action steps unlock Continue after the corresponding successful response. Actions use the real workspace and remain after the guide closes. The optional valid example creates a synthetic record; the invalid example demonstrates failed-file repair and may activate an error-rate alert. If ingestion is paused during the guide, resume it explicitly in Operations.
+
 ## Automatic intake
 
 The API watches `data/inbox/` recursively for `.json` files, polling every two seconds by default. A payload must remain unchanged for the configured two-second settling period before processing. For reliable delivery, write outside the inbox and atomically rename the completed file into it. This simulates object arrival locally; it cannot measure when a clinic created a file before the service discovered it.
