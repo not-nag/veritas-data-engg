@@ -3,9 +3,9 @@
   "fuzzy_threshold": 0.94,
   "fuzzy_margin": 0.06,
   "tests": {
-    "Hemoglobin": {
+    "Haemoglobin": {
       "aliases": [
-        "haemoglobin",
+        "hemoglobin",
         "hb",
         "hgb",
         "aemoglobin"

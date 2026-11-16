@@ -180,13 +180,13 @@ class WideViewAndPrivacyTests(unittest.TestCase):
                 rows=c.execute('SELECT * FROM canonical_wide').fetchall()
                 self.assertGreater(len(rows),8)
                 discharge=next(row for row in rows if row['record_type']=='discharge_summary')
-                self.assertIsNone(discharge['Hemoglobin_Result'])
+                self.assertIsNone(discharge['Haemoglobin_Result'])
                 self.assertTrue(any(row['Systolic Blood Pressure_Result']==100 and row['Diastolic Blood Pressure_Result']==60 for row in rows))
                 self.assertTrue(any(row['Bilirubin Total_Result']==.4 for row in rows))
     def test_masked_response_hides_raw_and_historical_identifiers(self):
         output={'patient':{'name':'Secret Name'},'document_id':'Secret ID','metadata':{'claim_no':'Secret Claim'},'clinical_summary':{'briefHistory':'Secret Name'},'lineage':{'source_file':'/private/Secret Name.json'},'observations':[{'test_name_canonical':None,'test_name_original':'Secret Name','result_text':'Secret Name','range_text':'Secret Name','unit_original':'Secret Name'}],'medications':[]}
         output['source_coverage']={'unresolved_names':{'Secret Name':1}}
-        output['observations'].append({'test_name_canonical':'Hemoglobin','test_name_original':'Secret Name','result_text':'Secret Name','range_text':'Secret Name','unit_original':'Secret Name','result_value':12})
+        output['observations'].append({'test_name_canonical':'Haemoglobin','test_name_original':'Secret Name','result_text':'Secret Name','range_text':'Secret Name','unit_original':'Secret Name','result_value':12})
         output['medications']=[{'original':'Secret Name','normalised_name':'Secret Name','instructions':['Secret Name'],'dose':'Secret Name','frequency':'Secret Name'}]
         detail={'output':output,'raw':{'patientName':'Secret Name'},'source':'/private/Secret Name.json','versions':[{'output':output}]}
         masked=masked_record(detail)

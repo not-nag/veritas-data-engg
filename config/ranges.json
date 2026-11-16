@@ -16,7 +16,7 @@
     "https://testguide.labmed.uw.edu/view/AGR?tabs=no"
   ],
   "adult_gender_ranges": {
-    "Hemoglobin": {
+    "Haemoglobin": {
       "Male": [
         13.8,
         17.2
@@ -162,7 +162,7 @@
     }
   ],
   "gender_reference_sources": {
-    "Hemoglobin": "https://medlineplus.gov/ency/article/003645.htm",
+    "Haemoglobin": "https://medlineplus.gov/ency/article/003645.htm",
     "Red Blood Cell Count": "https://medlineplus.gov/ency/article/003644.htm",
     "Creatinine": "https://medlineplus.gov/ency/article/003475.htm"
   },

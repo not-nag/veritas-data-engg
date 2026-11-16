@@ -24,7 +24,9 @@ class StandardisationTests(unittest.TestCase):
             self.assertIsNone(number(value)[0],value)
 
     def test_alias_and_unit_conversion(self):
-        self.assertEqual(normalize_name('aemoglobin',self.c['tests'])[0],'Hemoglobin')
+        self.assertEqual(normalize_name('aemoglobin',self.c['tests'])[0],'Haemoglobin')
+        for name in ['Hemoglobin', 'Haemoglobin', 'Hb', 'HGB']:
+            self.assertEqual(normalize_name(name,self.c['tests'])[0],'Haemoglobin')
         r = self.obs('140 g/L','g/L')
         self.assertEqual(r['result_value'],14)
         self.assertAlmostEqual(r['range_low'],1.2) # source range converted with its stated units
@@ -116,7 +118,7 @@ class ExportTests(unittest.TestCase):
             self.assertEqual(len(reader.fieldnames),expected)
             self.assertTrue(all(len(row)==expected for row in rows))
             discharge=next(r for r in rows if r['record_type']=='discharge_summary')
-            self.assertEqual(discharge['Hemoglobin_Result'],'')
+            self.assertEqual(discharge['Haemoglobin_Result'],'')
             self.assertGreater(len(rows),2) # repeated tests are not overwritten
 
 if __name__=='__main__': unittest.main()

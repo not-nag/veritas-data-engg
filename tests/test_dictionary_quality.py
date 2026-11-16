@@ -30,7 +30,7 @@ class DictionaryQualityTests(unittest.TestCase):
         self.assertIsNone(result['test_name_canonical'])
 
     def test_non_test_rows_remain_in_raw_denominator_and_outputs(self):
-        raw=[{'test_name':'Comment','result':'Retain this evidence'},{'test_name':'ABSENT','result':'ABSENT'},{'test_name':'Hemoglobin','result':'12','unit':'g/dL','range':'12-16'}]
+        raw=[{'test_name':'Comment','result':'Retain this evidence'},{'test_name':'ABSENT','result':'ABSENT'},{'test_name':'Haemoglobin','result':'12','unit':'g/dL','range':'12-16'}]
         prepared=prepare_tests(raw,self.fields,self.config['tests'])
         coverage=source_coverage(prepared,self.fields,self.config['tests'])
         self.assertEqual((coverage['total'],coverage['resolved'],coverage['eligible_entries'],coverage['non_test_entries']),(3,1,2,1))
@@ -39,7 +39,7 @@ class DictionaryQualityTests(unittest.TestCase):
         self.assertEqual(result['analytics'],'Invalid')
 
     def test_uploaded_internal_annotations_cannot_override_matching(self):
-        raw=[{'test_name':'Mystery','__interpretation':{'canonical':'Hemoglobin','category':'test'}}]
+        raw=[{'test_name':'Mystery','__interpretation':{'canonical':'Haemoglobin','category':'test'}}]
         self.assertNotIn('__interpretation',prepare_tests(raw,self.fields,self.config['tests'])[0])
 
     def test_label_recovery_never_invents_missing_values_or_units(self):

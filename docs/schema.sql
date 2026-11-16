@@ -10,7 +10,7 @@ FROM observations o JOIN records r ON r.id = o.record_id;
 
 -- Five columns per configured test; occurrence_index preserves repeats.
 SELECT record_id, occurrence_index,
-       "Hemoglobin_Result", "Hemoglobin_Range", "Hemoglobin_Unit", "Hemoglobin_Analytics"
+       "Haemoglobin_Result", "Haemoglobin_Range", "Haemoglobin_Unit", "Haemoglobin_Analytics"
 FROM canonical_wide;
 
 -- Retry evidence and alert transitions are independently inspectable.

@@ -17,7 +17,7 @@ class ValidationTests(unittest.TestCase):
         self.config = configuration()
         self.fields = self.config['clinics']['profiles'][0]['test_fields']
 
-    def obs(self, value, reference, name='Hemoglobin', unit='g/dL'):
+    def obs(self, value, reference, name='Haemoglobin', unit='g/dL'):
         raw = {'test_name':name,'result':value,'range':reference,'unit':unit}
         return observation(raw,self.fields,self.config['tests'],self.config['ranges'],{})
 
@@ -58,7 +58,7 @@ class ValidationTests(unittest.TestCase):
 
     def test_aliases_do_not_repair_bad_source_rows(self):
         result = self.obs('9700','4000-10000',name='aemoglobin',unit='cell/cu.mm')
-        self.assertEqual(result['test_name_canonical'],'Hemoglobin')
+        self.assertEqual(result['test_name_canonical'],'Haemoglobin')
         self.assertEqual(result['analytics'],'Invalid')
         for name in ['DIAGNOSTICS','ABSENT','NEGATIVE','9-11','test_name','BE']:
             self.assertIsNone(normalize_name(name,self.config['tests'])[0],name)

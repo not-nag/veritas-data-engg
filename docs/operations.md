@@ -47,7 +47,7 @@ Alerts persist in `alerts`, transition history in `alert_events`, and transition
 
 ```sql
 SELECT record_id, occurrence_index,
-       "Hemoglobin_Result", "Hemoglobin_Unit", "Hemoglobin_Analytics"
+       "Haemoglobin_Result", "Haemoglobin_Unit", "Haemoglobin_Analytics"
 FROM canonical_wide;
 ```
 
