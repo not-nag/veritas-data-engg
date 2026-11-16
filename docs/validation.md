@@ -7,7 +7,7 @@ Validated with Python 3.13.3 and Node.js 22.10.0.
 | `npm test` | 52 backend tests and 7 walkthrough tests pass |
 | `npm run build` | Production build and TypeScript checks pass |
 | API checks | Processing, retries, masking, metrics, and export verified |
-| UI checks | Navigation, coverage breakdown, inspector masking, watcher controls, and repair editor verified |
+| UI checks | Direct report URLs, Back/Forward, refresh, filter restoration, local tabs, dialogs, export, masking, review, watcher controls, and failed-file repair verified |
 
 ## Test coverage
 

@@ -15,9 +15,9 @@ npm run setup
 npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000) and select **Run sample data**. You can also upload JSON files or place them in `data/inbox/` for automatic ingestion. Ports 3000 and 8000 must be available. Stop both services with Ctrl+C.
+Open [localhost:3000](http://localhost:3000) and select **Upload reports → Use sample data**. You can also upload JSON files or place them in `data/inbox/` for automatic ingestion. Ports 3000 and 8000 must be available. Stop both services with Ctrl+C.
 
-Select **Walkthrough** in the header for a guided tour. It highlights controls, prepares examples, and waits for your actions; progress can be paused and resumed.
+Select **More → Help & walkthrough** for a guided tour. It highlights controls, prepares examples, and waits for your actions; progress can be paused and resumed.
 
 ## Features
 

@@ -309,7 +309,7 @@ export function WalkthroughGuide({ onFinish }: { onFinish: () => void }) {
                 {step.effect}
               </p>
             )}
-            {!found && (
+            {!found && !done && (
               <p role="status" className="mt-2 text-xs text-neutral-600">
                 {step.unavailable ||
                   "Waiting for this control. If you navigated away, use Back then Continue to return, or skip this step."}

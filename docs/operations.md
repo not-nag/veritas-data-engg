@@ -1,12 +1,12 @@
 # Local operations runbook
 
-Start with `npm run dev`. Open Operations in the UI. No cloud credentials or Docker are required. Run one API/watcher process per database.
+Start with `npm run dev`. Open More → System tools in the UI. No cloud credentials or Docker are required. Run one API/watcher process per database.
 
 ## Interactive walkthrough
 
-Select **Walkthrough** in the header to explore the interface in 33 steps. Back, Skip step, and a step picker support non-linear exploration. Paused progress resumes on the same browser; saved progress contains only step identifiers.
+Select **More → Help & walkthrough** to explore the interface in 33 steps. Back, Skip step, and a step picker support non-linear exploration. Paused progress resumes on the same browser; saved progress contains only step identifiers.
 
-The guide prepares views and example input but never submits processing, uploads, reviews, retries, or watcher changes. Required action steps unlock Continue after the corresponding successful response. Actions use the real workspace and remain after the guide closes. The optional valid example creates a synthetic record; the invalid example demonstrates failed-file repair and may activate an error-rate alert. If ingestion is paused during the guide, resume it explicitly in Operations.
+The guide prepares views and example input but never submits processing, uploads, reviews, retries, or watcher changes. Required action steps unlock Continue after the corresponding successful response. Actions use the real workspace and remain after the guide closes. The optional valid example creates a synthetic record; the invalid example demonstrates failed-file repair and may activate an error-rate alert. If ingestion is paused during the guide, resume it explicitly in System tools → Folder ingestion.
 
 ## Automatic intake
 
@@ -14,7 +14,7 @@ The API watches `data/inbox/` recursively for `.json` files, polling every two s
 
 The intake sequence is Settling → Pending → Processing → Processed or Failed. Content changes create a separate fingerprint; incomplete settling copies are superseded. Immutable discovered copies are retained in `data/intake/`. Repeated discovery of unchanged content at the same path does not reprocess it. Record deduplication still protects against copies arriving at different paths.
 
-Pause/resume in Operations persists across restarts and pauses discovery and processing. In-flight processing may finish. Pending work survives restarts. Processing claims older than five minutes return to pending; interrupted transient worker failures also return to pending. Malformed content goes to the dead-letter queue for explicit repair. Stale retry attempts are recovered when the watcher starts. Do not run competing local services on the same database.
+Pause/resume in System tools → Folder ingestion persists across restarts and pauses discovery and processing. In-flight processing may finish. Pending work survives restarts. Processing claims older than five minutes return to pending; interrupted transient worker failures also return to pending. Malformed content goes to the dead-letter queue for explicit repair. Stale retry attempts are recovered when the watcher starts. Do not run competing local services on the same database.
 
 For a standalone watcher:
 
@@ -63,7 +63,7 @@ Load and availability demonstrations, cloud queues/storage, authenticated roles,
 
 ### Main workflow
 
-The main navigation follows Upload → Review → Export. Upload accepts JSON or the supplied samples; standardisation runs during processing. Review contains both pending reports and all stored reports. Marking a report as reviewed records acknowledgement and retains its flags. Export downloads all stored reports, including those awaiting review. Source metrics, processing history, and recovery controls are available under Advanced. Detailed ingestion and coverage metrics can be expanded on Upload.
+The homepage is Reports. Upload accepts JSON or supplied samples in a dialog; standardisation runs during processing. Reports can be filtered to pending reviews, and each report opens at its own URL with readable results. Marking reviewed records acknowledgement and retains flags. Export is an action and includes all stored reports. Activity contains file/run history and expandable data-quality metrics. Sources, System tools, export, and Help are available under More. Main URLs are `/reports`, `/reports/[id]`, `/activity`, `/sources`, and `/system`. Browser history supports Back/Forward and direct report refresh; inner tabs and disclosure controls remain local.
 
 ### Blood-pressure references
 

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Activity, Check, Loader2, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useWorkspace } from "@/components/workspace-provider";
 import { useWalkthrough } from "@/components/walkthrough";
 import example from "@/public/walkthrough-example.json";
 type Failure = {
@@ -71,6 +72,15 @@ function stamp(value: string | null) {
 }
 export function OperationsPanel({ refreshKey }: { refreshKey?: string }) {
   const tour = useWalkthrough();
+  const workspace = useWorkspace();
+  const [view, setView] = useState("failures");
+  useEffect(() => {
+    if (!tour.active) return;
+    if (tour.step.id === "watcher") setView("folder");
+    if (["health", "alerts"].includes(tour.step.id)) setView("monitoring");
+    if (["failure-inspect", "repair"].includes(tour.step.id))
+      setView("failures");
+  }, [tour.active, tour.step.id]);
   const { reportWatcher } = tour;
   const [data, setData] = useState<State | null>(null),
     [error, setError] = useState(""),
@@ -116,6 +126,7 @@ export function OperationsPanel({ refreshKey }: { refreshKey?: string }) {
   }
   async function inspect(item: Failure) {
     setError("");
+    workspace.setNotice("");
     try {
       const value = await request(
         "dead-letter?id=" + encodeURIComponent(item.id),
@@ -144,6 +155,7 @@ export function OperationsPanel({ refreshKey }: { refreshKey?: string }) {
           : `Retry completed: ${result.records} new, ${result.updated_records} refreshed, ${result.duplicates} duplicates.`,
       );
       await refresh();
+      await workspace.refresh();
       if (!result.failed) {
         setSelected(null);
         tour.signal("retry-succeeded");
@@ -162,6 +174,21 @@ export function OperationsPanel({ refreshKey }: { refreshKey?: string }) {
     );
   return (
     <div className="space-y-6">
+      <div className="local-tabs" aria-label="System tool views">
+        {[
+          ["failures", "Failed files"],
+          ["monitoring", "Monitoring"],
+          ["folder", "Folder ingestion"],
+        ].map(([id, label]) => (
+          <button
+            key={id}
+            className={view === id ? "selected" : ""}
+            onClick={() => setView(id)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
       {error && (
         <p
           role="alert"
@@ -178,261 +205,288 @@ export function OperationsPanel({ refreshKey }: { refreshKey?: string }) {
           {notice}
         </p>
       )}
-      <section
-        data-tour="watcher"
-        className="rounded-lg border border-neutral-200 p-5"
-      >
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <h2 className="flex items-center gap-2 text-sm font-medium">
-              <Activity className="size-4" />
-              Folder ingestion
-              <Badge>{data.watcher.enabled ? "Running" : "Paused"}</Badge>
-            </h2>
-            <p className="mt-3 break-all font-mono text-[11px] text-neutral-500">
-              {data.watcher.folder}
-            </p>
-            <p className="mt-2 text-[11px] text-neutral-400">
-              Checks every {data.watcher.poll_seconds ?? "—"}s ·{" "}
-              {data.health.pending_files} pending · Last scan{" "}
-              {stamp(data.watcher.last_scan)}
-            </p>
-            <p className="mt-2 text-[11px] text-neutral-500">
-              Drop a JSON file here. Stable files are retained and processed
-              automatically.
-            </p>
-            {data.watcher.last_error && (
-              <p className="mt-2 text-xs text-red-700">
-                {data.watcher.last_error}
-              </p>
-            )}
-          </div>
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={busy}
-            onClick={() =>
-              action({ action: "watcher", enabled: !data.watcher.enabled })
-            }
-          >
-            {data.watcher.enabled ? "Pause ingestion" : "Resume ingestion"}
-          </Button>
-        </div>
-      </section>
-      <div data-tour="health" className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {[
-          [
-            "Error rate",
-            `${(data.health.error_rate * 100).toFixed(1)}%`,
-            `${data.health.file_attempts} attempts in monitoring window`,
-          ],
-          [
-            "Throughput",
-            `${(data.health.throughput_files_per_second * 3600).toFixed(1)}/h`,
-            "Completed files, window average",
-          ],
-          [
-            "Observed p95",
-            data.health.p95_file_latency_seconds === null
-              ? "—"
-              : `${data.health.p95_file_latency_seconds.toFixed(2)}s`,
-            "Local discovery to DB completion",
-          ],
-          [
-            "Oldest pending",
-            `${data.health.oldest_pending_seconds.toFixed(1)}s`,
-            "Settling, queued, or processing",
-          ],
-        ].map(([label, value, description]) => (
-          <div key={label} className="rounded-lg border border-neutral-200 p-5">
-            <p className="text-xs text-neutral-500">{label}</p>
-            <p className="mt-3 text-2xl font-semibold tracking-tight">
-              {value}
-            </p>
-            <p className="mt-2 text-[10px] text-neutral-400">{description}</p>
-          </div>
-        ))}
-      </div>
-      <section
-        data-tour="alerts"
-        className="overflow-hidden rounded-lg border border-neutral-200"
-      >
-        <h2 className="border-b border-neutral-100 px-5 py-4 text-sm font-medium">
-          Monitoring alerts
-        </h2>
-        {data.alerts.length ? (
-          <div className="divide-y divide-neutral-100">
-            {data.alerts.map((alert) => (
-              <div
-                key={alert.code}
-                className="flex flex-wrap items-center justify-between gap-3 px-5 py-4"
-              >
-                <div>
-                  <div className="flex items-center gap-2">
-                    <Badge
-                      className={
-                        alert.status === "Active"
-                          ? "border-amber-200 bg-amber-50 text-amber-800"
-                          : ""
-                      }
-                    >
-                      {alert.status}
-                    </Badge>
-                    <span className="text-xs">
-                      {alert.code.replaceAll("_", " ")}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-[11px] text-neutral-500">
-                    {alert.message}
-                  </p>
-                </div>
-                {alert.status === "Active" && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    disabled={busy || !!alert.acknowledged_at}
-                    onClick={() =>
-                      action({ action: "acknowledge", code: alert.code })
-                    }
-                  >
-                    <Check />
-                    {alert.acknowledged_at ? "Acknowledged" : "Acknowledge"}
-                  </Button>
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="p-5 text-xs text-neutral-500">
-            No threshold breaches. Alerts are retained here and in the local
-            alert log.
-          </p>
-        )}
-        <p className="border-t border-neutral-100 px-5 py-3 text-[10px] text-neutral-400">
-          Acknowledgement records review; it does not clear an active condition.
-          Unchanged conditions do not create repeated alerts.
-        </p>
-      </section>
-      <section className="overflow-x-auto rounded-lg border border-neutral-200">
-        <h2 className="border-b border-neutral-100 px-5 py-4 text-sm font-medium">
-          Failed-file review
-        </h2>
-        {data.dead_letters.length ? (
-          <table className="w-full">
-            <thead className="bg-neutral-50">
-              <tr>
-                {["Source", "Failure reason", "Status", "Retries", ""].map(
-                  (h, i) => (
-                    <th key={i}>{h}</th>
-                  ),
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {data.dead_letters.map((item) => (
-                <tr key={item.id}>
-                  <td className="max-w-52 break-all">
-                    {item.source.split("/").pop()}
-                  </td>
-                  <td className="max-w-96 text-neutral-500">{item.reason}</td>
-                  <td>
-                    <Badge>{item.status}</Badge>
-                  </td>
-                  <td>{item.retry_count}</td>
-                  <td>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      disabled={busy}
-                      data-tour="failure-inspect"
-                      onClick={() => inspect(item)}
-                    >
-                      Inspect / retry
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p className="p-5 text-xs text-neutral-500">
-            No failed files. Malformed and unsupported inputs will appear here.
-          </p>
-        )}
-      </section>
-      {selected && (
+      {view === "folder" && (
         <section
-          data-tour="repair"
+          data-tour="watcher"
           className="rounded-lg border border-neutral-200 p-5"
         >
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <h2 className="text-sm font-medium">Repair failed input</h2>
-            <Button size="sm" variant="ghost" onClick={() => setSelected(null)}>
-              Close
-            </Button>
-          </div>
-          <p className="mb-3 text-xs text-neutral-500">
-            The original payload is retained. Each retry stores its submitted
-            content and outcome.
-          </p>
-          <label
-            htmlFor="corrected-json"
-            className="mb-2 block text-xs font-medium"
-          >
-            JSON content
-          </label>
-          <textarea
-            id="corrected-json"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            spellCheck={false}
-            className="h-72 w-full rounded-md border border-neutral-200 p-3 font-mono text-xs outline-none focus:ring-2 focus:ring-neutral-300"
-          />
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Button disabled={busy} onClick={() => retry(true)}>
-              {busy ? <Loader2 className="animate-spin" /> : <RotateCcw />}Retry
-              edited JSON
-            </Button>
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h2 className="flex items-center gap-2 text-sm font-medium">
+                <Activity className="size-4" />
+                Folder ingestion
+                <Badge>{data.watcher.enabled ? "Running" : "Paused"}</Badge>
+              </h2>
+              <p className="mt-3 break-all font-mono text-[11px] text-neutral-500">
+                {data.watcher.folder}
+              </p>
+              <p className="mt-2 text-[11px] text-neutral-400">
+                Checks every {data.watcher.poll_seconds ?? "—"}s ·{" "}
+                {data.health.pending_files} pending · Last scan{" "}
+                {stamp(data.watcher.last_scan)}
+              </p>
+              <p className="mt-2 text-[11px] text-neutral-500">
+                Drop a JSON file here. Stable files are retained and processed
+                automatically.
+              </p>
+              {data.watcher.last_error && (
+                <p className="mt-2 text-xs text-red-700">
+                  {data.watcher.last_error}
+                </p>
+              )}
+            </div>
             <Button
-              disabled={busy}
+              size="sm"
               variant="outline"
-              onClick={() => retry(false)}
+              disabled={busy}
+              onClick={() =>
+                action({ action: "watcher", enabled: !data.watcher.enabled })
+              }
             >
-              Retry original
+              {data.watcher.enabled ? "Pause ingestion" : "Resume ingestion"}
             </Button>
           </div>
         </section>
       )}
-      <section className="overflow-x-auto rounded-lg border border-neutral-200">
-        <h2 className="border-b border-neutral-100 px-5 py-4 text-sm font-medium">
-          Folder queue
-        </h2>
-        {data.intake.length ? (
-          <table className="w-full">
-            <thead className="bg-neutral-50">
-              <tr>
-                {["File", "Status", "First observed", "Details"].map((h) => (
-                  <th key={h}>{h}</th>
+      {view === "monitoring" && (
+        <>
+          <div
+            data-tour="health"
+            className="grid grid-cols-2 gap-4 lg:grid-cols-4"
+          >
+            {[
+              [
+                "Error rate",
+                `${(data.health.error_rate * 100).toFixed(1)}%`,
+                `${data.health.file_attempts} attempts in monitoring window`,
+              ],
+              [
+                "Throughput",
+                `${(data.health.throughput_files_per_second * 3600).toFixed(1)}/h`,
+                "Completed files, window average",
+              ],
+              [
+                "Observed p95",
+                data.health.p95_file_latency_seconds === null
+                  ? "—"
+                  : `${data.health.p95_file_latency_seconds.toFixed(2)}s`,
+                "Local discovery to DB completion",
+              ],
+              [
+                "Oldest pending",
+                `${data.health.oldest_pending_seconds.toFixed(1)}s`,
+                "Settling, queued, or processing",
+              ],
+            ].map(([label, value, description]) => (
+              <div
+                key={label}
+                className="rounded-lg border border-neutral-200 p-5"
+              >
+                <p className="text-xs text-neutral-500">{label}</p>
+                <p className="mt-3 text-2xl font-semibold tracking-tight">
+                  {value}
+                </p>
+                <p className="mt-2 text-[10px] text-neutral-400">
+                  {description}
+                </p>
+              </div>
+            ))}
+          </div>
+          <section
+            data-tour="alerts"
+            className="overflow-hidden rounded-lg border border-neutral-200"
+          >
+            <h2 className="border-b border-neutral-100 px-5 py-4 text-sm font-medium">
+              Monitoring alerts
+            </h2>
+            {data.alerts.length ? (
+              <div className="divide-y divide-neutral-100">
+                {data.alerts.map((alert) => (
+                  <div
+                    key={alert.code}
+                    className="flex flex-wrap items-center justify-between gap-3 px-5 py-4"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          className={
+                            alert.status === "Active"
+                              ? "border-amber-200 bg-amber-50 text-amber-800"
+                              : ""
+                          }
+                        >
+                          {alert.status}
+                        </Badge>
+                        <span className="text-xs">
+                          {alert.code.replaceAll("_", " ")}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-[11px] text-neutral-500">
+                        {alert.message}
+                      </p>
+                    </div>
+                    {alert.status === "Active" && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={busy || !!alert.acknowledged_at}
+                        onClick={() =>
+                          action({ action: "acknowledge", code: alert.code })
+                        }
+                      >
+                        <Check />
+                        {alert.acknowledged_at ? "Acknowledged" : "Acknowledge"}
+                      </Button>
+                    )}
+                  </div>
                 ))}
-              </tr>
-            </thead>
-            <tbody>
-              {data.intake.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.source.split("/").pop()}</td>
-                  <td>
-                    <Badge>{item.status}</Badge>
-                  </td>
-                  <td>{stamp(item.seen_at)}</td>
-                  <td className="text-neutral-500">{item.reason || "—"}</td>
+              </div>
+            ) : (
+              <p className="p-5 text-xs text-neutral-500">
+                No threshold breaches. Alerts are retained here and in the local
+                alert log.
+              </p>
+            )}
+            <p className="border-t border-neutral-100 px-5 py-3 text-[10px] text-neutral-400">
+              Acknowledgement records review; it does not clear an active
+              condition. Unchanged conditions do not create repeated alerts.
+            </p>
+          </section>
+        </>
+      )}
+      {view === "failures" && (
+        <>
+          <section className="overflow-x-auto rounded-lg border border-neutral-200">
+            <h2 className="border-b border-neutral-100 px-5 py-4 text-sm font-medium">
+              Failed-file review
+            </h2>
+            {data.dead_letters.length ? (
+              <table className="w-full">
+                <thead className="bg-neutral-50">
+                  <tr>
+                    {["Source", "Failure reason", "Status", "Retries", ""].map(
+                      (h, i) => (
+                        <th key={i}>{h}</th>
+                      ),
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.dead_letters.map((item) => (
+                    <tr key={item.id}>
+                      <td className="max-w-52 break-all">
+                        {item.source.split("/").pop()}
+                      </td>
+                      <td className="max-w-96 text-neutral-500">
+                        {item.reason}
+                      </td>
+                      <td>
+                        <Badge>{item.status}</Badge>
+                      </td>
+                      <td>{item.retry_count}</td>
+                      <td>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          disabled={busy}
+                          data-tour="failure-inspect"
+                          onClick={() => inspect(item)}
+                        >
+                          Inspect / retry
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className="p-5 text-xs text-neutral-500">
+                No failed files. Malformed and unsupported inputs will appear
+                here.
+              </p>
+            )}
+          </section>
+          {selected && (
+            <section
+              data-tour="repair"
+              className="rounded-lg border border-neutral-200 p-5"
+            >
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <h2 className="text-sm font-medium">Repair failed input</h2>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setSelected(null)}
+                >
+                  Close
+                </Button>
+              </div>
+              <p className="mb-3 text-xs text-neutral-500">
+                The original payload is retained. Each retry stores its
+                submitted content and outcome.
+              </p>
+              <label
+                htmlFor="corrected-json"
+                className="mb-2 block text-xs font-medium"
+              >
+                JSON content
+              </label>
+              <textarea
+                id="corrected-json"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                spellCheck={false}
+                className="h-72 w-full rounded-md border border-neutral-200 p-3 font-mono text-xs outline-none focus:ring-2 focus:ring-neutral-300"
+              />
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Button disabled={busy} onClick={() => retry(true)}>
+                  {busy ? <Loader2 className="animate-spin" /> : <RotateCcw />}
+                  Retry edited JSON
+                </Button>
+                <Button
+                  disabled={busy}
+                  variant="outline"
+                  onClick={() => retry(false)}
+                >
+                  Retry original
+                </Button>
+              </div>
+            </section>
+          )}
+        </>
+      )}
+      {view === "folder" && (
+        <section className="overflow-x-auto rounded-lg border border-neutral-200">
+          <h2 className="border-b border-neutral-100 px-5 py-4 text-sm font-medium">
+            Folder queue
+          </h2>
+          {data.intake.length ? (
+            <table className="w-full">
+              <thead className="bg-neutral-50">
+                <tr>
+                  {["File", "Status", "First observed", "Details"].map((h) => (
+                    <th key={h}>{h}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p className="p-5 text-xs text-neutral-500">The inbox is empty.</p>
-        )}
-      </section>
+              </thead>
+              <tbody>
+                {data.intake.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.source.split("/").pop()}</td>
+                    <td>
+                      <Badge>{item.status}</Badge>
+                    </td>
+                    <td>{stamp(item.seen_at)}</td>
+                    <td className="text-neutral-500">{item.reason || "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="p-5 text-xs text-neutral-500">The inbox is empty.</p>
+          )}
+        </section>
+      )}
     </div>
   );
 }

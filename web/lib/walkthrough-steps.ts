@@ -34,8 +34,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Load the supplied reports",
     description:
       "Sample reports give you records to explore. Repeating a run demonstrates duplicate suppression.",
-    instruction:
-      "Click Try sample reports, wait for the result, then Continue.",
+    instruction: "Click Use sample data, wait for the result, then Continue.",
     target: "samples",
     screen: "Overview",
     event: "samples-processed",
@@ -49,7 +48,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     description:
       "These figures count file attempts on the chosen date: received, processed, failed, and flagged. Reruns count as new attempts.",
     instruction:
-      "Choose a date and click Apply. Fill example uses the date of your latest run.",
+      "Choose a date in Activity and click Apply. Fill example uses the date of your latest run.",
     target: "daily-filter",
     screen: "Overview",
     event: "date-applied",
@@ -86,7 +85,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Open the records list",
     description:
       "Records contains the stored reports, including their source, record type, observation count, and review status.",
-    instruction: "Click All reports below the page heading.",
+    instruction: "Click Reports in the top navigation.",
     target: "nav-Records",
     screen: "Review queue",
     event: "nav:Records",
@@ -134,18 +133,18 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Open a laboratory report",
     description:
       "The inspector connects the standardised results to their source evidence.",
-    instruction: "Click the highlighted Inspect arrow for a laboratory report.",
+    instruction: "Open the highlighted laboratory report.",
     target: "inspect-lab",
     screen: "Records",
     event: "inspect:lab",
-    unavailable: "No laboratory report is available. Try sample reports first.",
+    unavailable: "No laboratory report is available. Use sample data first.",
   },
   {
     id: "observation-filter",
     chapter: "Inspect a report",
     title: "Narrow down the observations",
     description:
-      "Each row shows the canonical name, original label, result, unit, range, classification, and issues.",
+      "Each row shows the standard name, result, reference, and status. Source details and checks expand beneath each test.",
     instruction:
       "Choose an observation filter, or use Fill example to show Invalid results.",
     target: "observation-filter",
@@ -162,7 +161,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     description:
       "Derived components retain their parent field. Missing units, contradictory ranges, and ambiguous results remain visible rather than being guessed.",
     instruction:
-      "Read the highlighted table. Scroll horizontally if needed to see range sources and issues.",
+      "Expand a test’s Source details or checks to review, and its Reference source, to see the evidence.",
     target: "observations",
     screen: "Records",
     record: "lab",
@@ -174,7 +173,8 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Compare raw and standardised data",
     description:
       "The original JSON is retained alongside the transformed output so you can check each decision.",
-    instruction: "Click Original & transformed data.",
+    instruction:
+      "Expand Technical details, then expand Original & transformed data.",
     target: "detail-Raw & standardised",
     screen: "Records",
     record: "lab",
@@ -217,11 +217,11 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Open a discharge summary",
     description:
       "Discharge summaries contain medications and clinical details. They may have no laboratory observations.",
-    instruction: "Click the highlighted Inspect arrow for a discharge summary.",
+    instruction: "Open the highlighted discharge summary.",
     target: "inspect-discharge",
     screen: "Records",
     event: "inspect:discharge",
-    unavailable: "No discharge summary is available. Try sample reports first.",
+    unavailable: "No discharge summary is available. Use sample data first.",
   },
   {
     id: "medications",
@@ -243,7 +243,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Open the review queue",
     description:
       "This queue contains flagged records that have not been acknowledged as reviewed.",
-    instruction: "Click 2. Review in the navigation.",
+    instruction: "Click Needs review above the reports list.",
     target: "nav-Review queue",
     screen: "Records",
     event: "nav:Review queue",
@@ -255,7 +255,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     description:
       "Check the observations or source before acknowledging a flagged record.",
     instruction:
-      "Click the highlighted Inspect arrow. If the queue is empty, skip this step.",
+      "Open the highlighted report. If the queue is empty, skip this step.",
     target: "inspect-review",
     screen: "Review queue",
     event: "inspect:review",
@@ -310,7 +310,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     description:
       "You can upload a supported clinic format. The downloadable example is synthetic and uses the second configured schema.",
     instruction:
-      "Download the example, click Choose JSON files (or Upload JSON outside the Upload screen), and select it. Upload starts after file selection. You can also skip this demonstration.",
+      "Download the example, click Choose files, and select it. Upload starts after file selection. You can also skip this demonstration.",
     target: "upload",
     screen: "Overview",
     event: "upload-succeeded",
@@ -325,7 +325,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Compare clinics",
     description:
       "Clinic summaries show duplicate, file-error, and missing-required-field rates with their denominators. Reruns are included.",
-    instruction: "Open Advanced, choose Sources, and compare the source rows.",
+    instruction: "Open More, choose Sources, and compare the source rows.",
     target: "nav-Clinics",
     screen: "Overview",
     event: "nav:Clinics",
@@ -336,7 +336,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Read processing history",
     description:
       "Activity shows runs and file outcomes, including suppressed duplicates and reasons for file failures.",
-    instruction: "Open Advanced and choose Processing history.",
+    instruction: "Click Activity in the top navigation.",
     target: "nav-Activity",
     screen: "Clinics",
     event: "nav:Activity",
@@ -347,7 +347,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Open the operational controls",
     description:
       "Operations combines folder intake, local health metrics, alerts, failed-file repair, and the intake queue.",
-    instruction: "Open Advanced and choose System tools.",
+    instruction: "Open More and choose System tools.",
     target: "nav-Operations",
     screen: "Activity",
     event: "nav:Operations",
@@ -384,7 +384,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     description:
       "The optional example is deliberately incomplete JSON. A failure is retained for investigation while other files can continue.",
     instruction:
-      "Download the invalid example, click Choose JSON files (or Upload JSON outside the Upload screen), and select it. Continue unlocks when the file is recorded as failed.",
+      "Download the invalid example, click Choose files, and select it. Continue unlocks when the file is recorded as failed.",
     target: "upload",
     screen: "Operations",
     event: "upload-failed",
