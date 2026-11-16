@@ -4,7 +4,7 @@ Validated with Python 3.13.3 and Node.js 22.10.0.
 
 | Check | Result |
 | --- | --- |
-| `npm test` | 52 backend tests and 7 walkthrough tests pass |
+| `npm test` | 61 backend tests and 7 walkthrough tests pass |
 | `npm run build` | Production build and TypeScript checks pass |
 | API checks | Processing, retries, masking, metrics, and export verified |
 | UI checks | Direct report URLs, Back/Forward, refresh, filter restoration, local tabs, dialogs, export, masking, review, watcher controls, and failed-file repair verified |
@@ -45,3 +45,7 @@ Detailed results are in [coverage-report.json](coverage-report.json).
 ## Limits
 
 These checks do not establish production throughput, uptime, privacy compliance, clinical correctness, or 98% mapping coverage. Local latency starts at discovery or submission. Medical reference examples and plausibility limits require domain validation.
+
+## Optional integration checks
+
+Cloud tests cover immutable generation downloads, completed-generation skipping, interrupted-processing replay without duplicate records, explicit failed-object retry, and the size limit. AI tests cover pending/accepted/rejected outcomes, alias conflicts, daily request limits, response validation, and explicit reprocessing with preserved old output. Auth tests verify missing, invalid and anonymous tokens are rejected and the project is passed to token verification. Direct API and Next.js proxy smoke checks return 401 for unsigned mutations and 200 for public reads. A live Gemini 3.5 Flash-Lite request mapped the synthetic label HGB concentration to Haemoglobin; its pending suggestion is visible in the UI. Firebase Google sign-in is provisioned, but a completed interactive browser login remains to be verified. Live GCS ingestion and public hosting remain unverified because no bucket/runtime was provisioned under the free-only constraint.

@@ -1,1 +1,3 @@
-# Backend uses Python 3.10+ standard library only. No pip dependencies required.
+# Optional cloud ingestion and signed-in write protection.
+google-auth[requests]>=2.40,<3
+google-cloud-storage>=3.0,<4

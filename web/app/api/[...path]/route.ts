@@ -8,6 +8,9 @@ async function proxy(
   if (
     path.length !== 1 ||
     ![
+      "session",
+      "mappings",
+      "cloud",
       "dashboard",
       "record",
       "process",
@@ -31,7 +34,12 @@ async function proxy(
       `http://127.0.0.1:8000/api/${path[0]}${request.nextUrl.search}`,
       {
         method: request.method,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(request.headers.get("authorization")
+            ? { Authorization: request.headers.get("authorization")! }
+            : {}),
+        },
         body,
         cache: "no-store",
         signal: AbortSignal.timeout(120000),

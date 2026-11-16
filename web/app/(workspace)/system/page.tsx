@@ -1,4 +1,5 @@
 export const metadata = { title: "System tools · Veritas" };
+import { CloudPanel } from "@/components/cloud-panel";
 import { OperationsPanel } from "@/components/operations-panel";
 export default function Page() {
   return (
@@ -10,6 +11,7 @@ export default function Page() {
         </div>
       </div>
       <OperationsPanel />
+      <CloudPanel />
     </>
   );
 }

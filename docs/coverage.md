@@ -4,7 +4,7 @@ Status reflects working local code, not the proposed cloud deployment.
 
 | Requirement | Status | Evidence or limit |
 | --- | --- | --- |
-| FR-1.1 ingestion | Implemented locally | Recursive CLI, automatic settling folder watcher, durable intake queue, and UI uploads; cloud trigger documented |
+| FR-1.1 ingestion | Local and GCS adapters implemented | Uploads, folder watcher, GCS generation-pinned downloads and scheduled polling; live GCS validation awaits a provisioned bucket |
 | FR-1.2 duplicates | Implemented | Configurable scope plus payload hash; primary key; integration test |
 | FR-1.3 flexible schemas | Implemented within mapping grammar | Config-only onboarding; version predicates, priority/specificity, ambiguity and unknown-version rejection |
 | FR-2.1 names | Implemented with partial coverage | 336/363 original source entries (92.6%); same source denominator; includes named panels/findings |
@@ -50,3 +50,7 @@ The sample baseline has 363 original entries, 336 recognised names, 398 output o
 Local operations also include persistent pause/resume, settling detection, crash recovery of stale intake claims, source retention, and alert transition history. See [operations](operations.md) for limits and metric definitions. Source reference contradictions remain invalid; supported blood-pressure pairs and source-threshold titres are handled without inventing missing clinical context.
 
 The dashboard also exposes 336/350 eligible coverage (96.0%) after 13 named non-test rows. The full 363-row metric remains primary and visible. All uncertain rows remain eligible; exclusion details are available in the dashboard. No 98% achievement is claimed.
+
+## Optional integrations
+
+Gemini test-name suggestions, audited human approval, persistent approved aliases, and Firebase verification for all mutation endpoints are implemented. A live synthetic Gemini request mapped HGB concentration to Haemoglobin. GCS generation replay, interrupted-processing recovery, failed-download retry, AI approval/conflict rules, request limits, and authentication failures have automated tests. Full hosting and a live bucket are not provisioned under the current free-only constraint; see [cloud setup](cloud-setup.md).

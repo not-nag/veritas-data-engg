@@ -12,3 +12,5 @@ data/*
 
 # Local framework-generated files.
 web/AGENTS.md
+
+.venv/

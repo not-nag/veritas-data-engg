@@ -11,6 +11,7 @@ import {
   Upload,
   X,
 } from "lucide-react";
+import { SignIn } from "./sign-in";
 import { Button } from "./ui/button";
 import {
   WalkthroughProvider,
@@ -140,6 +141,9 @@ function Shell({ children }: { children: ReactNode }) {
                 >
                   Sources
                 </Link>
+                <Link href="/mappings" onClick={closeMenu}>
+                  AI mappings
+                </Link>
                 <Link
                   href="/system"
                   data-tour="nav-Operations"
@@ -169,6 +173,7 @@ function Shell({ children }: { children: ReactNode }) {
               </div>
             </details>
           </nav>
+          <SignIn />
         </div>
       </header>
       <div className="app-container">

@@ -1,3 +1,4 @@
+import { writeHeaders } from "./auth-client";
 import type { Interval } from "./types";
 export async function api(path: string, body?: unknown, signal?: AbortSignal) {
   const response = await fetch("/api/" + path, {
@@ -7,7 +8,10 @@ export async function api(path: string, body?: unknown, signal?: AbortSignal) {
       ? {}
       : {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...(await writeHeaders()),
+          },
           body: JSON.stringify(body),
         }),
   });

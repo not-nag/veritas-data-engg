@@ -6,7 +6,7 @@ A medical-report standardisation pipeline with an operations dashboard. It inges
 
 ## Run locally
 
-Requires Node.js 20.9+ and Python 3.10+. No Docker, cloud account, or API keys are needed.
+Requires Node.js 20.9+ and Python 3.10+. No Docker is needed. Cloud services and API keys are optional for local processing.
 
 ```bash
 git clone https://github.com/not-nag/veritas-data-engg.git
@@ -25,6 +25,8 @@ Select **More → Help & walkthrough** for a guided tour. It highlights controls
 - Duplicate suppression, result validation, review flags, and raw/transformed record inspection.
 - Daily ingestion metrics, clinic quality summaries, failed-file retries, and local alerts.
 - SQLite persistence, output version history, and canonical CSV export.
+- Optional Gemini test-name suggestions with human approval and an audit trail.
+- Generation-aware GCS ingestion and optional Firebase sign-in for write access.
 
 ## Checks
 
@@ -37,6 +39,7 @@ The sample dataset produces 8 unique records and 398 observations. Raw name reso
 
 ## Documentation
 
+- [Cloud, Gemini and sign-in setup](docs/cloud-setup.md)
 - [Architecture and drawings](docs/architecture.md)
 - [Non-functional design](docs/non-functional-design.md)
 - [Assumptions and limitations](docs/assumptions.md)

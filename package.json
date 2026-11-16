@@ -3,9 +3,9 @@
   "private": true,
   "scripts": {
     "dev": "bash scripts/dev.sh",
-    "setup": "npm ci --prefix web",
+    "setup": "bash scripts/setup.sh",
     "build": "npm run build --prefix web",
-    "test": "PYTHONPATH=src python3 -m unittest discover -s tests -v && node --test tests/test_walkthrough.mjs",
+    "test": "bash scripts/test.sh",
     "process": "PYTHONPATH=src python3 -m pipeline"
   }
 }

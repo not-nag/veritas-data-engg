@@ -2,10 +2,12 @@
 import hashlib
 import json
 import logging
+import os
 import time
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
+from . import settings
 from .standardize import path, demographics, medication
 from .validate import observation
 from .composite import expand_test
@@ -16,7 +18,7 @@ from .wide import ensure_wide_view
 from .extraction import prepare_tests
 
 ROOT = Path(__file__).resolve().parents[2]
-DB = ROOT / 'data/veritas.sqlite'
+DB = Path(os.environ.get('VERITAS_DB', ROOT / 'data/veritas.sqlite'))
 PIPELINE_VERSION = '4.0'
 log = logging.getLogger('veritas')
 
@@ -90,6 +92,8 @@ def stored_coverage(connection):
 
 def process_files(files, db=DB, config_dir=ROOT / 'config', reprocess=False, arrivals=None, arrival_basis='batch discovery'):
     config = configuration(config_dir)
+    from .ai import apply_aliases
+    apply_aliases(config['tests'], db)
     version = digest(config)[:12]
     run_id, started, start = str(uuid.uuid4()), now(), time.monotonic()
     summary = {'received':len(files),'processed':0,'failed':0,'duplicates':0,'records':0,'updated_records':0,'flagged':0,'resolved_tests':0,'total_tests':0}

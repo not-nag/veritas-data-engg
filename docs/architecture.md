@@ -1,6 +1,6 @@
 # Solution architecture
 
-Veritas needs comparable, auditable observations from heterogeneous medical reports. The prototype prioritises deterministic transformations, preserved source evidence, configurable onboarding, and visible uncertainty. It implements local ingestion, processing, storage, and review; managed services below are the production design.
+Veritas needs comparable, auditable observations from heterogeneous medical reports. The prototype prioritises deterministic transformations, preserved source evidence, configurable onboarding, and visible uncertainty. It implements local ingestion, processing, storage, and review, plus optional GCS polling, Gemini mapping suggestions, and Firebase write authentication. The queued, scaled managed services in the production drawing remain a proposed design.
 
 ![Proposed production architecture](diagrams/production-architecture.svg)
 
@@ -12,6 +12,14 @@ Veritas needs comparable, auditable observations from heterogeneous medical repo
 In production, clinics land immutable objects under a clinic/date prefix. Pub/Sub delivers object notifications at least once. Workers fetch the exact object generation, select a versioned clinic profile, extract records, normalise names and supported units, validate, and emit canonical records with a configuration hash. Unknown mappings remain flagged. Runtime mapping uses schema-on-read; storage has explicit canonical fields.
 
 The local equivalent recursively reads a folder, watches stable JSON arrivals through a persistent intake queue, or accepts uploads through Next.js. A loopback Python HTTP service shares the same processing engine as the CLI. Uploads are retained locally. Each file has its own SQLite transaction, isolating a malformed file from the rest of the batch. Parsing failures preserve input and reason in `data/dead-letter/`. Original and corrected retry payloads remain linked in an audit trail. Queue state and watcher pause survive restarts; stale claims recover. Logs carry a run correlation ID and source path.
+
+## Optional cloud and AI integrations
+
+A GCS adapter lists a configured bucket/prefix, pins downloads to immutable object generations, retains sources, and tracks outcomes in SQLite. Manual sync and 60-second polling use the same processor and lock as local ingestion. Failed objects require an explicit retry; interrupted objects replay safely through record deduplication. GCS deployment requires separately provisioned storage, IAM and billing.
+
+Gemini receives an explicitly confirmed test label and a constrained canonical vocabulary. It returns a suggestion or unresolved outcome; it never supplies results, ranges, units or medicines. Suggestions and decisions are audited. Only a human-accepted alias enters future deterministic processing; the configuration hash includes approved aliases. Existing reports require explicit reprocessing to apply changes. A daily request cap bounds demo usage.
+
+Firebase Google sign-in can protect every mutation at the Python API boundary while keeping GETs public. Next.js forwards ID tokens; Python verifies them against the configured project. This shared public demo must contain synthetic data. See [setup, cost constraints and hosting status](cloud-setup.md).
 
 ## Storage and configuration
 
