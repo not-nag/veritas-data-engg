@@ -64,3 +64,7 @@ Load and availability demonstrations, cloud queues/storage, authenticated roles,
 ### Main workflow
 
 The main navigation follows Upload → Review → Export. Upload accepts JSON or the supplied samples; standardisation runs during processing. Review contains both pending reports and all stored reports. Marking a report as reviewed records acknowledgement and retains its flags. Export downloads all stored reports, including those awaiting review. Source metrics, processing history, and recovery controls are available under Advanced. Detailed ingestion and coverage metrics can be expanded on Upload.
+
+### Blood-pressure references
+
+For adults with a known age of at least 18 years and explicit mmHg units, missing component references use the AHA normal-category upper thresholds: systolic <120 and diastolic <80. Valid source references for individual components take precedence; malformed source references are flagged. The output retains the source URL and labels these as upper-threshold comparisons, not a diagnosis or assessment of hypotension. Both components are required for blood-pressure categorisation. Children and records with unknown ages do not receive this adult fallback.

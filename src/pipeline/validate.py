@@ -194,8 +194,12 @@ def observation(raw, fields, config, ranges, patient):
                     continue
                 if reference.get('gender') and reference['gender']!=patient.get('gender'):
                     continue
-                limits={'low':reference['low'],'high':reference['high'],'low_inclusive':True,'high_inclusive':True}
+                limits={'low':reference['low'],'high':reference['high'],'low_inclusive':reference.get('low_inclusive',True),'high_inclusive':reference.get('high_inclusive',True)}
                 out['range_source']=reference['source']
+                if reference.get('policy'):
+                    out['reference_policy']=reference['policy']
+                if reference.get('note'):
+                    out['reference_note']=reference['note']
                 break
     if limits:
         out.update({'range_low':limits['low'], 'range_high':limits['high'], 'range_low_inclusive':limits['low_inclusive'], 'range_high_inclusive':limits['high_inclusive']})

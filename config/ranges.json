@@ -13,7 +13,8 @@
     "https://medlineplus.gov/ency/article/003478.htm",
     "https://medlineplus.gov/ency/article/003657.htm",
     "https://www.uhhospitals.org/-/media/files/for-clinicians/research/lab-reference-ranges.pdf?hash=FE0D345C3ECEB8C338A09459498F9ED09D39EC95&la=en",
-    "https://testguide.labmed.uw.edu/view/AGR?tabs=no"
+    "https://testguide.labmed.uw.edu/view/AGR?tabs=no",
+    "https://www.heart.org/en/health-topics/high-blood-pressure/understanding-blood-pressure-readings"
   ],
   "adult_gender_ranges": {
     "Haemoglobin": {
@@ -159,6 +160,28 @@
       "high": 2.4,
       "source": "https://testguide.labmed.uw.edu/view/AGR?tabs=no",
       "note": "Example laboratory interval; local laboratory validation remains required"
+    },
+    {
+      "test": "Systolic Blood Pressure",
+      "min_age_years": 18,
+      "unit": "mmHg",
+      "low": null,
+      "high": 120,
+      "high_inclusive": false,
+      "source": "https://www.heart.org/en/health-topics/high-blood-pressure/understanding-blood-pressure-readings",
+      "policy": "adult_bp_upper_threshold",
+      "note": "Configured adult normal-category upper threshold only. Both components are needed for BP categorisation; this comparison does not assess low blood pressure or establish a diagnosis."
+    },
+    {
+      "test": "Diastolic Blood Pressure",
+      "min_age_years": 18,
+      "unit": "mmHg",
+      "low": null,
+      "high": 80,
+      "high_inclusive": false,
+      "source": "https://www.heart.org/en/health-topics/high-blood-pressure/understanding-blood-pressure-readings",
+      "policy": "adult_bp_upper_threshold",
+      "note": "Configured adult normal-category upper threshold only. Both components are needed for BP categorisation; this comparison does not assess low blood pressure or establish a diagnosis."
     }
   ],
   "gender_reference_sources": {

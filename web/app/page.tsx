@@ -66,6 +66,8 @@ type Obs = {
   range_low: number | null;
   range_high: number | null;
   range_source: string;
+  reference_policy?: string;
+  reference_note?: string;
   analytics: string;
   issues: string[];
   normalization_method: string;
@@ -922,7 +924,7 @@ function Workspace() {
                                 </p>
                               )}
                             </td>
-                            <td className="max-w-44">
+                            <td className="min-w-52 max-w-64">
                               <p>
                                 {o.range_low !== null || o.range_high !== null
                                   ? intervalText({
@@ -936,11 +938,46 @@ function Workspace() {
                                   : o.range_text || "—"}
                               </p>
                               <p className="mt-1 text-[10px] text-neutral-400">
-                                {o.range_source}
+                                {o.reference_policy ===
+                                "adult_bp_upper_threshold" ? (
+                                  <a
+                                    href={o.range_source}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="underline underline-offset-2"
+                                  >
+                                    Configured adult BP threshold · AHA
+                                  </a>
+                                ) : (
+                                  o.range_source
+                                )}
                               </p>
+                              {o.reference_note && (
+                                <details className="mt-2 text-[11px] text-neutral-500">
+                                  <summary>About this threshold</summary>
+                                  <p className="mt-2">{o.reference_note}</p>
+                                </details>
+                              )}
                             </td>
                             <td>
-                              <Status value={o.analytics} />
+                              <Status
+                                value={
+                                  o.reference_policy ===
+                                    "adult_bp_upper_threshold" &&
+                                  o.analytics === "Within Range"
+                                    ? "Below adult upper threshold"
+                                    : o.reference_policy ===
+                                          "adult_bp_upper_threshold" &&
+                                        o.analytics === "Above Range"
+                                      ? "At/above adult upper threshold"
+                                      : o.analytics === "Invalid" &&
+                                          o.issues.includes(
+                                            "No applicable reference range; cannot classify",
+                                          )
+                                        ? "Reference unavailable"
+                                        : o.analytics
+                                }
+                              />
                             </td>
                             <td className="min-w-48 max-w-72 text-[11px] text-neutral-500">
                               {o.issues.length
