@@ -159,3 +159,164 @@ summary:focus-visible {
     scroll-margin-top: 480px;
   }
 }
+
+.workflow-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 6px;
+  color: #eadce2;
+  font-size: 14px;
+  white-space: nowrap;
+  list-style: none;
+}
+.workflow-tab::-webkit-details-marker {
+  display: none;
+}
+.workflow-tab:hover {
+  background: #401b2d;
+  color: white;
+}
+.workflow-tab.is-active {
+  background: #512439;
+  color: white;
+  font-weight: 600;
+}
+.advanced-nav {
+  position: relative;
+}
+.advanced-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 14px);
+  z-index: 45;
+  min-width: 200px;
+  padding: 6px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 8px 24px #00000010;
+}
+.advanced-menu button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  text-align: left;
+  font-size: 13px;
+  border-radius: 4px;
+}
+.advanced-menu button:hover {
+  background: #f5f5f5;
+}
+.upload-surface {
+  padding: 42px 24px;
+  border: 1px dashed #cdbbc3;
+  border-radius: 10px;
+  background: #fcfafb;
+  text-align: center;
+}
+.upload-symbol {
+  display: inline-flex;
+  padding: 14px;
+  margin-bottom: 16px;
+  border: 1px solid #e8dfe3;
+  border-radius: 12px;
+  color: #4c1b31;
+  background: white;
+}
+.upload-surface h2 {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.upload-surface p {
+  margin-top: 10px;
+  color: #737373;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.upload-surface .upload-hint {
+  margin-top: 18px;
+  font-size: 12px;
+}
+.workflow-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 24px 0;
+}
+.workflow-summary > div {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.workflow-summary strong {
+  font-size: 24px;
+  font-weight: 600;
+}
+.workflow-summary span {
+  font-size: 13px;
+  color: #737373;
+}
+.workflow-summary > button {
+  margin-left: auto;
+}
+.processing-details {
+  border-top: 1px solid #e5e5e5;
+  padding-top: 18px;
+}
+.processing-details > summary {
+  font-size: 13px;
+  color: #737373;
+}
+.export-surface {
+  padding: 32px;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+}
+@media (max-width: 640px) {
+  .workflow-tab {
+    padding: 10px;
+    gap: 5px;
+    font-size: 12px;
+  }
+  .veritas-nav {
+    padding: 6px;
+  }
+  .workflow-tab > span {
+    display: none;
+  }
+  .workflow-summary {
+    gap: 16px;
+  }
+  .workflow-summary > button {
+    margin-left: 0;
+  }
+  .upload-surface {
+    padding: 28px 16px;
+  }
+  .export-surface {
+    padding: 22px;
+  }
+}
+.report-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 20px;
+}
+@media (max-width: 640px) {
+  .report-row {
+    gap: 12px;
+  }
+  .report-row > div {
+    flex-basis: 100%;
+  }
+  .report-row > button {
+    margin-left: auto;
+  }
+}

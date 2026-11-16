@@ -60,3 +60,7 @@ The record inspector checkbox requests a masked API response. Current and histor
 ## Remaining production work
 
 Load and availability demonstrations, cloud queues/storage, authenticated roles, encryption, retention/deletion policies, external alert delivery, comprehensive regional drug/reference catalogues, and domain approval remain separate. The original sample name-resolution denominator stays 363; recognised panels and narrative labels do not imply safe numeric interpretation. The 98% target is not claimed.
+
+### Main workflow
+
+The main navigation follows Upload → Review → Export. Upload accepts JSON or the supplied samples; standardisation runs during processing. Review contains both pending reports and all stored reports. Marking a report as reviewed records acknowledgement and retains its flags. Export downloads all stored reports, including those awaiting review. Source metrics, processing history, and recovery controls are available under Advanced. Detailed ingestion and coverage metrics can be expanded on Upload.

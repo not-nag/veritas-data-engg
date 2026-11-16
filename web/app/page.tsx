@@ -4,7 +4,6 @@ import {
   Activity,
   ArrowDownToLine,
   ArrowLeft,
-  ArrowUpRight,
   Check,
   CheckCheck,
   ChevronRight,
@@ -171,14 +170,15 @@ function intervalText(i: Interval): string {
 function percent(value: number | null) {
   return value === null ? "—" : `${value.toFixed(1)}%`;
 }
-const tabs = [
-  "Overview",
-  "Records",
-  "Review queue",
-  "Clinics",
-  "Activity",
-  "Operations",
-];
+const screenNames: Record<string, string> = {
+  Overview: "Upload",
+  Records: "All reports",
+  "Review queue": "Review reports",
+  Export: "Export",
+  Clinics: "Sources",
+  Activity: "Processing history",
+  Operations: "System tools",
+};
 function Status({ value }: { value: string }) {
   return (
     <Badge
@@ -194,7 +194,11 @@ function Status({ value }: { value: string }) {
               : ""
       }
     >
-      {value}
+      {value === "Invalid"
+        ? "Needs checking"
+        : value === "Outlier"
+          ? "Outside expected range"
+          : value}
     </Badge>
   );
 }
@@ -507,7 +511,7 @@ function Workspace() {
             veritas
             <span className="mx-3 h-5 border-l border-neutral-200" />
             <span className="text-xs font-normal text-neutral-500">
-              Claims operations
+              Report processing
             </span>
           </a>
           <div className="flex items-center gap-3">
@@ -525,9 +529,13 @@ function Workspace() {
         <nav
           data-tour="navigation"
           aria-label="Main navigation"
-          className="veritas-nav flex gap-1 overflow-x-auto"
+          className="veritas-nav flex items-center gap-1"
         >
-          {tabs.map((t) => (
+          {[
+            ["Overview", "1. Upload"],
+            ["Review queue", "2. Review"],
+            ["Export", "3. Export"],
+          ].map(([t, label]) => (
             <button
               key={t}
               data-tour={`nav-${t}`}
@@ -536,18 +544,56 @@ function Workspace() {
                 setTab(t);
                 setDetail(null);
                 setQuery("");
+                setClinic("All clinics");
+                setClassification("All records");
               }}
-              aria-current={tab === t ? "page" : undefined}
-              className={`flex h-9 items-center gap-2 whitespace-nowrap rounded-md px-3 text-xs ${tab === t ? "bg-[#512439] font-medium text-white" : "text-[#f2dce5] hover:bg-[#401b2d] hover:text-white"}`}
+              aria-current={
+                tab === t || (t === "Review queue" && tab === "Records")
+                  ? "page"
+                  : undefined
+              }
+              className={`workflow-tab ${tab === t || (t === "Review queue" && tab === "Records") ? "is-active" : ""}`}
             >
-              {t}
+              {label}
               {t === "Review queue" && pending > 0 && (
-                <span className="rounded bg-white/15 px-1.5 py-0.5 text-[10px]">
+                <span className="rounded bg-white/15 px-2 py-0.5 text-xs">
                   {pending}
                 </span>
               )}
             </button>
           ))}
+          <details
+            className="advanced-nav ml-auto"
+            open={
+              tour.active &&
+              ["clinics", "activity", "operations"].includes(tour.step.id)
+            }
+          >
+            <summary
+              className={`workflow-tab ${["Clinics", "Activity", "Operations"].includes(tab) ? "is-active" : ""}`}
+            >
+              Advanced
+            </summary>
+            <div className="advanced-menu">
+              {["Clinics", "Activity", "Operations"].map((t) => (
+                <button
+                  key={t}
+                  data-tour={`nav-${t}`}
+                  onClick={(event) => {
+                    setTab(t);
+                    setDetail(null);
+                    setQuery("");
+                    tour.signal("nav:" + t);
+                    event.currentTarget
+                      .closest("details")
+                      ?.removeAttribute("open");
+                  }}
+                >
+                  {screenNames[t]}
+                </button>
+              ))}
+            </div>
+          </details>
         </nav>
         <WalkthroughGuide
           onFinish={() =>
@@ -560,48 +606,46 @@ function Workspace() {
           <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
             <div>
               <div className="mb-2 text-[10px] font-medium uppercase tracking-[.15em] text-neutral-400">
-                Data standardisation
+                Medical reports
               </div>
               <h1 className="text-2xl font-semibold tracking-tight">
                 {detail
-                  ? "Record inspector"
+                  ? "Review report"
                   : tab === "Overview"
-                    ? "Pipeline overview"
-                    : tab}
+                    ? "Upload your reports"
+                    : screenNames[tab]}
               </h1>
               <p className="mt-2 text-xs text-neutral-500">
                 {detail
-                  ? "Trace each transformation back to its source."
+                  ? "Check the extracted results, then mark this report as reviewed."
                   : tab === "Overview"
-                    ? "A clear view of incoming reports and the quality of your data."
+                    ? "Add JSON files. Veritas standardises the data and highlights anything that needs checking."
                     : tab === "Review queue"
-                      ? "Review unresolved mappings, unusual results, and source inconsistencies."
-                      : tab === "Clinics"
-                        ? "Monitor data quality across your source systems."
-                        : tab === "Activity"
-                          ? "File outcomes and processing history."
-                          : tab === "Operations"
-                            ? "Monitor intake, recover failed files, and review pipeline alerts."
-                            : "Search reports and inspect standardised results."}
+                      ? "Open a report, check the highlighted issues, and mark it as reviewed."
+                      : tab === "Export"
+                        ? "Download the standardised results as a CSV file."
+                        : tab === "Clinics"
+                          ? "Monitor data quality across your source systems."
+                          : tab === "Activity"
+                            ? "File outcomes and processing history."
+                            : tab === "Operations"
+                              ? "Monitor intake, recover failed files, and review pipeline alerts."
+                              : "Open a report to see its test results, medicines, and any issues found."}
               </p>
             </div>
-            <div className="flex gap-2">
+            <div
+              className={
+                tab === "Overview" && !detail ? "hidden" : "flex gap-2"
+              }
+            >
               <Button
                 variant="outline"
-                data-tour="upload"
+                data-tour={tab === "Overview" && !detail ? undefined : "upload"}
                 onClick={() => input.current?.click()}
                 disabled={busy}
               >
                 <Upload />
                 Upload JSON
-              </Button>
-              <Button
-                data-tour="samples"
-                onClick={() => process()}
-                disabled={busy}
-              >
-                {busy ? <Loader2 className="animate-spin" /> : <Activity />}
-                {busy ? "Processing…" : "Run sample data"}
               </Button>
               <input
                 ref={input}
@@ -663,7 +707,7 @@ function Workspace() {
                 onClick={() => setDetail(null)}
               >
                 <ArrowLeft />
-                Back to {tab.toLowerCase()}
+                Back to {screenNames[tab]?.toLowerCase()}
               </Button>
               <label
                 data-tour="mask"
@@ -724,12 +768,18 @@ function Workspace() {
                       : "Mark reviewed"}
                   </Button>
                 </div>
-                <p className="mt-4 break-all text-[11px] text-neutral-400">
-                  Source: {detail.source}
+                <p className="mt-4 text-sm leading-6 text-neutral-500">
+                  {detail.output.observations.length} test results ·{" "}
+                  {detail.output.medications.length} medicines. Check the
+                  results below before marking this report as reviewed.
+                  Reviewing records your acknowledgement; it does not alter the
+                  original report.
                 </p>
-                <p className="mt-1 text-[11px] text-neutral-400">
-                  Configuration: {detail.output.config_version}
-                </p>
+                <details className="mt-3 text-xs text-neutral-500">
+                  <summary>Source &amp; processing version</summary>
+                  <p className="mt-2 break-all">{detail.source}</p>
+                  <p className="mt-1">{detail.output.config_version}</p>
+                </details>
               </div>
               {!!detail.versions?.length && (
                 <details
@@ -776,7 +826,11 @@ function Workspace() {
                         tour.signal("detail:" + t);
                       }}
                     >
-                      {t}
+                      {t === "Observations"
+                        ? "Test results"
+                        : t === "Medications"
+                          ? "Medicines"
+                          : "Original & transformed data"}
                     </Button>
                   ),
                 )}
@@ -821,11 +875,11 @@ function Workspace() {
                       <thead className="bg-neutral-50/70">
                         <tr>
                           {[
-                            "Test / source label",
+                            "Test name",
                             "Result",
                             "Reference",
-                            "Classification",
-                            "Transformation notes",
+                            "Result status",
+                            "What needs checking",
                           ].map((h) => (
                             <th key={h}>{h}</th>
                           ))}
@@ -982,273 +1036,437 @@ function Workspace() {
               )}
               {tab === "Overview" && (
                 <>
-                  <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-xs text-neutral-500">
-                    <span>
-                      Daily ingestion · {data?.daily.timezone || "Asia/Kolkata"}
+                  <section className="upload-surface">
+                    <span className="upload-symbol">
+                      <Upload className="size-6" />
                     </span>
-                    <form
-                      data-tour="daily-filter"
-                      aria-label="Daily statistics filter"
-                      className="flex gap-2"
-                      onSubmit={async (e) => {
-                        e.preventDefault();
-                        const day = String(
-                          new FormData(e.currentTarget).get("day") || "",
-                        );
-                        try {
-                          const result = await api(
-                            "dashboard?day=" + encodeURIComponent(day),
-                          );
-                          setData(result);
-                          setSelectedDay(day);
-                          setError("");
-                          tour.signal("date-applied");
-                        } catch (error) {
-                          setError((error as Error).message);
-                        }
+                    <h2>Add medical-report files</h2>
+                    <p>
+                      Select one or more JSON files. Processing starts after you
+                      select them.
+                    </p>
+                    <div className="mt-6 flex flex-wrap justify-center gap-3">
+                      <Button
+                        data-tour="upload"
+                        disabled={busy}
+                        onClick={() => input.current?.click()}
+                      >
+                        <Upload />
+                        {busy ? "Processing…" : "Choose JSON files"}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        data-tour="samples"
+                        disabled={busy}
+                        onClick={() => process()}
+                      >
+                        {busy ? (
+                          <Loader2 className="animate-spin" />
+                        ) : (
+                          <Files />
+                        )}
+                        Try sample reports
+                      </Button>
+                    </div>
+                    <p className="upload-hint">
+                      JSON only · up to 9.5 MB per upload
+                    </p>
+                  </section>
+                  <div className="workflow-summary">
+                    <div>
+                      <strong>{data?.records.length ?? 0}</strong>
+                      <span>reports stored</span>
+                    </div>
+                    <div>
+                      <strong>{pending}</strong>
+                      <span>need review</span>
+                    </div>
+                    <Button
+                      variant="outline"
+                      disabled={!data?.records.length}
+                      onClick={() => {
+                        setTab(pending ? "Review queue" : "Records");
+                        setQuery("");
+                        setClinic("All clinics");
+                        setClassification("All records");
                       }}
                     >
-                      <Input
-                        key={data?.daily.date}
-                        name="day"
-                        required
-                        type="date"
-                        aria-label="Daily statistics date"
-                        value={
-                          dayDraft ?? (selectedDay || data?.daily.date || "")
-                        }
-                        onChange={(e) => setDayDraft(e.target.value)}
-                        className="h-8 text-xs"
-                      />
-                      <Button type="submit" variant="outline" size="sm">
-                        Apply
-                      </Button>
-                    </form>
+                      Review reports <ChevronRight />
+                    </Button>
                   </div>
-                  <div className="mb-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
-                    {[
-                      [
-                        "Files received",
-                        data?.daily.received ?? 0,
-                        "File attempts on selected day",
-                      ],
-                      [
-                        "Processed",
-                        data?.daily.processed ?? 0,
-                        "Completed file attempts",
-                      ],
-                      [
-                        "Failed",
-                        data?.daily.failed ?? 0,
-                        "Retained for investigation",
-                      ],
-                      [
-                        "Flagged files",
-                        data?.daily.flagged_files ?? 0,
-                        "Files containing review flags",
-                      ],
-                    ].map(([label, value, note]) => (
-                      <div
-                        className="rounded-lg border border-neutral-200 p-5"
-                        key={label}
-                      >
-                        <p className="text-xs text-neutral-500">{label}</p>
-                        <p className="mb-2 mt-4 text-3xl font-semibold tracking-tight tabular-nums">
-                          {value}
-                        </p>
-                        <p className="text-[11px] text-neutral-400">{note}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="mb-8 text-[11px] text-neutral-400">
-                    All time: {data?.records.length ?? 0} stored records ·{" "}
-                    {data?.observation_count ?? 0} observations · {pending}{" "}
-                    awaiting review
+                  <p className="mb-7 text-sm leading-6 text-neutral-500">
+                    What happens next: names and units are standardised
+                    automatically. You check uncertain results, mark reports as
+                    reviewed, then export the data.
                   </p>
-                  <div className="mb-8 grid gap-5 lg:grid-cols-[1.6fr_1fr]">
-                    <section className="rounded-lg border border-neutral-200">
-                      <div className="flex items-center justify-between border-b border-neutral-100 px-5 py-4">
-                        <h2 className="text-sm font-medium">Latest run</h2>
-                        {latest && (
-                          <span className="text-[11px] text-neutral-400">
-                            {time(latest.started_at)}
-                          </span>
-                        )}
-                      </div>
-                      {latest ? (
-                        <div className="p-5">
-                          <div className="mb-5 flex items-center gap-3">
-                            <span className="flex size-9 items-center justify-center rounded-full bg-neutral-100">
-                              <Check className="size-4" />
-                            </span>
-                            <div>
-                              <p className="text-sm font-medium">
-                                {latest.summary.failed
-                                  ? "Completed with errors"
-                                  : "Processing complete"}
-                              </p>
-                              <p className="mt-1 text-[11px] text-neutral-500">
-                                {latest.summary.received} files ·{" "}
-                                {latest.summary.duration_seconds}s elapsed
-                              </p>
-                            </div>
-                          </div>
-                          <div className="grid grid-cols-3 gap-4 border-t border-neutral-100 pt-4">
-                            {[
-                              [
-                                "New / refreshed",
-                                `${latest.summary.records} / ${latest.summary.updated_records ?? 0}`,
-                              ],
-                              ["Duplicates", latest.summary.duplicates],
-                              ["Flagged records", latest.summary.flagged],
-                            ].map(([k, v]) => (
-                              <div key={k}>
-                                <p className="text-[11px] text-neutral-500">
-                                  {k}
-                                </p>
-                                <p className="mt-2 text-lg font-medium">{v}</p>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      ) : (
-                        <Empty
-                          title="Ready for your first run"
-                          description="Run the supplied samples or upload JSON reports."
-                        />
-                      )}
-                    </section>
-                    <section
-                      data-tour="coverage"
-                      className="rounded-lg border border-neutral-200"
-                    >
-                      <div className="border-b border-neutral-100 px-5 py-4">
-                        <h2 className="text-sm font-medium">
-                          Standardisation coverage
-                        </h2>
-                      </div>
-                      <div className="p-5">
-                        <div className="flex items-end justify-between">
-                          <p className="text-3xl font-semibold tracking-tight">
-                            {data?.total_tests
-                              ? (
-                                  (data.resolved_tests / data.total_tests) *
-                                  100
-                                ).toFixed(1)
-                              : 0}
-                            <span className="text-lg text-neutral-400">%</span>
-                          </p>
-                          <span className="text-[11px] text-neutral-400">
-                            Name resolution
-                          </span>
-                        </div>
-                        <div className="mb-3 mt-4 h-1.5 overflow-hidden rounded-full bg-neutral-100">
-                          <div
-                            className="h-full rounded-full bg-neutral-800"
-                            style={{
-                              width: `${data?.total_tests ? (data.resolved_tests / data.total_tests) * 100 : 0}%`,
-                            }}
+                  <details
+                    className="processing-details"
+                    open={
+                      tour.active &&
+                      ["daily", "coverage", "exclusions", "refresh"].includes(
+                        tour.step.id,
+                      )
+                    }
+                  >
+                    <summary>Processing details &amp; data quality</summary>
+                    <div className="pt-6">
+                      <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-xs text-neutral-500">
+                        <span>
+                          Daily ingestion ·{" "}
+                          {data?.daily.timezone || "Asia/Kolkata"}
+                        </span>
+                        <form
+                          data-tour="daily-filter"
+                          aria-label="Daily statistics filter"
+                          className="flex gap-2"
+                          onSubmit={async (e) => {
+                            e.preventDefault();
+                            const day = String(
+                              new FormData(e.currentTarget).get("day") || "",
+                            );
+                            try {
+                              const result = await api(
+                                "dashboard?day=" + encodeURIComponent(day),
+                              );
+                              setData(result);
+                              setSelectedDay(day);
+                              setError("");
+                              tour.signal("date-applied");
+                            } catch (error) {
+                              setError((error as Error).message);
+                            }
+                          }}
+                        >
+                          <Input
+                            key={data?.daily.date}
+                            name="day"
+                            required
+                            type="date"
+                            aria-label="Daily statistics date"
+                            value={
+                              dayDraft ??
+                              (selectedDay || data?.daily.date || "")
+                            }
+                            onChange={(e) => setDayDraft(e.target.value)}
+                            className="h-8 text-xs"
                           />
-                        </div>
-                        <p className="text-[11px] leading-relaxed text-neutral-500">
-                          {data?.resolved_tests || 0} of{" "}
-                          {data?.total_tests || 0} original source entries
-                          mapped, before panel expansion. Matching includes
-                          named panels and findings; result validity is assessed
-                          separately.
-                        </p>
-                        {!!data?.non_test_entries && (
-                          <div className="mt-4 rounded-md bg-neutral-50 p-3 text-[11px] text-neutral-600">
-                            <p className="font-medium">
-                              {(
-                                (data.resolved_tests /
-                                  data.eligible_test_entries) *
-                                100
-                              ).toFixed(1)}
-                              % excluding identified non-test rows
-                            </p>
-                            <p className="mt-1">
-                              {data.resolved_tests} of{" "}
-                              {data.eligible_test_entries} eligible entries. All{" "}
-                              {data.non_test_entries} excluded rows remain in
-                              the raw metric above and in the source evidence.
-                              Uncertain rows remain eligible.
-                            </p>
-                            <details
-                              data-tour="exclusions"
-                              onToggle={(e) => {
-                                if (e.currentTarget.open)
-                                  tour.signal("exclusions-opened");
-                              }}
-                              className="mt-2"
-                            >
-                              <summary>View non-test rows</summary>
-                              {Object.entries(data.non_test_names).map(
-                                ([name, count]) => (
-                                  <p key={name} className="mt-1">
-                                    {name} ×{count}
-                                  </p>
-                                ),
-                              )}
-                            </details>
-                          </div>
-                        )}
-                        <p className="mt-2 text-[11px] text-neutral-400">
-                          {(data?.observation_count ?? 0) -
-                            (data?.analytics.Invalid ?? 0)}{" "}
-                          of {data?.observation_count ?? 0} output observations
-                          have a result classification.
-                        </p>
-                        {!!Object.keys(data?.unresolved_names || {}).length && (
-                          <details className="mt-4 text-[11px] text-neutral-500">
-                            <summary>Unresolved source names</summary>
-                            <div className="mt-2 max-h-40 overflow-auto">
-                              {Object.entries(data?.unresolved_names || {}).map(
-                                ([name, count]) => (
-                                  <p key={name} className="py-1">
-                                    {name}{" "}
-                                    <span className="text-neutral-400">
-                                      ×{count}
-                                    </span>
-                                  </p>
-                                ),
-                              )}
-                            </div>
-                          </details>
-                        )}
-                        {!!data?.outdated_records && (
-                          <Button
-                            className="mt-4"
-                            variant="outline"
-                            size="sm"
-                            disabled={busy}
-                            onClick={() => process(undefined, true)}
-                          >
-                            {busy ? (
-                              <Loader2 className="animate-spin" />
-                            ) : (
-                              <Activity />
-                            )}
-                            Refresh {data.outdated_records} records with latest
-                            mappings
+                          <Button type="submit" variant="outline" size="sm">
+                            Apply
                           </Button>
-                        )}
+                        </form>
                       </div>
-                    </section>
-                  </div>
+                      <div className="mb-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
+                        {[
+                          [
+                            "Files received",
+                            data?.daily.received ?? 0,
+                            "File attempts on selected day",
+                          ],
+                          [
+                            "Processed",
+                            data?.daily.processed ?? 0,
+                            "Completed file attempts",
+                          ],
+                          [
+                            "Failed",
+                            data?.daily.failed ?? 0,
+                            "Retained for investigation",
+                          ],
+                          [
+                            "Flagged files",
+                            data?.daily.flagged_files ?? 0,
+                            "Files containing review flags",
+                          ],
+                        ].map(([label, value, note]) => (
+                          <div
+                            className="rounded-lg border border-neutral-200 p-5"
+                            key={label}
+                          >
+                            <p className="text-xs text-neutral-500">{label}</p>
+                            <p className="mb-2 mt-4 text-3xl font-semibold tracking-tight tabular-nums">
+                              {value}
+                            </p>
+                            <p className="text-[11px] text-neutral-400">
+                              {note}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="mb-8 text-[11px] text-neutral-400">
+                        All time: {data?.records.length ?? 0} stored records ·{" "}
+                        {data?.observation_count ?? 0} observations · {pending}{" "}
+                        awaiting review
+                      </p>
+                      <div className="mb-8 grid gap-5 lg:grid-cols-[1.6fr_1fr]">
+                        <section className="rounded-lg border border-neutral-200">
+                          <div className="flex items-center justify-between border-b border-neutral-100 px-5 py-4">
+                            <h2 className="text-sm font-medium">Latest run</h2>
+                            {latest && (
+                              <span className="text-[11px] text-neutral-400">
+                                {time(latest.started_at)}
+                              </span>
+                            )}
+                          </div>
+                          {latest ? (
+                            <div className="p-5">
+                              <div className="mb-5 flex items-center gap-3">
+                                <span className="flex size-9 items-center justify-center rounded-full bg-neutral-100">
+                                  <Check className="size-4" />
+                                </span>
+                                <div>
+                                  <p className="text-sm font-medium">
+                                    {latest.summary.failed
+                                      ? "Completed with errors"
+                                      : "Processing complete"}
+                                  </p>
+                                  <p className="mt-1 text-[11px] text-neutral-500">
+                                    {latest.summary.received} files ·{" "}
+                                    {latest.summary.duration_seconds}s elapsed
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="grid grid-cols-3 gap-4 border-t border-neutral-100 pt-4">
+                                {[
+                                  [
+                                    "New / refreshed",
+                                    `${latest.summary.records} / ${latest.summary.updated_records ?? 0}`,
+                                  ],
+                                  ["Duplicates", latest.summary.duplicates],
+                                  ["Flagged records", latest.summary.flagged],
+                                ].map(([k, v]) => (
+                                  <div key={k}>
+                                    <p className="text-[11px] text-neutral-500">
+                                      {k}
+                                    </p>
+                                    <p className="mt-2 text-lg font-medium">
+                                      {v}
+                                    </p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ) : (
+                            <Empty
+                              title="Ready for your first run"
+                              description="Run the supplied samples or upload JSON reports."
+                            />
+                          )}
+                        </section>
+                        <section
+                          data-tour="coverage"
+                          className="rounded-lg border border-neutral-200"
+                        >
+                          <div className="border-b border-neutral-100 px-5 py-4">
+                            <h2 className="text-sm font-medium">
+                              Standardisation coverage
+                            </h2>
+                          </div>
+                          <div className="p-5">
+                            <div className="flex items-end justify-between">
+                              <p className="text-3xl font-semibold tracking-tight">
+                                {data?.total_tests
+                                  ? (
+                                      (data.resolved_tests / data.total_tests) *
+                                      100
+                                    ).toFixed(1)
+                                  : 0}
+                                <span className="text-lg text-neutral-400">
+                                  %
+                                </span>
+                              </p>
+                              <span className="text-[11px] text-neutral-400">
+                                Name resolution
+                              </span>
+                            </div>
+                            <div className="mb-3 mt-4 h-1.5 overflow-hidden rounded-full bg-neutral-100">
+                              <div
+                                className="h-full rounded-full bg-neutral-800"
+                                style={{
+                                  width: `${data?.total_tests ? (data.resolved_tests / data.total_tests) * 100 : 0}%`,
+                                }}
+                              />
+                            </div>
+                            <p className="text-[11px] leading-relaxed text-neutral-500">
+                              {data?.resolved_tests || 0} of{" "}
+                              {data?.total_tests || 0} original source entries
+                              mapped, before panel expansion. Matching includes
+                              named panels and findings; result validity is
+                              assessed separately.
+                            </p>
+                            {!!data?.non_test_entries && (
+                              <div className="mt-4 rounded-md bg-neutral-50 p-3 text-[11px] text-neutral-600">
+                                <p className="font-medium">
+                                  {(
+                                    (data.resolved_tests /
+                                      data.eligible_test_entries) *
+                                    100
+                                  ).toFixed(1)}
+                                  % excluding identified non-test rows
+                                </p>
+                                <p className="mt-1">
+                                  {data.resolved_tests} of{" "}
+                                  {data.eligible_test_entries} eligible entries.
+                                  All {data.non_test_entries} excluded rows
+                                  remain in the raw metric above and in the
+                                  source evidence. Uncertain rows remain
+                                  eligible.
+                                </p>
+                                <details
+                                  data-tour="exclusions"
+                                  onToggle={(e) => {
+                                    if (e.currentTarget.open)
+                                      tour.signal("exclusions-opened");
+                                  }}
+                                  className="mt-2"
+                                >
+                                  <summary>View non-test rows</summary>
+                                  {Object.entries(data.non_test_names).map(
+                                    ([name, count]) => (
+                                      <p key={name} className="mt-1">
+                                        {name} ×{count}
+                                      </p>
+                                    ),
+                                  )}
+                                </details>
+                              </div>
+                            )}
+                            <p className="mt-2 text-[11px] text-neutral-400">
+                              {(data?.observation_count ?? 0) -
+                                (data?.analytics.Invalid ?? 0)}{" "}
+                              of {data?.observation_count ?? 0} output
+                              observations have a result classification.
+                            </p>
+                            {!!Object.keys(data?.unresolved_names || {})
+                              .length && (
+                              <details className="mt-4 text-[11px] text-neutral-500">
+                                <summary>Unresolved source names</summary>
+                                <div className="mt-2 max-h-40 overflow-auto">
+                                  {Object.entries(
+                                    data?.unresolved_names || {},
+                                  ).map(([name, count]) => (
+                                    <p key={name} className="py-1">
+                                      {name}{" "}
+                                      <span className="text-neutral-400">
+                                        ×{count}
+                                      </span>
+                                    </p>
+                                  ))}
+                                </div>
+                              </details>
+                            )}
+                            {!!data?.outdated_records && (
+                              <Button
+                                className="mt-4"
+                                variant="outline"
+                                size="sm"
+                                disabled={busy}
+                                onClick={() => process(undefined, true)}
+                              >
+                                {busy ? (
+                                  <Loader2 className="animate-spin" />
+                                ) : (
+                                  <Activity />
+                                )}
+                                Refresh {data.outdated_records} records with
+                                latest mappings
+                              </Button>
+                            )}
+                          </div>
+                        </section>
+                      </div>
+                    </div>
+                  </details>
                 </>
               )}
-              {(tab === "Overview" ||
-                tab === "Records" ||
-                tab === "Review queue") && (
+              {tab === "Export" && (
+                <section className="export-surface">
+                  <ArrowDownToLine className="mb-5 size-7 text-neutral-400" />
+                  <h2 className="text-xl font-semibold">
+                    Your standardised data
+                  </h2>
+                  <p className="mt-3 max-w-xl text-sm leading-6 text-neutral-500">
+                    The CSV contains recognised tests, results, units, reference
+                    ranges, and result statuses. It includes all stored reports,
+                    including those still awaiting review.
+                  </p>
+                  <div className="my-6 rounded-md border border-neutral-200 bg-neutral-50 p-4 text-sm">
+                    {data?.records.length ?? 0} reports stored · {pending}{" "}
+                    awaiting review
+                    {pending > 0 && (
+                      <p className="mt-2 text-neutral-500">
+                        Review the flagged reports before using the exported
+                        data.
+                      </p>
+                    )}
+                  </div>
+                  <Button asChild disabled={!data?.records.length}>
+                    <a
+                      data-tour="export"
+                      href={data?.records.length ? "/api/export" : undefined}
+                      aria-disabled={!data?.records.length}
+                      onClick={() => {
+                        if (data?.records.length)
+                          tour.signal("export-requested");
+                      }}
+                    >
+                      <ArrowDownToLine />
+                      Download CSV
+                    </a>
+                  </Button>
+                  {pending > 0 && (
+                    <Button
+                      className="ml-3"
+                      variant="outline"
+                      onClick={() => setTab("Review queue")}
+                    >
+                      Review reports
+                    </Button>
+                  )}
+                </section>
+              )}
+              {(tab === "Records" || tab === "Review queue") && (
+                <div
+                  className="mb-5 flex flex-wrap items-center gap-2"
+                  aria-label="Report views"
+                >
+                  <Button
+                    variant={tab === "Review queue" ? "default" : "outline"}
+                    onClick={() => {
+                      setTab("Review queue");
+                      setQuery("");
+                      setClinic("All clinics");
+                      setClassification("All records");
+                      tour.signal("nav:Review queue");
+                    }}
+                  >
+                    Needs review ({pending})
+                  </Button>
+                  <Button
+                    data-tour="nav-Records"
+                    variant={tab === "Records" ? "default" : "outline"}
+                    onClick={() => {
+                      setTab("Records");
+                      setQuery("");
+                      setClinic("All clinics");
+                      setClassification("All records");
+                      tour.signal("nav:Records");
+                    }}
+                  >
+                    All reports ({data?.records.length ?? 0})
+                  </Button>
+                  <p className="text-xs text-neutral-500 sm:ml-2">
+                    A flag means the data needs checking, not that the patient
+                    is unwell.
+                  </p>
+                </div>
+              )}
+              {(tab === "Records" || tab === "Review queue") && (
                 <section className="overflow-hidden rounded-lg border border-neutral-200">
                   <div className="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-100 px-5 py-4">
                     <h2 className="flex items-center gap-2 text-sm font-medium">
-                      {tab === "Overview"
-                        ? "Recent records"
-                        : tab === "Review queue"
-                          ? "Open reviews"
-                          : "All records"}
+                      {tab === "Review queue"
+                        ? "Reports to check"
+                        : "All reports"}
                       <span className="text-xs font-normal text-neutral-400">
                         {records.length}
                       </span>
@@ -1259,7 +1477,7 @@ function Workspace() {
                         <Input
                           data-tour="search"
                           aria-label="Search records"
-                          placeholder="Search records…"
+                          placeholder="Find a report…"
                           value={query}
                           onChange={(e) => {
                             setQuery(e.target.value);
@@ -1300,99 +1518,69 @@ function Workspace() {
                           <option>Clear</option>
                         </select>
                       )}
-                      <Button size="sm" variant="outline" asChild>
-                        <a
-                          data-tour="export"
-                          href="/api/export"
-                          onClick={() => tour.signal("export-requested")}
-                        >
-                          <ArrowDownToLine />
-                          Export
-                        </a>
-                      </Button>
                     </div>
                   </div>
                   <div className="overflow-x-auto">
                     {records.length ? (
-                      <table className="w-full">
-                        <thead className="bg-neutral-50/60">
-                          <tr>
-                            {[
-                              "Document",
-                              "Source",
-                              "Record type",
-                              "Tests",
-                              "Quality",
-                              "",
-                            ].map((h, i) => (
-                              <th key={i}>{h}</th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {records
-                            .slice(0, tab === "Overview" ? 6 : 500)
-                            .map((r) => (
-                              <tr key={r.id} className="hover:bg-neutral-50/60">
-                                <td>
-                                  <button
-                                    className="text-left font-mono text-[11px] underline-offset-4 hover:underline"
-                                    onClick={() => inspect(r.id)}
-                                  >
-                                    {r.document_id.length > 27
-                                      ? r.document_id.slice(0, 27) + "…"
-                                      : r.document_id}
-                                  </button>
-                                  <p className="mt-1 text-[10px] text-neutral-400">
-                                    {r.patient.report_date ||
-                                      "Date unavailable"}
-                                  </p>
-                                </td>
-                                <td>{r.clinic}</td>
-                                <td className="text-neutral-500">
-                                  {r.record_type.replaceAll("_", " ")}
-                                </td>
-                                <td className="tabular-nums">
-                                  {r.tests || "—"}
-                                </td>
-                                <td>
-                                  <Badge
-                                    className={
-                                      r.review_status === "Reviewed"
-                                        ? "bg-neutral-50 text-neutral-500"
-                                        : r.flagged
-                                          ? "border-amber-200 bg-amber-50 text-amber-800"
-                                          : ""
-                                    }
-                                  >
-                                    {r.review_status === "Reviewed"
-                                      ? "Reviewed"
-                                      : r.flagged
-                                        ? `${r.issues} flags`
-                                        : "Clear"}
-                                  </Badge>
-                                </td>
-                                <td>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    data-tour={
-                                      tab === "Review queue"
-                                        ? "inspect-review"
-                                        : r.tests
-                                          ? "inspect-lab"
-                                          : "inspect-discharge"
-                                    }
-                                    aria-label={`Inspect ${r.document_id}`}
-                                    onClick={() => inspect(r.id)}
-                                  >
-                                    <ArrowUpRight />
-                                  </Button>
-                                </td>
-                              </tr>
-                            ))}
-                        </tbody>
-                      </table>
+                      <ul
+                        aria-label="Reports"
+                        className="divide-y divide-neutral-100"
+                      >
+                        {records.slice(0, 500).map((r) => (
+                          <li key={r.id} className="report-row">
+                            <div className="min-w-0 flex-1">
+                              <p className="font-medium">
+                                {r.record_type === "lab_report"
+                                  ? "Lab report"
+                                  : r.record_type === "discharge_summary"
+                                    ? "Discharge summary"
+                                    : "Medical report"}
+                              </p>
+                              <p className="mt-1 text-xs text-neutral-500">
+                                {r.clinic} ·{" "}
+                                {r.patient.report_date || "No report date"}
+                                {r.tests ? ` · ${r.tests} test results` : ""}
+                              </p>
+                              <p
+                                className="mt-2 truncate font-mono text-[10px] text-neutral-400"
+                                title={r.document_id}
+                              >
+                                {r.document_id}
+                              </p>
+                            </div>
+                            <Badge
+                              className={
+                                r.review_status === "Reviewed"
+                                  ? "bg-neutral-50 text-neutral-500"
+                                  : r.flagged
+                                    ? "border-amber-200 bg-amber-50 text-amber-800"
+                                    : ""
+                              }
+                            >
+                              {r.review_status === "Reviewed"
+                                ? "Reviewed"
+                                : r.flagged
+                                  ? `${r.issues} issues to check`
+                                  : "No issues found"}
+                            </Badge>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              data-tour={
+                                tab === "Review queue"
+                                  ? "inspect-review"
+                                  : r.tests
+                                    ? "inspect-lab"
+                                    : "inspect-discharge"
+                              }
+                              aria-label={`Open ${r.record_type.replaceAll("_", " ")} ${r.document_id}`}
+                              onClick={() => inspect(r.id)}
+                            >
+                              Open <ChevronRight />
+                            </Button>
+                          </li>
+                        ))}
+                      </ul>
                     ) : (
                       <Empty
                         title={
@@ -1408,18 +1596,6 @@ function Workspace() {
                       />
                     )}
                   </div>
-                  {tab === "Overview" && records.length > 6 && (
-                    <div className="flex justify-end border-t border-neutral-100 px-4 py-2">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => setTab("Records")}
-                      >
-                        View all records
-                        <ChevronRight />
-                      </Button>
-                    </div>
-                  )}
                 </section>
               )}
               {tab === "Clinics" && (
@@ -1570,11 +1746,8 @@ function Workspace() {
           )}
         </main>
         <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-neutral-100 py-5 text-[10px] text-neutral-400">
-          <span>Veritas Claims · Operations workspace</span>
-          <span>
-            {data?.config.tests || 0} dictionary entries · Local SQLite ·
-            Prototype
-          </span>
+          <span>Veritas · Medical report processing</span>
+          <span>Upload → Review → Export</span>
         </footer>
       </div>
     </div>

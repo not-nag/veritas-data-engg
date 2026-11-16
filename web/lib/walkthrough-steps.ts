@@ -34,7 +34,8 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Load the supplied reports",
     description:
       "Sample reports give you records to explore. Repeating a run demonstrates duplicate suppression.",
-    instruction: "Click Run sample data, wait for the result, then Continue.",
+    instruction:
+      "Click Try sample reports, wait for the result, then Continue.",
     target: "samples",
     screen: "Overview",
     event: "samples-processed",
@@ -85,9 +86,9 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Open the records list",
     description:
       "Records contains the stored reports, including their source, record type, observation count, and review status.",
-    instruction: "Click Records in the navigation.",
+    instruction: "Click All reports below the page heading.",
     target: "nav-Records",
-    screen: "Overview",
+    screen: "Review queue",
     event: "nav:Records",
   },
   {
@@ -137,7 +138,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     target: "inspect-lab",
     screen: "Records",
     event: "inspect:lab",
-    unavailable: "No laboratory report is available. Run sample data first.",
+    unavailable: "No laboratory report is available. Try sample reports first.",
   },
   {
     id: "observation-filter",
@@ -173,7 +174,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Compare raw and standardised data",
     description:
       "The original JSON is retained alongside the transformed output so you can check each decision.",
-    instruction: "Click Raw & standardised.",
+    instruction: "Click Original & transformed data.",
     target: "detail-Raw & standardised",
     screen: "Records",
     record: "lab",
@@ -220,7 +221,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     target: "inspect-discharge",
     screen: "Records",
     event: "inspect:discharge",
-    unavailable: "No discharge summary is available. Run sample data first.",
+    unavailable: "No discharge summary is available. Try sample reports first.",
   },
   {
     id: "medications",
@@ -229,7 +230,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     description:
       "Verified products are mapped to generic ingredients. Formulation suffixes and strengths matter; unresolved names remain for review.",
     instruction:
-      "Click Medications and read the mapping status and reference links.",
+      "Click Medicines and read the mapping status and reference links.",
     target: "detail-Medications",
     screen: "Records",
     record: "discharge",
@@ -242,7 +243,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Open the review queue",
     description:
       "This queue contains flagged records that have not been acknowledged as reviewed.",
-    instruction: "Click Review queue in the navigation.",
+    instruction: "Click 2. Review in the navigation.",
     target: "nav-Review queue",
     screen: "Records",
     event: "nav:Review queue",
@@ -285,9 +286,9 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Export the canonical output",
     description:
       "The CSV has five columns for each configured test. Absent tests are blank; repeated observations use additional rows. The export includes all stored records, not just the filtered list.",
-    instruction: "Click Export to request the CSV download.",
+    instruction: "Click Download CSV to download the transformed data.",
     target: "export",
-    screen: "Records",
+    screen: "Export",
     event: "export-requested",
     optional: true,
   },
@@ -309,7 +310,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     description:
       "You can upload a supported clinic format. The downloadable example is synthetic and uses the second configured schema.",
     instruction:
-      "Download the example, click Upload JSON, and select it. Upload starts after file selection. You can also skip this demonstration.",
+      "Download the example, click Choose JSON files (or Upload JSON outside the Upload screen), and select it. Upload starts after file selection. You can also skip this demonstration.",
     target: "upload",
     screen: "Overview",
     event: "upload-succeeded",
@@ -324,7 +325,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Compare clinics",
     description:
       "Clinic summaries show duplicate, file-error, and missing-required-field rates with their denominators. Reruns are included.",
-    instruction: "Click Clinics and compare the source rows.",
+    instruction: "Open Advanced, choose Sources, and compare the source rows.",
     target: "nav-Clinics",
     screen: "Overview",
     event: "nav:Clinics",
@@ -335,7 +336,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Read processing history",
     description:
       "Activity shows runs and file outcomes, including suppressed duplicates and reasons for file failures.",
-    instruction: "Click Activity, then inspect the run and file tables.",
+    instruction: "Open Advanced and choose Processing history.",
     target: "nav-Activity",
     screen: "Clinics",
     event: "nav:Activity",
@@ -346,7 +347,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     title: "Open the operational controls",
     description:
       "Operations combines folder intake, local health metrics, alerts, failed-file repair, and the intake queue.",
-    instruction: "Click Operations.",
+    instruction: "Open Advanced and choose System tools.",
     target: "nav-Operations",
     screen: "Activity",
     event: "nav:Operations",
@@ -383,7 +384,7 @@ export const walkthroughSteps: WalkthroughStep[] = [
     description:
       "The optional example is deliberately incomplete JSON. A failure is retained for investigation while other files can continue.",
     instruction:
-      "Download the invalid example, click Upload JSON, and select it. Continue unlocks when the file is recorded as failed.",
+      "Download the invalid example, click Choose JSON files (or Upload JSON outside the Upload screen), and select it. Continue unlocks when the file is recorded as failed.",
     target: "upload",
     screen: "Operations",
     event: "upload-failed",

@@ -9,7 +9,7 @@ const inter = localFont({
   display: "swap",
 });
 export const metadata: Metadata = {
-  title: "Veritas · Operations",
+  title: "Veritas · Report processing",
   description: "Medical report standardisation and quality review",
 };
 export default function RootLayout({
