@@ -1054,29 +1054,6 @@ select,
   }
 }
 
-.sign-in-control {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  position: relative;
-}
-.sign-in-control button {
-  color: #171717;
-  background: white;
-}
-.sign-in-error {
-  position: absolute;
-  top: 42px;
-  right: 0;
-  width: 280px;
-  padding: 12px;
-  background: white;
-  color: #991b1b;
-  border: 1px solid #e5e5e5;
-  border-radius: 6px;
-  z-index: 50;
-}
 .mapping-form {
   display: grid;
   gap: 14px;
@@ -1085,19 +1062,7 @@ select,
   border: 1px solid var(--border);
   border-radius: 8px;
 }
-.cloud-section {
-  margin-top: 32px;
-  border-top: 1px solid var(--border);
-  padding-top: 24px;
-}
-.cloud-section h2 {
-  font-size: 18px;
-  font-weight: 600;
-}
 @media (max-width: 640px) {
-  .sign-in-control > span {
-    display: none;
-  }
   .mapping-form {
     padding: 16px;
   }

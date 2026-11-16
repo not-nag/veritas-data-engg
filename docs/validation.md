@@ -4,7 +4,7 @@ Validated with Python 3.13.3 and Node.js 22.10.0.
 
 | Check | Result |
 | --- | --- |
-| `npm test` | 61 backend tests and 7 walkthrough tests pass |
+| `npm test` | 64 backend tests and 7 walkthrough tests pass |
 | `npm run build` | Production build and TypeScript checks pass |
 | API checks | Processing, retries, masking, metrics, and export verified |
 | UI checks | Direct report URLs, Back/Forward, refresh, filter restoration, local tabs, dialogs, export, masking, review, watcher controls, and failed-file repair verified |
@@ -29,7 +29,7 @@ The five supplied JSON files produce 8 unique records from 9 record occurrences,
 | Coverage excluding identified non-test rows | 336/350 (96.0%) |
 | Identified non-test rows | 13; retained in raw coverage |
 | Classified / invalid observations | 172 / 226 |
-| Medication occurrences | 28 mapped, 32 unresolved, 2 treatment categories, 2 not applicable |
+| Medication occurrences | 32 mapped, 28 unresolved, 2 treatment categories, 2 not applicable |
 | Canonical tests | 104 |
 | Wide CSV | 524 columns |
 | Wide SQL view | 525 columns, 19 occurrence rows |
@@ -46,6 +46,6 @@ Detailed results are in [coverage-report.json](coverage-report.json).
 
 These checks do not establish production throughput, uptime, privacy compliance, clinical correctness, or 98% mapping coverage. Local latency starts at discovery or submission. Medical reference examples and plausibility limits require domain validation.
 
-## Optional integration checks
+## Optional AI checks
 
-Cloud tests cover immutable generation downloads, completed-generation skipping, interrupted-processing replay without duplicate records, explicit failed-object retry, and the size limit. AI tests cover pending/accepted/rejected outcomes, alias conflicts, daily request limits, response validation, and explicit reprocessing with preserved old output. Auth tests verify missing, invalid and anonymous tokens are rejected and the project is passed to token verification. Direct API and Next.js proxy smoke checks return 401 for unsigned mutations and 200 for public reads. A live Gemini 3.5 Flash-Lite request mapped the synthetic label HGB concentration to Haemoglobin; its pending suggestion is visible in the UI. Firebase Google sign-in is provisioned, but a completed interactive browser login remains to be verified. Live GCS ingestion and public hosting remain unverified because no bucket/runtime was provisioned under the free-only constraint.
+Tests cover pending/accepted/rejected suggestions, alias conflicts, daily request limits, response validation, and explicit reprocessing with preserved old output. A loopback HTTP integration test verifies uploads and reviews without a sign-in token. A live Gemini 3.5 Flash-Lite request mapped the synthetic label HGB concentration to Haemoglobin; the pending suggestion is visible in the UI. Hosting and cloud deployment are outside the selected local prototype scope.

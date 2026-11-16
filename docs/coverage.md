@@ -4,7 +4,7 @@ Status reflects working local code, not the proposed cloud deployment.
 
 | Requirement | Status | Evidence or limit |
 | --- | --- | --- |
-| FR-1.1 ingestion | Local and GCS adapters implemented | Uploads, folder watcher, GCS generation-pinned downloads and scheduled polling; live GCS validation awaits a provisioned bucket |
+| FR-1.1 ingestion | Implemented for the prototype | Local folder, scheduled folder watcher and uploads; section 3.2 explicitly permits a local folder simulating GCS |
 | FR-1.2 duplicates | Implemented | Configurable scope plus payload hash; primary key; integration test |
 | FR-1.3 flexible schemas | Implemented within mapping grammar | Config-only onboarding; version predicates, priority/specificity, ambiguity and unknown-version rejection |
 | FR-2.1 names | Implemented with partial coverage | 336/363 original source entries (92.6%); same source denominator; includes named panels/findings |
@@ -12,7 +12,7 @@ Status reflects working local code, not the proposed cloud deployment.
 | FR-2.3 numeric parsing | Implemented for supported forms | Scalars, intervals, inequalities and configured panel decomposition; ambiguous fields retained |
 | FR-2.4 units | Implemented for configured units | Factors convert results and ranges; unsupported units invalid |
 | FR-2.5 demographics | Implemented for supported formats | Structured age, gender aliases, ISO dates; redactions unknown |
-| FR-2.6 medicines | Partial dictionary | 19 verified products; 28 sample occurrences mapped, 32 unresolved, 2 treatment categories, 2 not applicable |
+| FR-2.6 medicines | Partial dictionary | 19 verified products; 32 sample occurrences mapped, 28 unresolved, 2 treatment categories, 2 not applicable |
 | FR-3.1 range validation | Implemented with limited reference data | Open/closed and one-sided source ranges, interval certainty, unit consistency; limited demographic fallbacks |
 | FR-3.2 outliers | Prototype rules | Separate outlier classification; rules need domain approval |
 | FR-3.3 analytics | Implemented | Five requested labels with explanatory issues |
@@ -51,6 +51,12 @@ Local operations also include persistent pause/resume, settling detection, crash
 
 The dashboard also exposes 336/350 eligible coverage (96.0%) after 13 named non-test rows. The full 363-row metric remains primary and visible. All uncertain rows remain eligible; exclusion details are available in the dashboard. No 98% achievement is claimed.
 
-## Optional integrations
+## Optional AI integration
 
-Gemini test-name suggestions, audited human approval, persistent approved aliases, and Firebase verification for all mutation endpoints are implemented. A live synthetic Gemini request mapped HGB concentration to Haemoglobin. GCS generation replay, interrupted-processing recovery, failed-download retry, AI approval/conflict rules, request limits, and authentication failures have automated tests. Full hosting and a live bucket are not provisioned under the current free-only constraint; see [cloud setup](cloud-setup.md).
+Gemini test-name suggestions, audited human approval and persistent approved aliases are implemented. A live synthetic request mapped HGB concentration to Haemoglobin. Tests cover approval/rejection, alias conflicts, response validation, request limits and explicit reprocessing with history. See [Gemini setup](ai-mappings.md).
+
+## Submission scope
+
+Section 3.2 explicitly permits a local folder simulating GCS and a local SQLite database. Hosting and application authentication are not required. Scale, latency and other production NFRs are explained in the architecture and concept notes rather than claimed as proven deployment results.
+
+Remaining quality limits are the unmet 98% name-resolution target, partial medicine/reference dictionaries, and unverified clinical rules. Five supplied input files are in `sample-data`; a second field-layout example is in `examples/clinic-v2.json`. The architecture narrative has not been rendered to verify the two-page limit. A PDF or slide deck is not a mandatory deliverable; drawing extracts in Google Slides are recommended.

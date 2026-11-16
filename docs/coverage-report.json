@@ -56,10 +56,10 @@
     "Within Range": 100
   },
   "medication_statuses": {
-    "Unresolved": 32,
+    "Unresolved": 28,
     "Treatment category": 2,
     "Not applicable": 2,
-    "Mapped": 28
+    "Mapped": 32
   },
   "canonical_tests": 104,
   "wide_csv_columns": 524,

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { api, time } from "@/lib/client";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { useWorkspace } from "./workspace-provider";
 type Suggestion = {
   id: string;
   label: string;
@@ -20,9 +21,13 @@ type State = {
   daily_limit: number;
   calls_today: number;
   suggestions: Suggestion[];
+  unresolved: { label: string; occurrences: number }[];
   aliases: { label: string; canonical: string }[];
 };
 export function MappingsPage() {
+  const workspace = useWorkspace();
+  const [confirmReplay, setConfirmReplay] = useState(false);
+  const [notice, setNotice] = useState("");
   const [data, setData] = useState<State | null>(null);
   const [label, setLabel] = useState("");
   const [consent, setConsent] = useState(false);
@@ -44,6 +49,24 @@ export function MappingsPage() {
       setBusy(false);
     }
   }
+  async function replay() {
+    setBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      const result = await api("process", { mode: "stored", reprocess: true });
+      await workspace.refresh();
+      setData(await api("mappings"));
+      setNotice(
+        `${result.updated_records} reports updated. Previous output versions were retained; review the recalculated results.`,
+      );
+      setConfirmReplay(false);
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
   return (
     <>
       <div className="page-heading">
@@ -56,6 +79,33 @@ export function MappingsPage() {
         </div>
       </div>
       <div className="mapping-form">
+        {!!data?.unresolved?.length && (
+          <div>
+            <label htmlFor="unresolved-name">
+              Unresolved names from your reports
+            </label>
+            <select
+              id="unresolved-name"
+              className="mt-2 w-full rounded-md border border-neutral-200 p-2"
+              value=""
+              onChange={(e) => {
+                setLabel(e.target.value);
+                setConsent(false);
+              }}
+            >
+              <option value="">Choose a label to review…</option>
+              {data.unresolved.map((item) => (
+                <option key={item.label} value={item.label}>
+                  {item.label} ({item.occurrences})
+                </option>
+              ))}
+            </select>
+            <p className="supporting mt-2">
+              Damaged or missing names require the original report. A suggestion
+              is never applied automatically.
+            </p>
+          </div>
+        )}
         <label htmlFor="test-label">Test name</label>
         <div className="flex gap-3">
           <Input
@@ -106,6 +156,44 @@ export function MappingsPage() {
         Accepted aliases apply to future processing. Existing reports change
         only when explicitly reprocessed; previous outputs are retained.
       </p>
+      {!!data?.aliases.length && (
+        <div className="my-5">
+          {!confirmReplay ? (
+            <Button
+              variant="outline"
+              disabled={busy}
+              onClick={() => setConfirmReplay(true)}
+            >
+              Apply accepted mappings to existing reports
+            </Button>
+          ) : (
+            <div className="rounded-md border border-neutral-200 p-4">
+              <p className="mb-3">
+                Reprocess stored reports using accepted aliases? Previous
+                outputs will be retained. Review acknowledgements reset for
+                changed reports.
+              </p>
+              <div className="flex gap-2">
+                <Button disabled={busy} onClick={replay}>
+                  {busy ? "Reprocessing…" : "Reprocess reports"}
+                </Button>
+                <Button
+                  variant="outline"
+                  disabled={busy}
+                  onClick={() => setConfirmReplay(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+      {notice && (
+        <p role="status" className="feedback mb-5">
+          {notice}
+        </p>
+      )}
       <div className="data-table-wrap mapping-results">
         <table className="w-full">
           <thead>

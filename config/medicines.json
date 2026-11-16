@@ -1,5 +1,5 @@
 {
-  "version": "4.0",
+  "version": "5.0",
   "note": "Exact normalised product matching only. Form prefixes, punctuation, mg spacing, and trailing instructions are separated. Product suffixes such as D, DSR, CV and O are never discarded. Strength/form evidence is retained; unresolved abbreviations remain for review.",
   "sources": [
     "https://dailymed.nlm.nih.gov/dailymed/search.cfm?query=acetaminophen",
@@ -14,18 +14,10 @@
     "https://www.alkemlabs.com/our-offerings/rx-products",
     "https://www.alkemlabs.com/pdf/adverse/PAN%20D.pdf",
     "https://greenbook.nafdac.gov.ng/products/details/8301",
-    "https://www.alkemlabs.com/our-offerings/rx-products",
-    "https://www.alkemlabs.com/pdf/adverse/PAN%20D.pdf",
-    "https://greenbook.nafdac.gov.ng/products/details/8301",
-    "https://www.alkemlabs.com/our-offerings/rx-products",
-    "https://www.alkemlabs.com/pdf/adverse/PAN%20D.pdf",
-    "https://greenbook.nafdac.gov.ng/products/details/8301",
-    "https://www.alkemlabs.com/our-offerings/rx-products",
-    "https://www.alkemlabs.com/pdf/adverse/PAN%20D.pdf",
-    "https://greenbook.nafdac.gov.ng/products/details/8301",
-    "https://www.alkemlabs.com/our-offerings/rx-products",
-    "https://www.alkemlabs.com/pdf/adverse/PAN%20D.pdf",
-    "https://greenbook.nafdac.gov.ng/products/details/8301"
+    "https://portal.mcaz.co.zw/?download_id=1830&sdm_process_download=1",
+    "https://www.troikaa.com/wp-content/uploads/2022/01/Dynapar-1-ml-ID-non-comparitive-clincal-study_IMJ.pdf",
+    "https://dsci.delhi.gov.in/sites/default/files/dsci/circulars-orders/stock_of_edl_medicines_as_on_10mar2025.pdf",
+    "https://www.medicines.org.uk/emc/product/890/pil"
   ],
   "aliases": {
     "acetaminophen": "Paracetamol",
@@ -234,6 +226,61 @@
       "forms": [
         "injection"
       ]
+    },
+    {
+      "name": "dynapar",
+      "generic": "Diclofenac sodium",
+      "ingredients": [
+        "Diclofenac sodium"
+      ],
+      "forms": [
+        "injection"
+      ],
+      "source": "https://portal.mcaz.co.zw/?download_id=1830&sdm_process_download=1",
+      "verified_on": "2026-11-16"
+    },
+    {
+      "name": "dynapar aq",
+      "generic": "Diclofenac sodium",
+      "ingredients": [
+        "Diclofenac sodium"
+      ],
+      "forms": [
+        "injection"
+      ],
+      "source": "https://www.troikaa.com/wp-content/uploads/2022/01/Dynapar-1-ml-ID-non-comparitive-clincal-study_IMJ.pdf",
+      "verified_on": "2026-11-16"
+    },
+    {
+      "name": "econorm sachet",
+      "generic": "Saccharomyces boulardii",
+      "ingredients": [
+        "Saccharomyces boulardii"
+      ],
+      "source": "https://dsci.delhi.gov.in/sites/default/files/dsci/circulars-orders/stock_of_edl_medicines_as_on_10mar2025.pdf",
+      "verified_on": "2026-11-16"
+    },
+    {
+      "name": "eco norm sachet",
+      "generic": "Saccharomyces boulardii",
+      "ingredients": [
+        "Saccharomyces boulardii"
+      ],
+      "source": "https://dsci.delhi.gov.in/sites/default/files/dsci/circulars-orders/stock_of_edl_medicines_as_on_10mar2025.pdf",
+      "note": "Exact configured spacing variant of Econorm sachet; no strength or dosing inferred.",
+      "verified_on": "2026-11-16"
+    },
+    {
+      "name": "buscopan",
+      "generic": "Hyoscine butylbromide",
+      "ingredients": [
+        "Hyoscine butylbromide"
+      ],
+      "forms": [
+        "injection"
+      ],
+      "source": "https://www.medicines.org.uk/emc/product/890/pil",
+      "verified_on": "2026-11-16"
     }
   ],
   "treatment_categories": {

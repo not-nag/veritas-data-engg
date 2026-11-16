@@ -11,7 +11,7 @@
 ## Technical assumptions
 
 - Python 3.10+ and Node 20.9+ are available; ports 8000 and 3000 are free. No Docker or cloud credentials are required.
-- Core processing uses Python's standard library. Optional cloud libraries are installed in `.venv` for GCS and Firebase token verification. Next.js provides the UI and proxy; SQLite provides transactional, inspectable persistence.
+- The backend, including optional Gemini API calls, uses Python's standard library. Next.js provides the UI and proxy; SQLite provides transactional, inspectable persistence.
 - Schema mappings use dotted dictionary paths and configured list boundaries. Arbitrary transformations and joins across unrelated arrays are outside this grammar.
 - Configurations are trusted local files. Each run reloads them and hashes the complete configuration for lineage.
 - A rerun is idempotent against the default clinic/document/type/payload key. Source formatting and object-key order do not change payload identity; array order does.
@@ -47,7 +47,7 @@
 | Full medicine catalogue | Requires licensed or approved regional reference data and version management. |
 | Automated approval of recalculations | Explicit refresh and version history work. Clinical correction approval, record supersession for changed source documents, and automatic replay approval remain excluded. |
 | Full PII compliance | Optional masked responses hide current and historical identifiers, raw evidence, source labels, and free text. Raw data remains stored and other routes remain accessible locally. Production needs jurisdiction-specific review, tokenisation, encryption, access controls, deletion, and audit policies. |
-| External alert delivery and scaled cloud ingestion | GCS generation-aware polling, local folder ingestion, persistent checkpoints, and threshold alerts are implemented. Provision the bucket and connect production event notifications and external alert channels separately. |
+| External alert delivery and cloud ingestion | Local folder ingestion, persistent checkpoints, and threshold alerts are implemented. A deployed cloud object-store adapter, event notifications and external alert channels remain production work. |
 | Broad cross-document near-duplicate matching | Redacted patient IDs are unreliable. Define encounter IDs and configurable clinical identity rules first. |
 | Broad completeness contracts | Required demographic-field counts and rates are implemented per clinic profile/record type. Expected test panels and longitudinal field-quality history need additional business contracts. |
 

@@ -1,5 +1,5 @@
 {
-  "version": "4.0",
+  "version": "5.0",
   "fuzzy_threshold": 0.94,
   "fuzzy_margin": 0.06,
   "tests": {
@@ -8,7 +8,9 @@
         "hemoglobin",
         "hb",
         "hgb",
-        "aemoglobin"
+        "aemoglobin",
+        "haemoglobin concentration",
+        "hemoglobin concentration"
       ],
       "kind": "numeric",
       "unit": "g/dL",
@@ -30,7 +32,10 @@
         "total leucocyte count",
         "total leukocyte count",
         "tlc",
-        "tal wbc count"
+        "tal wbc count",
+        "white cell count",
+        "leucocyte count",
+        "leukocyte count"
       ],
       "kind": "numeric",
       "unit": "cells/uL",
@@ -71,7 +76,8 @@
     "Platelet Count": {
       "aliases": [
         "platelet count",
-        "atelet count"
+        "atelet count",
+        "thrombocyte count"
       ],
       "kind": "numeric",
       "unit": "cells/uL",
@@ -113,7 +119,8 @@
       "aliases": [
         "mean cell volume",
         "mean corp volume mcv",
-        "lean corp volume mcv"
+        "lean corp volume mcv",
+        "mean corpuscular volume"
       ],
       "kind": "numeric",
       "unit": "fL",
@@ -132,7 +139,9 @@
     "MCH": {
       "aliases": [
         "mean cell hemoglobin",
-        "mean cell haemoglobin"
+        "mean cell haemoglobin",
+        "mean corpuscular haemoglobin",
+        "mean corpuscular hemoglobin"
       ],
       "kind": "numeric",
       "unit": "pg",
@@ -148,7 +157,9 @@
     "MCHC": {
       "aliases": [
         "mean corp hb conc mchc",
-        "lean corp hb conc mchc"
+        "lean corp hb conc mchc",
+        "mean corpuscular haemoglobin concentration",
+        "mean corpuscular hemoglobin concentration"
       ],
       "kind": "numeric",
       "unit": "g/dL",
@@ -329,7 +340,10 @@
       "reference": null
     },
     "Chloride": {
-      "aliases": [],
+      "aliases": [
+        "serum chloride",
+        "chloride serum"
+      ],
       "kind": "numeric",
       "unit": "mmol/L",
       "units": {
@@ -386,7 +400,9 @@
     },
     "Calcium": {
       "aliases": [
-        "serum calcium"
+        "serum calcium",
+        "serum calcium total",
+        "total calcium"
       ],
       "kind": "numeric",
       "unit": "mg/dL",
@@ -417,7 +433,8 @@
     },
     "Albumin": {
       "aliases": [
-        "albumin, serum"
+        "albumin, serum",
+        "serum albumin"
       ],
       "kind": "numeric",
       "unit": "g/dL",
@@ -1231,21 +1248,21 @@
         "temp."
       ],
       "kind": "numeric",
-      "unit": "\u00b0C",
+      "unit": "°C",
       "units": {
         "degree f": {
           "factor": 0.5555555555555556,
           "offset": -17.77777777777778
         },
-        "\u00baf": {
+        "ºf": {
           "factor": 0.5555555555555556,
           "offset": -17.77777777777778
         },
-        "\u00b0f": {
+        "°f": {
           "factor": 0.5555555555555556,
           "offset": -17.77777777777778
         },
-        "\u00b0c": 1
+        "°c": 1
       },
       "plausible": [
         20,
@@ -1255,7 +1272,7 @@
     },
     "Pulse": {
       "aliases": [
-        "heart rate\u00ae",
+        "heart rate®",
         "heart rate"
       ],
       "kind": "numeric",

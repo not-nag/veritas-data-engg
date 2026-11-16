@@ -26,7 +26,6 @@ def connect(db):
     CREATE TABLE IF NOT EXISTS ai_suggestions(id TEXT PRIMARY KEY,label TEXT,canonical TEXT,reason TEXT,model TEXT,status TEXT,requested_by TEXT,created_at TEXT,reviewed_by TEXT,reviewed_at TEXT);
     CREATE TABLE IF NOT EXISTS approved_aliases(alias_key TEXT PRIMARY KEY,label TEXT,canonical TEXT,suggestion_id TEXT,reviewed_by TEXT,reviewed_at TEXT);
     CREATE TABLE IF NOT EXISTS ai_calls(id TEXT PRIMARY KEY,requested_by TEXT,created_at TEXT,status TEXT);
-    CREATE TABLE IF NOT EXISTS cloud_objects(id TEXT PRIMARY KEY,bucket TEXT,name TEXT,generation TEXT,status TEXT,retained_path TEXT,run_id TEXT,error TEXT,updated_at TEXT);
     CREATE TABLE IF NOT EXISTS settings(name TEXT PRIMARY KEY,value TEXT);
     CREATE TABLE IF NOT EXISTS dead_letters(id TEXT PRIMARY KEY,source TEXT,content TEXT,reason TEXT,created_at TEXT,updated_at TEXT,status TEXT,retry_count INTEGER DEFAULT 0,last_run_id TEXT);
     CREATE TABLE IF NOT EXISTS retry_attempts(id INTEGER PRIMARY KEY,dead_letter_id TEXT,content TEXT,started_at TEXT,run_id TEXT,outcome TEXT);

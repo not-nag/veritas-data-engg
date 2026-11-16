@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useWorkspace } from "@/components/workspace-provider";
 import { useWalkthrough } from "@/components/walkthrough";
-import { writeHeaders } from "@/lib/auth-client";
 import example from "@/public/walkthrough-example.json";
 type Failure = {
   id: string;
@@ -61,7 +60,6 @@ async function request(path: string, body?: unknown) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            ...(await writeHeaders()),
           },
           body: JSON.stringify(body),
         }

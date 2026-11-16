@@ -9,17 +9,9 @@ parser.add_argument('--config',default=str(ROOT/'config'))
 parser.add_argument('--reprocess',action='store_true',help='Recalculate records with a changed configuration, preserving the previous output')
 parser.add_argument('--watch',action='store_true',help='Watch the supplied folder for settled JSON files')
 parser.add_argument('--interval',type=float,default=2,help='Folder polling interval in seconds')
-parser.add_argument('--gcs',action='store_true',help='Read JSON objects from configured GCS_BUCKET and GCS_PREFIX')
 args = parser.parse_args()
 logging.basicConfig(level=logging.INFO,format='%(message)s')
-if args.gcs:
-    from .cloud import sync
-    import time
-    while True:
-        print(json.dumps(sync(args.db,args.config),indent=2))
-        if not args.watch:break
-        time.sleep(max(60,args.interval))
-elif args.watch:
+if args.watch:
     from .operations import FolderWatcher
     watcher=FolderWatcher(args.db,args.config,args.folder)
     watcher.enabled=True

@@ -1,5 +1,5 @@
 {
-  "version": "4.0",
+  "version": "5.0",
   "policy": "Source ranges take priority only for known tests with compatible explicit units. Fallbacks require applicable demographics. Plausibility limits are demonstration quality rules, not clinically validated thresholds.",
   "sources": [
     "https://medlineplus.gov/ency/article/003645.htm",
@@ -14,7 +14,15 @@
     "https://medlineplus.gov/ency/article/003657.htm",
     "https://www.uhhospitals.org/-/media/files/for-clinicians/research/lab-reference-ranges.pdf?hash=FE0D345C3ECEB8C338A09459498F9ED09D39EC95&la=en",
     "https://testguide.labmed.uw.edu/view/AGR?tabs=no",
-    "https://www.heart.org/en/health-topics/high-blood-pressure/understanding-blood-pressure-readings"
+    "https://www.heart.org/en/health-topics/high-blood-pressure/understanding-blood-pressure-readings",
+    "https://medlineplus.gov/ency/article/003477.htm",
+    "https://medlineplus.gov/ency/article/003485.htm",
+    "https://medlineplus.gov/ency/article/003480.htm",
+    "https://medlineplus.gov/ency/article/003483.htm",
+    "https://medlineplus.gov/ency/article/003473.htm",
+    "https://medlineplus.gov/ency/article/003472.htm",
+    "https://medlineplus.gov/ency/article/003479.htm",
+    "https://medlineplus.gov/ency/article/003474.htm"
   ],
   "adult_gender_ranges": {
     "Haemoglobin": {
@@ -45,6 +53,16 @@
       "Female": [
         0.5,
         0.95
+      ]
+    },
+    "MCH": {
+      "Female": [
+        26,
+        33
+      ],
+      "Male": [
+        27,
+        33
       ]
     }
   },
@@ -182,12 +200,93 @@
       "source": "https://www.heart.org/en/health-topics/high-blood-pressure/understanding-blood-pressure-readings",
       "policy": "adult_bp_upper_threshold",
       "note": "Configured adult normal-category upper threshold only. Both components are needed for BP categorisation; this comparison does not assess low blood pressure or establish a diagnosis."
+    },
+    {
+      "test": "Calcium",
+      "min_age_years": 18,
+      "unit": "mg/dL",
+      "low": 8.8,
+      "high": 10.3,
+      "source": "https://medlineplus.gov/ency/article/003477.htm",
+      "verified_on": "2026-11-16",
+      "note": "Published example interval; laboratory-specific intervals take priority. Adult fallback only; not validated for pregnancy or paediatric use."
+    },
+    {
+      "test": "Chloride",
+      "min_age_years": 18,
+      "unit": "mmol/L",
+      "low": 98,
+      "high": 107,
+      "source": "https://medlineplus.gov/ency/article/003485.htm",
+      "verified_on": "2026-11-16",
+      "note": "Published example interval; laboratory-specific intervals take priority. Adult fallback only; not validated for pregnancy or paediatric use."
+    },
+    {
+      "test": "Albumin",
+      "min_age_years": 18,
+      "unit": "g/dL",
+      "low": 3.4,
+      "high": 5.4,
+      "source": "https://medlineplus.gov/ency/article/003480.htm",
+      "verified_on": "2026-11-16",
+      "note": "Published example interval; laboratory-specific intervals take priority. Adult fallback only; not validated for pregnancy or paediatric use."
+    },
+    {
+      "test": "Total Protein",
+      "min_age_years": 18,
+      "unit": "g/dL",
+      "low": 6.5,
+      "high": 8.1,
+      "source": "https://medlineplus.gov/ency/article/003483.htm",
+      "verified_on": "2026-11-16",
+      "note": "Published example interval; laboratory-specific intervals take priority. Adult fallback only; not validated for pregnancy or paediatric use."
+    },
+    {
+      "test": "ALT",
+      "min_age_years": 18,
+      "unit": "U/L",
+      "low": 4,
+      "high": 36,
+      "source": "https://medlineplus.gov/ency/article/003473.htm",
+      "verified_on": "2026-11-16",
+      "note": "Published example interval; laboratory-specific intervals take priority. Adult fallback only; not validated for pregnancy or paediatric use."
+    },
+    {
+      "test": "AST",
+      "min_age_years": 18,
+      "unit": "U/L",
+      "low": 8,
+      "high": 33,
+      "source": "https://medlineplus.gov/ency/article/003472.htm",
+      "verified_on": "2026-11-16",
+      "note": "Published example interval; laboratory-specific intervals take priority. Adult fallback only; not validated for pregnancy or paediatric use."
+    },
+    {
+      "test": "Bilirubin Total",
+      "min_age_years": 18,
+      "unit": "mg/dL",
+      "low": 0.1,
+      "high": 1.2,
+      "source": "https://medlineplus.gov/ency/article/003479.htm",
+      "verified_on": "2026-11-16",
+      "note": "Published example interval; laboratory-specific intervals take priority. Adult fallback only; not validated for pregnancy or paediatric use."
+    },
+    {
+      "test": "Blood Urea Nitrogen",
+      "min_age_years": 18,
+      "unit": "mg/dL",
+      "low": 6,
+      "high": 20,
+      "source": "https://medlineplus.gov/ency/article/003474.htm",
+      "verified_on": "2026-11-16",
+      "note": "Published example interval; laboratory-specific intervals take priority. Adult fallback only; not validated for pregnancy or paediatric use."
     }
   ],
   "gender_reference_sources": {
     "Haemoglobin": "https://medlineplus.gov/ency/article/003645.htm",
     "Red Blood Cell Count": "https://medlineplus.gov/ency/article/003644.htm",
-    "Creatinine": "https://medlineplus.gov/ency/article/003475.htm"
+    "Creatinine": "https://medlineplus.gov/ency/article/003475.htm",
+    "MCH": "https://medlineplus.gov/ency/article/003648.htm"
   },
   "titre_policy": "Compare dilution denominators only against an explicit source titre reference. No universal Widal cutoff is assumed."
 }

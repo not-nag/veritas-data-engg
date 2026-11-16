@@ -8,9 +8,7 @@ async function proxy(
   if (
     path.length !== 1 ||
     ![
-      "session",
       "mappings",
-      "cloud",
       "dashboard",
       "record",
       "process",
@@ -36,9 +34,6 @@ async function proxy(
         method: request.method,
         headers: {
           "Content-Type": "application/json",
-          ...(request.headers.get("authorization")
-            ? { Authorization: request.headers.get("authorization")! }
-            : {}),
         },
         body,
         cache: "no-store",

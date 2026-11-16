@@ -26,7 +26,7 @@ Select **More → Help & walkthrough** for a guided tour. It highlights controls
 - Daily ingestion metrics, clinic quality summaries, failed-file retries, and local alerts.
 - SQLite persistence, output version history, and canonical CSV export.
 - Optional Gemini test-name suggestions with human approval and an audit trail.
-- Generation-aware GCS ingestion and optional Firebase sign-in for write access.
+- Local JSON uploads and automatic folder pickup, with no sign-in.
 
 ## Checks
 
@@ -39,7 +39,7 @@ The sample dataset produces 8 unique records and 398 observations. Raw name reso
 
 ## Documentation
 
-- [Cloud, Gemini and sign-in setup](docs/cloud-setup.md)
+- [Optional Gemini setup](docs/ai-mappings.md)
 - [Architecture and drawings](docs/architecture.md)
 - [Non-functional design](docs/non-functional-design.md)
 - [Assumptions and limitations](docs/assumptions.md)

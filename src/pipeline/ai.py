@@ -26,9 +26,18 @@ def snapshot(db):
     with connect(db) as c:
         suggestions = [dict(r) for r in c.execute('SELECT * FROM ai_suggestions ORDER BY created_at DESC LIMIT 100')]
         aliases = [dict(r) for r in c.execute('SELECT * FROM approved_aliases ORDER BY reviewed_at DESC')]
+        unknown = {}
+        for row in c.execute('SELECT original_name,output_json FROM observations WHERE canonical IS NULL'):
+            output = json.loads(row['output_json'])
+            if output.get('source_interpretation', {}).get('category') not in (None, 'test'):
+                continue
+            label = row['original_name']
+            if label:
+                unknown[label] = unknown.get(label, 0) + 1
         calls = c.execute('SELECT count(*) FROM ai_calls WHERE created_at>=?', (stamp()[:10],)).fetchone()[0]
     return {'enabled': bool(os.getenv('GEMINI_API_KEY')), 'model': os.getenv('GEMINI_MODEL', 'gemini-3.5-flash-lite'),
-            'daily_limit': 10, 'calls_today': calls, 'suggestions': suggestions, 'aliases': aliases}
+            'daily_limit': 10, 'calls_today': calls, 'suggestions': suggestions, 'aliases': aliases,
+            'unresolved': [{'label': label, 'occurrences': count} for label, count in sorted(unknown.items(), key=lambda item: (-item[1], item[0]))[:50]]}
 
 
 def generate(label, tests, api_key, model):
@@ -76,6 +85,8 @@ def suggest(label, db, config, actor, generator=generate):
     if not isinstance(label, str) or not 2 <= len(label.strip()) <= 100 or any(ord(c) < 32 for c in label):
         raise ValueError('Enter a test label between 2 and 100 characters.')
     label = label.strip()
+    if key(label) in config.get('extraction', {}).get('non_test_labels', {}) or label.upper() in {'ABSENT', 'NEGATIVE', 'POSITIVE', 'PRESENT', 'NIL'} or re.fullmatch(r'[\d\s.,:/+%-]+', label):
+        raise ValueError('This is a result, heading or damaged label rather than an identifiable test name. Check the original report; AI cannot recover the missing name.')
     if '@' in label or re.search(r'\d{5,}', label):
         raise ValueError('Use a test name only; remove identifying details.')
     apply_aliases(config, db)

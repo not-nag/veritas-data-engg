@@ -8,8 +8,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 from .engine import DB, ROOT, now, process_files, read_folder, configuration
 from .store import connect
-from .auth import identity, Unauthorized
-from . import ai, cloud
+from . import ai
 
 from .operations import PROCESS_LOCK as LOCK, FolderWatcher, operations_snapshot, retry_dead_letter, acknowledge_alert
 WATCHER = None
@@ -65,15 +64,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         url = urlparse(self.path)
-        if url.path=='/api/session':
-            import os
-            return self.send({'required':os.getenv('VERITAS_REQUIRE_AUTH','false').lower()=='true',
-                              'firebase':{'apiKey':os.getenv('FIREBASE_WEB_API_KEY',''), 'projectId':os.getenv('FIREBASE_PROJECT_ID',''),
-                                          'authDomain':os.getenv('FIREBASE_AUTH_DOMAIN',''), 'appId':os.getenv('FIREBASE_APP_ID','')}})
         if url.path=='/api/mappings':
             return self.send(ai.snapshot(DB))
-        if url.path=='/api/cloud':
-            return self.send(cloud.snapshot(DB))
         if url.path=='/api/dashboard':
             try:
                 return self.send(dashboard(parse_qs(url.query).get('day',[None])[0]))
@@ -113,10 +105,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send({'error':'Not found'},404)
 
     def do_POST(self):
-        try:
-            actor = identity(self.headers.get('Authorization'))
-        except Unauthorized as exc:
-            return self.send({'error':str(exc)},401)
+        actor = 'local-user'
         if self.headers.get('Origin') not in [None, 'http://127.0.0.1:3000', 'http://localhost:3000']:
             return self.send({'error':'Origin rejected'},403)
         length = int(self.headers.get('Content-Length','0'))
@@ -131,13 +120,6 @@ class Handler(BaseHTTPRequestHandler):
                         raise ValueError('Confirm that the input contains a test label only, without patient data.')
                     return self.send(ai.suggest(body.get('label'),DB,configuration()['tests'],actor))
                 return self.send(ai.decide(body.get('id'),body.get('decision'),DB,configuration()['tests'],actor))
-            if self.path=='/api/cloud':
-                if not LOCK.acquire(blocking=False):
-                    return self.send({'error':'Processing already in progress'},409)
-                try:
-                    return self.send(cloud.sync(retry_failed=body.get('retry_failed') is True))
-                finally:
-                    LOCK.release()
             if self.path=='/api/operations':
                 if body.get('action')=='watcher':
                     if WATCHER is None:raise ValueError('Folder watcher is unavailable')
@@ -209,8 +191,6 @@ if __name__=='__main__':
     print('Veritas API listening on http://127.0.0.1:8000',flush=True)
     WATCHER=FolderWatcher()
     WATCHER.start()
-    cloud_watcher=cloud.CloudWatcher()
-    cloud_watcher.start()
     server = ThreadingHTTPServer(('127.0.0.1',8000),Handler)
     try:
         server.serve_forever()
@@ -219,4 +199,3 @@ if __name__=='__main__':
     finally:
         server.server_close()
         WATCHER.close()
-        cloud_watcher.close()
