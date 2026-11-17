@@ -1,0 +1,177 @@
+{
+  "schemaVersion": "2.0",
+  "clinicId": "SYNTHETIC-DEMO-CLINIC",
+  "documentId": "COMPLETE-DEMO-20261117-001",
+  "metadata": {
+    "synthetic": true,
+    "purpose": "Functional demonstration; not a clinical report"
+  },
+  "reports": [
+    {
+      "type": "lab_report",
+      "payload": {
+        "patient": {
+          "name": "Demo A - Standardisation (synthetic)",
+          "age": "35Y",
+          "sex": "F",
+          "date": "2026-11-17"
+        },
+        "measurements": [
+          {
+            "name": "TLC",
+            "value": "7500 cells/cu.mm",
+            "units": "cells/cu.mm",
+            "reference": "4000-11000",
+            "page": 1
+          },
+          {
+            "name": "Creatininee",
+            "value": "0.8",
+            "units": "mg/dL",
+            "reference": "0.5-0.95",
+            "page": 1
+          },
+          {
+            "name": "HGB concentration",
+            "value": "13.5 g/dL",
+            "units": "g/dL",
+            "reference": "12-16",
+            "page": 1
+          },
+          {
+            "name": "Platelet count",
+            "value": "2.5",
+            "units": "lac/cmm",
+            "reference": "1.5-4.5",
+            "page": 1
+          },
+          {
+            "name": "Calcium",
+            "value": "9.5",
+            "units": "mg/dL",
+            "reference": "",
+            "page": 1
+          },
+          {
+            "name": "BP",
+            "value": "110/70 mmHg",
+            "units": "mmHg",
+            "reference": "",
+            "page": 1
+          }
+        ]
+      }
+    },
+    {
+      "type": "lab_report",
+      "payload": {
+        "patient": {
+          "name": "Demo B - Review required (synthetic)",
+          "age": "35Y",
+          "sex": "F",
+          "date": "2026-11-17"
+        },
+        "measurements": [
+          {
+            "name": "ALT",
+            "value": "91",
+            "units": "U/L",
+            "reference": "4-36",
+            "page": 1
+          },
+          {
+            "name": "Albumin",
+            "value": "2.0",
+            "units": "g/dL",
+            "reference": "3.4-5.4",
+            "page": 1
+          },
+          {
+            "name": "Hb",
+            "value": "999",
+            "units": "g/dL",
+            "reference": "12-16",
+            "page": 1
+          },
+          {
+            "name": "TLC",
+            "value": "9700",
+            "units": "g/dL",
+            "reference": "4000-11000",
+            "page": 1
+          },
+          {
+            "name": "Creatinine",
+            "value": null,
+            "units": "mg/dL",
+            "reference": "0.5-0.95",
+            "page": 1
+          },
+          {
+            "name": "ABSENT",
+            "value": "NEGATIVE",
+            "units": "",
+            "reference": "",
+            "page": 2
+          }
+        ]
+      }
+    },
+    {
+      "type": "discharge_summary",
+      "payload": {
+        "name": "Demo C - Medicines (synthetic)",
+        "age": "35Y",
+        "sex": "F",
+        "date": "2026-11-17",
+        "admissionDate": "2026-11-15",
+        "dischargeDate": "2026-11-17",
+        "dischargeMedications": [
+          {
+            "medicine": "Tab. Dolo 650",
+            "dose": "As recorded by clinic",
+            "frequency": "As prescribed"
+          },
+          {
+            "medicine": "Tab. Pantocid 40",
+            "dose": "As recorded by clinic",
+            "frequency": "As prescribed"
+          },
+          {
+            "medicine": "Unverified Demo Brand",
+            "dose": null,
+            "frequency": null
+          }
+        ]
+      }
+    },
+    {
+      "type": "discharge_summary",
+      "payload": {
+        "name": "Demo C - Medicines (synthetic)",
+        "age": "35Y",
+        "sex": "F",
+        "date": "2026-11-17",
+        "admissionDate": "2026-11-15",
+        "dischargeDate": "2026-11-17",
+        "dischargeMedications": [
+          {
+            "medicine": "Tab. Dolo 650",
+            "dose": "As recorded by clinic",
+            "frequency": "As prescribed"
+          },
+          {
+            "medicine": "Tab. Pantocid 40",
+            "dose": "As recorded by clinic",
+            "frequency": "As prescribed"
+          },
+          {
+            "medicine": "Unverified Demo Brand",
+            "dose": null,
+            "frequency": null
+          }
+        ]
+      }
+    }
+  ]
+}
