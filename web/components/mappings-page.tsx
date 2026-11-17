@@ -177,7 +177,7 @@ export function MappingsPage() {
         Accepted aliases apply to future processing. Existing reports change
         only when explicitly reprocessed; previous outputs are retained.
       </p>
-      {!!data?.aliases.length && (
+      {!!(data?.aliases.length || data?.automatic.length) && (
         <div className="my-5">
           {!confirmReplay ? (
             <Button
@@ -185,12 +185,12 @@ export function MappingsPage() {
               disabled={busy}
               onClick={() => setConfirmReplay(true)}
             >
-              Apply accepted mappings to existing reports
+              Reprocess existing reports
             </Button>
           ) : (
             <div className="rounded-md border border-neutral-200 p-4">
               <p className="mb-3">
-                Reprocess stored reports using accepted aliases? Previous
+                Reprocess stored reports using current mappings and retry failed Gemini lookups? Previous
                 outputs will be retained. Review acknowledgements reset for
                 changed reports.
               </p>

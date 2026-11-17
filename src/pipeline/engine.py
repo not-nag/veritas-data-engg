@@ -31,6 +31,16 @@ def digest(data):
     return hashlib.sha256(json.dumps(data, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
 
 
+def unchanged_record(existing, version, reprocess, auto_enabled):
+    if not existing:
+        return False
+    if not reprocess:
+        return True
+    previous = json.loads(existing['output_json'])
+    failed_ai = auto_enabled and any(o.get('ai_mapping', {}).get('status') in ('Failed', 'Skipped') for o in previous.get('observations', []))
+    return existing['config_version'] == version and previous.get('pipeline_version') == PIPELINE_VERSION and not failed_ai
+
+
 def configuration(root=ROOT / 'config'):
     return {name:json.loads((Path(root) / (name+'.json')).read_text()) for name in ['clinics','tests','ranges','medicines']}
 
@@ -138,7 +148,7 @@ def process_files(files, db=DB, config_dir=ROOT / 'config', reprocess=False, arr
                     identity = {k:scope[k] for k in config['clinics']['deduplication']['scope_fields']}
                     with connect(db) as reader:
                         existing = reader.execute('SELECT config_version,output_json FROM records WHERE id=?', (digest({'scope':identity,'payload':raw}),)).fetchone()
-                    if existing and (not reprocess or (existing['config_version']==version and json.loads(existing['output_json']).get('pipeline_version')==PIPELINE_VERSION)):
+                    if unchanged_record(existing, version, reprocess, auto_enabled):
                         continue
                     for test in prepared[index]:
                         if resolve_test(test,profile['test_fields'],config['tests'])[0] or test.get('__interpretation',{}).get('category') not in (None,'test'):
@@ -171,7 +181,7 @@ def process_files(files, db=DB, config_dir=ROOT / 'config', reprocess=False, arr
                     quality = required_quality(patient, kind, profile)
                     missing_fields += quality['missing']
                     expected_fields += quality['expected']
-                    if existing and (not reprocess or (existing['config_version']==version and json.loads(existing['output_json']).get('pipeline_version')==PIPELINE_VERSION)):
+                    if unchanged_record(existing, version, reprocess, auto_enabled):
                         duplicates += 1
                         flagged += int(existing['flagged'])
                         continue

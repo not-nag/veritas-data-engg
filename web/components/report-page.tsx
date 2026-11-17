@@ -325,6 +325,9 @@ export function ReportPage({ id }: { id: string }) {
                               ? "Gemini · automatically mapped during processing"
                               : `${o.normalization_method} · similarity ${Math.round((o.normalization_confidence ?? 0) * 100)}%`}
                           </dd>
+                          {o.ai_mapping && (
+                            <><dt>Gemini outcome</dt><dd>{o.ai_mapping.status}: {o.ai_mapping.reason}</dd></>
+                          )}
                           <dt>Page</dt>
                           <dd>{o.page ?? "Not supplied"}</dd>
                           {o.derived_from && (

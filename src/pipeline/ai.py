@@ -53,8 +53,10 @@ def automatic_mapping(label, db, config, run_id, source_file, generator=None):
             if not isinstance(reason, str) or not reason.strip() or len(reason) > 1000:
                 raise ValueError('Invalid mapping reason')
             status = 'Mapped' if canonical else 'Unresolved'
-        except Exception:
-            canonical, status, reason = None, 'Failed', 'Gemini request failed; name remains unresolved.'
+        except ValueError as exc:
+            canonical, status, reason = None, 'Failed', str(exc)
+        except Exception as exc:
+            canonical, status, reason = None, 'Failed', f'Gemini request failed ({type(exc).__name__}); name remains unresolved.'
         with connect(db) as c:
             c.execute('UPDATE ai_calls SET status=? WHERE id=?', ('failed' if status == 'Failed' else 'completed', identifier))
     event = {'id':identifier, 'label':label, 'canonical':canonical, 'reason':reason, 'model':model, 'status':status}

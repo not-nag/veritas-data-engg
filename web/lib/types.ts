@@ -45,6 +45,7 @@ export type Obs = {
   issues: string[];
   normalization_method: string;
   normalization_confidence: number | null;
+  ai_mapping?: { status: string; reason: string; model: string };
   page: number;
 };
 export type Run = {

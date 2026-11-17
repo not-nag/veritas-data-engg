@@ -92,3 +92,28 @@ class AutomaticAITests(unittest.TestCase):
         with patch.dict(os.environ,{'GEMINI_AUTO_MAPPING':'false'}):self.process()
         o=self.output()[1]['observations'][0]
         self.assertIsNone(o['test_name_canonical']);self.assertNotIn('ai_mapping',o)
+
+    def test_explicit_replay_retries_failed_ai_with_unchanged_config_and_archives_output(self):
+        with patch.object(ai,'generate',side_effect=ValueError('Gemini could not be reached. Try later.')):
+            self.process()
+        before=self.output()[1]
+        self.assertEqual(before['observations'][0]['ai_mapping']['reason'],'Gemini could not be reached. Try later.')
+        with patch.object(ai,'generate',return_value=('Haemoglobin','Same analyte.')) as call:
+            self.assertEqual(self.process()['duplicates'],1)
+            call.assert_not_called()
+            result=process_files([('synthetic.json',json.dumps(self.data))],self.db,reprocess=True)
+            self.assertEqual(result['updated_records'],1)
+            call.assert_called_once()
+        after=self.output()[1]
+        self.assertEqual(after['config_version'],before['config_version'])
+        self.assertEqual(after['observations'][0]['normalization_method'],'gemini')
+        with connect(self.db) as c:
+            old=json.loads(c.execute('SELECT output_json FROM record_versions').fetchone()[0])
+        self.assertEqual(old['observations'][0]['ai_mapping']['status'],'Failed')
+
+    def test_successful_ai_is_not_repeated_by_unchanged_replay(self):
+        with patch.object(ai,'generate',return_value=('Haemoglobin','Same analyte.')) as call:
+            self.process()
+            result=process_files([('synthetic.json',json.dumps(self.data))],self.db,reprocess=True)
+            self.assertEqual(result['duplicates'],1)
+            self.assertEqual(call.call_count,1)
