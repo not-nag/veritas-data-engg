@@ -53,7 +53,7 @@ The dashboard also exposes 336/350 eligible coverage (96.0%) after 13 named non-
 
 ## Optional AI integration
 
-Gemini test-name suggestions, audited human approval and persistent approved aliases are implemented. A live synthetic request mapped HGB concentration to Haemoglobin. Tests cover approval/rejection, alias conflicts, response validation, request limits and explicit reprocessing with history. See [Gemini setup](ai-mappings.md).
+Optional automatic Gemini name mapping before output storage, decision provenance, manual suggestions, audited human approval and persistent approved aliases are implemented. A live synthetic request mapped HGB concentration to Haemoglobin. Tests cover approval/rejection, alias conflicts, response validation, request limits and explicit reprocessing with history. See [Gemini setup](ai-mappings.md).
 
 ## Submission scope
 

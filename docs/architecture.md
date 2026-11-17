@@ -13,11 +13,11 @@ In production, clinics land immutable objects under a clinic/date prefix. Pub/Su
 
 The local equivalent recursively reads a folder, watches stable JSON arrivals through a persistent intake queue, or accepts uploads through Next.js. A loopback Python HTTP service shares the same processing engine as the CLI. Uploads are retained locally. Each file has its own SQLite transaction, isolating a malformed file from the rest of the batch. Parsing failures preserve input and reason in `data/dead-letter/`. Original and corrected retry payloads remain linked in an audit trail. Queue state and watcher pause survive restarts; stale claims recover. Logs carry a run correlation ID and source path.
 
-## Optional AI mapping suggestions
+## Optional Gemini fallback and reviewed aliases
 
-Gemini receives an explicitly confirmed test label and a constrained canonical vocabulary. It returns a suggestion or unresolved outcome; it never supplies results, ranges, units or medicines. Suggestions and decisions are audited. Only a human-accepted alias enters future deterministic processing; the configuration hash includes approved aliases. Existing reports require explicit reprocessing to apply changes. A daily request cap bounds demo usage.
+With `GEMINI_AUTO_MAPPING=true`, dictionary, fuzzy and configured context matching run first. Unresolved test labels are sent to Gemini before the file write transaction; the model selects an existing canonical name or unresolved. Responses are validated and recorded in `ai_mapping_events`. Output observations retain decision provenance, while source JSON remains unchanged. Failures and quota exhaustion leave names unresolved without blocking storage. Repeated labels share a request within the run; duplicate records skip the fallback. Results, units, references and medicines remain rule-based.
 
-The application runs locally without sign-in. Both services bind to loopback. Local AI approvals retain an operator label rather than a verified user identity. See [Gemini setup](ai-mappings.md).
+Automatic decisions are separate from human-approved aliases. The AI mappings page also supports manually requested suggestions and audited accept/reject actions. Accepted aliases apply to future processing and explicit replay. Both modes share a daily request cap. Only labels and canonical vocabulary are sent, but basic screening does not guarantee labels are free of PII; use synthetic/redacted inputs. Both services bind to loopback without sign-in. See [Gemini setup](ai-mappings.md).
 
 ## Storage and configuration
 

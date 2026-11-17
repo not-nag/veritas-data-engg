@@ -15,11 +15,11 @@ from .quality import required_quality, source_coverage
 from .store import connect
 from .schema import select_profile
 from .wide import ensure_wide_view
-from .extraction import prepare_tests
+from .extraction import prepare_tests, resolve_test
 
 ROOT = Path(__file__).resolve().parents[2]
 DB = Path(os.environ.get('VERITAS_DB', ROOT / 'data/veritas.sqlite'))
-PIPELINE_VERSION = '4.0'
+PIPELINE_VERSION = '5.0'
 log = logging.getLogger('veritas')
 
 
@@ -92,9 +92,11 @@ def stored_coverage(connection):
 
 def process_files(files, db=DB, config_dir=ROOT / 'config', reprocess=False, arrivals=None, arrival_basis='batch discovery'):
     config = configuration(config_dir)
-    from .ai import apply_aliases
+    from .ai import apply_aliases, automatic_enabled, automatic_mapping
     apply_aliases(config['tests'], db)
-    version = digest(config)[:12]
+    auto_enabled = automatic_enabled()
+    version = digest({'config':config, 'automatic_ai':auto_enabled, 'ai_model':os.getenv('GEMINI_MODEL', 'gemini-3.5-flash-lite') if auto_enabled else None})[:12]
+    ai_cache = {}
     run_id, started, start = str(uuid.uuid4()), now(), time.monotonic()
     summary = {'received':len(files),'processed':0,'failed':0,'duplicates':0,'records':0,'updated_records':0,'flagged':0,'resolved_tests':0,'total_tests':0}
     with connect(db) as connection:
@@ -117,9 +119,43 @@ def process_files(files, db=DB, config_dir=ROOT / 'config', reprocess=False, arr
             entries = path(data, profile['records_path'])
             if not isinstance(entries, list) or not entries:
                 raise ValueError('Configured records path must contain a non-empty list')
+            # Finish schema checks and network calls before acquiring the file write lock.
+            prepared = {}
+            for index, entry in enumerate(entries):
+                kind, raw = path(entry,profile['type_path']), path(entry,profile['payload_path'])
+                if not isinstance(raw,dict):
+                    raise ValueError('Record payload must be an object')
+                if kind not in profile['lab_types']+profile['discharge_types']:
+                    raise ValueError('Unsupported record type: '+str(kind))
+                tests = path(raw,profile['tests_path'],[]) if kind in profile['lab_types'] else []
+                if not isinstance(tests,list) or any(not isinstance(test,dict) for test in tests):
+                    raise ValueError('Tests must be a list of objects')
+                prepared[index] = prepare_tests(tests,profile['test_fields'],config['tests'])
+            if auto_enabled:
+                for index, entry in enumerate(entries):
+                    raw = path(entry,profile['payload_path'])
+                    scope = {'clinic':clinic,'document_id':document_id,'record_type':path(entry,profile['type_path'])}
+                    identity = {k:scope[k] for k in config['clinics']['deduplication']['scope_fields']}
+                    with connect(db) as reader:
+                        existing = reader.execute('SELECT config_version,output_json FROM records WHERE id=?', (digest({'scope':identity,'payload':raw}),)).fetchone()
+                    if existing and (not reprocess or (existing['config_version']==version and json.loads(existing['output_json']).get('pipeline_version')==PIPELINE_VERSION)):
+                        continue
+                    for test in prepared[index]:
+                        if resolve_test(test,profile['test_fields'],config['tests'])[0] or test.get('__interpretation',{}).get('category') not in (None,'test'):
+                            continue
+                        label = path(test,profile['test_fields']['name'],'')
+                        if not isinstance(label,str):
+                            continue
+                        if label not in ai_cache:
+                            ai_cache[label] = automatic_mapping(label, db, config['tests'], run_id, name)
+                        event = ai_cache[label]
+                        if event:
+                            test['__ai_mapping'] = event
+                            if event['canonical']:
+                                test['__interpretation'] = {'canonical':event['canonical'], 'category':'test', 'method':'gemini', 'reason':event['reason']}
             with connect(db) as connection:
                 connection.execute('BEGIN IMMEDIATE')
-                for entry in entries:
+                for entry_index, entry in enumerate(entries):
                     kind, raw = path(entry,profile['type_path']), path(entry,profile['payload_path'])
                     if not isinstance(raw,dict):
                         raise ValueError('Record payload must be an object')
@@ -142,7 +178,7 @@ def process_files(files, db=DB, config_dir=ROOT / 'config', reprocess=False, arr
                     tests = path(raw,profile['tests_path'],[]) if kind in profile['lab_types'] else []
                     if not isinstance(tests,list) or any(not isinstance(test,dict) for test in tests):
                         raise ValueError('Tests must be a list of objects')
-                    tests = prepare_tests(tests,profile['test_fields'],config['tests'])
+                    tests = prepared[entry_index]
                     coverage = source_coverage(tests,profile['test_fields'],config['tests'])
                     observations = build_observations(tests,profile['test_fields'],config,patient)
                     log.info(json.dumps({'event':'record_validated','correlation_id':run_id,'record_id':record_id,'source_entries':len(tests),'observations':len(observations),'invalid':sum(o['analytics']=='Invalid' for o in observations)}))

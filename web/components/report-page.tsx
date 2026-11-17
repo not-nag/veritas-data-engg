@@ -321,8 +321,9 @@ export function ReportPage({ id }: { id: string }) {
                           <dd>{o.unit_original || "Not supplied"}</dd>
                           <dt>Matching</dt>
                           <dd>
-                            {o.normalization_method} · similarity{" "}
-                            {Math.round(o.normalization_confidence * 100)}%
+                            {o.normalization_method === "gemini"
+                              ? "Gemini · automatically mapped during processing"
+                              : `${o.normalization_method} · similarity ${Math.round((o.normalization_confidence ?? 0) * 100)}%`}
                           </dd>
                           <dt>Page</dt>
                           <dd>{o.page ?? "Not supplied"}</dd>

@@ -92,6 +92,8 @@ def observation(raw, fields, config, ranges, patient):
     source_range = str(path(raw, fields['range'], '') or '')
     out = {'test_name_original':name, 'test_name_canonical':canonical, 'result_text':original, 'result_value':None, 'result_low':None, 'result_high':None, 'result_interval':None, 'unit_original':unit, 'unit_canonical':None, 'range_text':source_range, 'range_low':None, 'range_high':None, 'range_low_inclusive':True, 'range_high_inclusive':True, 'range_source':None, 'normalization_method':method, 'normalization_confidence':confidence, 'analytics':'Invalid', 'issues':[], 'page':path(raw, fields.get('page', 'page_no'))}
     issues = out['issues']
+    if raw.get('__ai_mapping'):
+        out['ai_mapping'] = raw['__ai_mapping']
     if raw.get('__interpretation'):
         out['source_interpretation'] = raw['__interpretation']
         if raw['__interpretation']['category'] != 'test':

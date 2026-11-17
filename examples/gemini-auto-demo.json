@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "2.0",
+  "clinicId": "DEMO-CLINIC",
+  "documentId": "GEMINI-AUTO-DEMO-001",
+  "metadata": {},
+  "reports": [
+    {
+      "type": "lab_report",
+      "payload": {
+        "patient": {
+          "name": "Synthetic patient",
+          "age": "35Y",
+          "sex": "F",
+          "date": "2026-11-13"
+        },
+        "measurements": [
+          {
+            "name": "HGB concentration",
+            "value": "13.5 g/dL",
+            "units": "g/dL",
+            "reference": "12-16",
+            "page": 1
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -15,6 +15,55 @@ def stamp():
     return datetime.now(timezone.utc).isoformat()
 
 
+def automatic_enabled():
+    return bool(os.getenv('GEMINI_API_KEY')) and os.getenv('GEMINI_AUTO_MAPPING', 'false').lower() == 'true'
+
+
+def validate_label(label, config):
+    if not isinstance(label, str) or not 2 <= len(label.strip()) <= 100 or any(ord(c) < 32 for c in label):
+        raise ValueError('Enter a test label between 2 and 100 characters.')
+    label = label.strip()
+    if key(label) in config.get('extraction', {}).get('non_test_labels', {}) or label.upper() in {'ABSENT', 'NEGATIVE', 'POSITIVE', 'PRESENT', 'NIL'} or re.fullmatch(r'[\d\s.,:/+%-]+', label):
+        raise ValueError('This is a result, heading or damaged label rather than an identifiable test name. Check the original report; AI cannot recover the missing name.')
+    if '@' in label or re.search(r'\d{5,}', label):
+        raise ValueError('Use a test name only; remove identifying details.')
+    return label
+
+
+def automatic_mapping(label, db, config, run_id, source_file, generator=None):
+    """Resolve a label before output storage; audit separately from human approvals."""
+    try:
+        label = validate_label(label, config)
+    except ValueError:
+        return None
+    identifier, created = str(uuid.uuid4()), stamp()
+    model = os.getenv('GEMINI_MODEL', 'gemini-3.5-flash-lite')
+    canonical, reason, status = None, '', 'Unresolved'
+    with connect(db) as c:
+        c.execute('BEGIN IMMEDIATE')
+        if c.execute('SELECT count(*) FROM ai_calls WHERE created_at>=?', (created[:10],)).fetchone()[0] >= 10:
+            status, reason = 'Skipped', 'Daily Gemini request limit reached; name remains unresolved.'
+        else:
+            c.execute('INSERT INTO ai_calls VALUES (?,?,?,?)', (identifier, 'automatic-ingestion', created, 'requested'))
+    if status != 'Skipped':
+        try:
+            canonical, reason = generator(label, config['tests'], os.getenv('GEMINI_API_KEY'), model) if generator else generate(label, config['tests'], os.getenv('GEMINI_API_KEY'), model, timeout=10)
+            if canonical is not None and canonical not in config['tests']:
+                raise ValueError('Invalid canonical name')
+            if not isinstance(reason, str) or not reason.strip() or len(reason) > 1000:
+                raise ValueError('Invalid mapping reason')
+            status = 'Mapped' if canonical else 'Unresolved'
+        except Exception:
+            canonical, status, reason = None, 'Failed', 'Gemini request failed; name remains unresolved.'
+        with connect(db) as c:
+            c.execute('UPDATE ai_calls SET status=? WHERE id=?', ('failed' if status == 'Failed' else 'completed', identifier))
+    event = {'id':identifier, 'label':label, 'canonical':canonical, 'reason':reason, 'model':model, 'status':status}
+    with connect(db) as c:
+        c.execute('INSERT INTO ai_mapping_events VALUES (?,?,?,?,?,?,?,?,?)',
+                  (identifier, run_id, str(source_file), label, canonical, reason, model, status, created))
+    return event
+
+
 def apply_aliases(config, db):
     with connect(db) as c:
         for row in c.execute('SELECT label,canonical FROM approved_aliases ORDER BY alias_key'):
@@ -35,12 +84,13 @@ def snapshot(db):
             if label:
                 unknown[label] = unknown.get(label, 0) + 1
         calls = c.execute('SELECT count(*) FROM ai_calls WHERE created_at>=?', (stamp()[:10],)).fetchone()[0]
-    return {'enabled': bool(os.getenv('GEMINI_API_KEY')), 'model': os.getenv('GEMINI_MODEL', 'gemini-3.5-flash-lite'),
+        automatic = [dict(r) for r in c.execute('SELECT * FROM ai_mapping_events ORDER BY created_at DESC LIMIT 100')]
+    return {'enabled': bool(os.getenv('GEMINI_API_KEY')), 'automatic_enabled':automatic_enabled(), 'automatic':automatic, 'model': os.getenv('GEMINI_MODEL', 'gemini-3.5-flash-lite'),
             'daily_limit': 10, 'calls_today': calls, 'suggestions': suggestions, 'aliases': aliases,
             'unresolved': [{'label': label, 'occurrences': count} for label, count in sorted(unknown.items(), key=lambda item: (-item[1], item[0]))[:50]]}
 
 
-def generate(label, tests, api_key, model):
+def generate(label, tests, api_key, model, timeout=35):
     schema = {'type': 'OBJECT', 'properties': {
         'canonical': {'type': 'STRING', 'enum': list(tests) + ['UNRESOLVED']},
         'reason': {'type': 'STRING'}}, 'required': ['canonical', 'reason']}
@@ -58,7 +108,7 @@ def generate(label, tests, api_key, model):
         f'https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent',
         json.dumps(payload).encode(), {'Content-Type': 'application/json', 'x-goog-api-key': api_key})
     try:
-        with urllib.request.urlopen(request, timeout=35) as response:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
             raw = json.load(response)
     except urllib.error.HTTPError as exc:
         message = {429: 'Gemini free quota is exhausted. Try later; no paid fallback is used.',

@@ -17,6 +17,8 @@ type Suggestion = {
 };
 type State = {
   enabled: boolean;
+  automatic_enabled: boolean;
+  automatic: { id: string; label: string; canonical: string | null; reason: string; model: string; status: string; created_at: string }[];
   model: string;
   daily_limit: number;
   calls_today: number;
@@ -73,11 +75,30 @@ export function MappingsPage() {
         <div>
           <h1>AI mappings</h1>
           <p>
-            Ask Gemini about an unfamiliar test name, then review its
-            suggestion.
+            Unrecognised test names can be resolved by Gemini during processing.
+            You can also request and review reusable aliases here.
           </p>
         </div>
       </div>
+      <p className="supporting mb-5">
+        Automatic ingestion mapping: {data?.automatic_enabled ? "On" : "Off"}.
+        Only test labels are sent; results, units and reference ranges use existing rules.
+      </p>
+      {!!data?.automatic?.length && (
+        <div className="data-table-wrap mb-6">
+          <h2 className="p-4 font-semibold">Automatic processing decisions</h2>
+          <table className="w-full">
+            <thead><tr><th>Original name</th><th>Mapped name</th><th>Outcome</th><th>Reason</th></tr></thead>
+            <tbody>{data.automatic.map((event) => (
+              <tr key={event.id}>
+                <td>{event.label}<p className="supporting">{time(event.created_at)}</p></td>
+                <td>{event.canonical || "Unresolved"}</td>
+                <td>{event.status}</td><td>{event.reason}<p className="supporting">{event.model}</p></td>
+              </tr>
+            ))}</tbody>
+          </table>
+        </div>
+      )}
       <div className="mapping-form">
         {!!data?.unresolved?.length && (
           <div>
@@ -101,8 +122,8 @@ export function MappingsPage() {
               ))}
             </select>
             <p className="supporting mt-2">
-              Damaged or missing names require the original report. A suggestion
-              is never applied automatically.
+              Damaged or missing names require the original report. Manual suggestions
+              below require approval; automatic ingestion decisions are listed separately.
             </p>
           </div>
         )}

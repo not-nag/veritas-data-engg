@@ -4,7 +4,7 @@ Validated with Python 3.13.3 and Node.js 22.10.0.
 
 | Check | Result |
 | --- | --- |
-| `npm test` | 64 backend tests and 7 walkthrough tests pass |
+| `npm test` | 71 backend tests and 7 walkthrough tests pass |
 | `npm run build` | Production build and TypeScript checks pass |
 | API checks | Processing, retries, masking, metrics, and export verified |
 | UI checks | Direct report URLs, Back/Forward, refresh, filter restoration, local tabs, dialogs, export, masking, review, watcher controls, and failed-file repair verified |
@@ -49,3 +49,5 @@ These checks do not establish production throughput, uptime, privacy compliance,
 ## Optional AI checks
 
 Tests cover pending/accepted/rejected suggestions, alias conflicts, daily request limits, response validation, and explicit reprocessing with preserved old output. A loopback HTTP integration test verifies uploads and reviews without a sign-in token. A live Gemini 3.5 Flash-Lite request mapped the synthetic label HGB concentration to Haemoglobin; the pending suggestion is visible in the UI. Hosting and cloud deployment are outside the selected local prototype scope.
+
+Automatic ingestion tests cover pre-storage mapping, preserved source evidence, AI provenance, duplicate avoidance, per-run request reuse, request failures, invalid responses, exhausted quota, disabled mode and rejection of uploaded internal annotations.

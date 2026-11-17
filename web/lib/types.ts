@@ -44,7 +44,7 @@ export type Obs = {
   analytics: string;
   issues: string[];
   normalization_method: string;
-  normalization_confidence: number;
+  normalization_confidence: number | null;
   page: number;
 };
 export type Run = {

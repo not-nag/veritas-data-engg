@@ -25,7 +25,7 @@ Select **More → Help & walkthrough** for a guided tour. It highlights controls
 - Duplicate suppression, result validation, review flags, and raw/transformed record inspection.
 - Daily ingestion metrics, clinic quality summaries, failed-file retries, and local alerts.
 - SQLite persistence, output version history, and canonical CSV export.
-- Optional Gemini test-name suggestions with human approval and an audit trail.
+- Optional Gemini fallback during ingestion, plus human-reviewed reusable aliases and an audit trail.
 - Local JSON uploads and automatic folder pickup, with no sign-in.
 
 ## Checks

@@ -13,6 +13,7 @@ def masked_output(output):
         value['source_coverage']['unresolved_names']={}
         value['source_coverage']['non_test_names']={}
     for observation in value.get('observations',[]):
+        observation.pop('ai_mapping', None)
         for key in ['test_name_original','result_text','range_text','unit_original']:
             observation[key]='[MASKED SOURCE TEXT]'
         if observation.get('derived_from'):

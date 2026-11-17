@@ -5,7 +5,7 @@
     "dev": "bash scripts/dev.sh",
     "setup": "npm ci --prefix web",
     "build": "npm run build --prefix web",
-    "test": "PYTHONPATH=src python3 -m unittest discover -s tests -v && node --test tests/test_walkthrough.mjs",
+    "test": "GEMINI_AUTO_MAPPING=false PYTHONPATH=src python3 -m unittest discover -s tests -v && node --test tests/test_walkthrough.mjs",
     "process": "PYTHONPATH=src python3 -m pipeline"
   }
 }

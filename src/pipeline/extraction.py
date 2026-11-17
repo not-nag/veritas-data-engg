@@ -11,6 +11,7 @@ def prepare_tests(tests, fields, config):
         test = deepcopy(original)
         # Never accept internal annotations supplied by an uploaded document.
         test.pop('__interpretation', None)
+        test.pop('__ai_mapping', None)
         name = str(path(test, fields['name'], '') or '')
         category = rules.get('non_test_labels', {}).get(key(name))
         if category:
@@ -44,5 +45,5 @@ def prepare_tests(tests, fields, config):
 def resolve_test(test, fields, config):
     interpretation = test.get('__interpretation', {})
     if interpretation.get('canonical') in config['tests']:
-        return interpretation['canonical'], 'configured context', 1.0
+        return interpretation['canonical'], interpretation.get('method', 'configured context'), None if interpretation.get('method') == 'gemini' else 1.0
     return normalize_name(path(test, fields['name'], ''), config)
