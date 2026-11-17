@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "2.0",
+  "clinicId": "DEMO-CLINIC",
+  "documentId": "DEMO-FUZZY-001",
+  "metadata": {},
+  "reports": [
+    {
+      "type": "lab_report",
+      "payload": {
+        "patient": {
+          "name": "Synthetic patient",
+          "age": "35Y",
+          "sex": "F",
+          "date": "2026-11-13"
+        },
+        "measurements": [
+          {
+            "name": "Haemoglobinn",
+            "value": "13.5",
+            "units": "g/dL",
+            "reference": "12-16",
+            "page": 1
+          }
+        ]
+      }
+    }
+  ]
+}
